@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel;
 using System.Linq;
+using CheeseBot.EfCore;
 using Disqord;
 using Disqord.Bot.Hosting;
 using Disqord.Gateway;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -33,16 +35,19 @@ namespace CheeseBot
                     x.Services.Remove(x.Services.First(x => x.ServiceType == typeof(ILogger<>)));
                     x.Services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
                 })
-                .ConfigureServices(services => {})
+                .ConfigureServices((context, services) =>
+                {
+                    var connString = context.Configuration["postgres:connection_string"];
+                    services.AddDbContext<CheeseBotDbContext>(x => x.UseNpgsql(connString).UseSnakeCaseNamingConvention());
+                })
                 .ConfigureAppConfiguration(configuration => configuration.AddJsonFile(ConfigPath))
                 .ConfigureDiscordBot((context, bot) =>
                 {
                     bot.Token = context.Configuration["discord:token"];
-                    bot.Prefixes = new[] { "hey cheeseman", "!" }; //TODO: IPrefixProvider
+                    //bot.Prefixes = new[] { "hey cheeseman", "!" }; //TODO: IPrefixProvider
                     bot.UseMentionPrefix = true;
                     bot.OwnerIds = new[] {new Snowflake(Global.OwnerId)};
                     bot.Intents = GatewayIntents.All;
-                    
                 })
                 .Build();
 

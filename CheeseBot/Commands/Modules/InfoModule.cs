@@ -10,7 +10,7 @@ using Qmmands;
 
 namespace CheeseBot.Commands.Modules
 {
-    public sealed class InfoModule : DiscordModuleBase
+    public class InfoModule : DiscordModuleBase
     {
         private readonly UptimeService _uptimeService;
         
