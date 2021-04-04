@@ -1,7 +1,8 @@
-﻿using System.ComponentModel;
-using System.Linq;
+﻿using System.Linq;
 using CheeseBot.EfCore;
+using CheeseBot.Services;
 using Disqord;
+using Disqord.Bot;
 using Disqord.Bot.Hosting;
 using Disqord.Gateway;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +26,7 @@ namespace CheeseBot
                 .ConfigureLogging(x =>
                 {
                     var logger = new LoggerConfiguration()
-                        .MinimumLevel.Information()
+                        .MinimumLevel.Verbose()
                         .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                         .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}", theme: AnsiConsoleTheme.Code)
                         .CreateLogger();
@@ -39,15 +40,18 @@ namespace CheeseBot
                 {
                     var connString = context.Configuration["postgres:connection_string"];
                     services.AddDbContext<CheeseBotDbContext>(x => x.UseNpgsql(connString).UseSnakeCaseNamingConvention());
+                    //services.AddSingleton<IPrefixProvider, CheeseBotPrefixProvider>();
                 })
                 .ConfigureAppConfiguration(configuration => configuration.AddJsonFile(ConfigPath))
                 .ConfigureDiscordBot((context, bot) =>
                 {
                     bot.Token = context.Configuration["discord:token"];
-                    //bot.Prefixes = new[] { "hey cheeseman", "!" }; //TODO: IPrefixProvider
+                    bot.Prefixes = new[] { "hey cheeseman", "!" }; //TODO: IPrefixProvider
                     bot.UseMentionPrefix = true;
-                    bot.OwnerIds = new[] {new Snowflake(Global.OwnerId)};
+                    bot.OwnerIds = new[] {new Snowflake(Global.AuthorId)};
                     bot.Intents = GatewayIntents.All;
+                    
+                    
                 })
                 .Build();
 

@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
-using CheeseBot.Entities;
+using System.Threading;
+using System.Threading.Tasks;
+using CheeseBot.EfCore.Entities;
 using Disqord;
 using Disqord.Bot;
 using Disqord.Hosting;
@@ -9,23 +12,30 @@ namespace CheeseBot.Services
 {
     public class DefaultGuildSettingsProvider : DiscordClientService
     {
-        public HashSet<IPrefix> DefaultPrefixes { get; } 
+        public HashSet<IPrefix> DefaultPrefixes { get; private set; } 
         
         public DefaultGuildSettingsProvider(ILogger<DefaultGuildSettingsProvider> logger, DiscordClientBase client) 
             : base(logger, client)
         {
+            
+        }
+
+        public override async Task StartAsync(CancellationToken cancellationToken)
+        {
+            //TODO: Is it right to just pass along the CT? Never worked with CTs really
+            //await Client.WaitUntilReadyAsync(cancellationToken);
             DefaultPrefixes = new HashSet<IPrefix>
             {
                 new StringPrefix("?"),
-                new MentionPrefix(client.CurrentUser.Id)
+                //new MentionPrefix(Client.CurrentUser.Id)
             };
             
-            logger.LogInformation("Default settings setup!");
+            Logger.LogInformation("Default settings setup!");
         }
 
-        public GuildSettings CreateDefaultGuildSettings(ulong guildId)
+        public GuildSettings CreateDefaultGuildSettings(Snowflake guildId)
         {
-            return new GuildSettings(guildId, DefaultPrefixes);
+            return new(guildId, DefaultPrefixes);
         }
     }
 }

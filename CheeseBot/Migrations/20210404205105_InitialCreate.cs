@@ -7,22 +7,22 @@ namespace CheeseBot.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "GuildSettings",
+                name: "guild_settings",
                 columns: table => new
                 {
-                    GuildId = table.Column<decimal>(type: "numeric(20,0)", nullable: false),
-                    Prefix = table.Column<string>(type: "text", nullable: true)
+                    guild_id = table.Column<decimal>(type: "numeric(20,0)", nullable: false),
+                    prefixes = table.Column<string[]>(type: "text[]", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GuildSettings", x => x.GuildId);
+                    table.PrimaryKey("pk_guild_settings", x => x.guild_id);
                 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "GuildSettings");
+                name: "guild_settings");
         }
     }
 }

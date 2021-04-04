@@ -9,7 +9,7 @@ namespace CheeseBot.EfCore
         public CheeseBotDbContext CreateDbContext(string[] args)
         {
             var builder = new DbContextOptionsBuilder<CheeseBotDbContext>();
-            builder.UseNpgsql("Host=localhost;Database=cheesebot;Username=postgres;Password=password");
+            builder.UseNpgsql("Host=localhost;Database=cheesebot;Username=postgres;Password=password").UseSnakeCaseNamingConvention();
             return new CheeseBotDbContext(builder.Options);
         }
     }
