@@ -1,0 +1,24 @@
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Disqord;
+using Disqord.Bot;
+
+namespace CheeseBot.EfCore.Entities
+{
+    public sealed class GuildSettings
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public Snowflake GuildId { get; set; }
+        
+        public HashSet<IPrefix> Prefixes { get; }
+
+        public GuildSettings(Snowflake guildId, HashSet<IPrefix> prefixes)
+        {
+            GuildId = guildId;
+            Prefixes = prefixes;
+        }
+        
+    }
+}

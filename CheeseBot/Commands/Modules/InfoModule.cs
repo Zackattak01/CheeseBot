@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using CheeseBot.Services;
 using Disqord;
 using Disqord.Bot;
 using Disqord.Gateway;
@@ -10,17 +9,8 @@ using Qmmands;
 
 namespace CheeseBot.Commands.Modules
 {
-    public sealed class InfoModule : DiscordModuleBase
+    public class InfoModule : DiscordModuleBase
     {
-        private readonly UptimeService _uptimeService;
-        
-        
-        public InfoModule(UptimeService uptimeService)
-        {
-            _uptimeService = uptimeService;
-        }
-
-
         [Command("ping")]
         public async Task PingAsync()
         {
@@ -39,7 +29,9 @@ namespace CheeseBot.Commands.Modules
         {
             var authorId = Context.Bot.OwnerIds[0];
 
-            var authorString = Context.Bot.GatewayClient.GetUser(authorId).ToString();;
+            var authorString = Context.Bot.GatewayClient.GetUser(authorId).ToString();
+
+            var uptimeString = (DateTime.Now - Process.GetCurrentProcess().StartTime).GetHumanReadableTimeFormat();
 
             //TODO: CHECK UP
             //at this time of writing this Guild.Members is null
@@ -55,10 +47,10 @@ namespace CheeseBot.Commands.Modules
                 .WithColor(Global.DefaultEmbedColor)
                 .WithTitle(Context.Bot.CurrentUser.Name)
                 .AddField("Author", authorString, true)
-                .AddField("Uptime", _uptimeService.Uptime.GetHumanReadableTimeFormat(), true)
+                .AddField("Uptime", uptimeString, true)
                 .AddBlankField()
                 .AddField("Source Code", Markdown.Link("GitHub", Global.CheeseBotRepo), true)
-                .AddField("Library", Markdown.Link("Disqord " + Library.Version.ToString(), Library.RepositoryUrl), true);
+                .AddField("Library", Markdown.Link("Disqord " + Library.Version, Library.RepositoryUrl), true);
 
 
             return Response(embedBuilder);
