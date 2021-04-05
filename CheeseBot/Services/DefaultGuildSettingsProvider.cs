@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using CheeseBot.EfCore.Entities;
 using Disqord;
 using Disqord.Bot;
-using Disqord.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace CheeseBot.Services

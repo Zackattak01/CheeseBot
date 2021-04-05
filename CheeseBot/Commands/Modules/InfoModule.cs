@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using CheeseBot.Extensions;
 using Disqord;
 using Disqord.Bot;
 using Disqord.Gateway;
@@ -12,24 +13,24 @@ namespace CheeseBot.Commands.Modules
     public class InfoModule : DiscordModuleBase
     {
         [Command("ping")]
+        [Description("Plays a quick game of Ping Pong.")]
         public async Task PingAsync()
         {
-            var localMessage = new LocalMessageBuilder().WithContent("Pong: *loading* response time");
-
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            var msg = await Context.Bot.SendMessageAsync(Context.ChannelId, localMessage.Build());
+            var msg = await Response("Pong: *loading* response time");
             stopwatch.Stop();
 
             await msg.ModifyAsync(x => x.Content = $"Pong: {stopwatch.ElapsedMilliseconds}ms response time");
         }
 
         [Command("info")]
+        [Description("Provides info about the bot.")]
         public DiscordCommandResult InfoAsync()
         {
             var authorId = Context.Bot.OwnerIds[0];
 
-            var authorString = Context.Bot.GatewayClient.GetUser(authorId).ToString();
+            var authorString = Context.Bot.GetUser(authorId).ToString();
 
             var uptimeString = (DateTime.Now - Process.GetCurrentProcess().StartTime).GetHumanReadableTimeFormat();
             
@@ -50,9 +51,10 @@ namespace CheeseBot.Commands.Modules
                 .AddField("Source Code", Markdown.Link("GitHub", Global.CheeseBotRepo), true)
                 .AddField("Library", Markdown.Link("Disqord " + Library.Version, Library.RepositoryUrl), true)
                 .AddBlankField(isInline:true);
-
-
+            
             return Response(embedBuilder);
         }
+        
+        
     }
 }

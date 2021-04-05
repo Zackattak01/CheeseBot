@@ -1,14 +1,7 @@
-using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
-using Disqord;
 using Disqord.Bot;
 using Disqord.Gateway;
-using Disqord.Hosting;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Npgsql.Replication.PgOutput.Messages;
 
 namespace CheeseBot.Services
 {

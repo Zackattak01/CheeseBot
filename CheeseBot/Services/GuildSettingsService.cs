@@ -5,8 +5,6 @@ using CheeseBot.EfCore;
 using CheeseBot.EfCore.Entities;
 using Disqord;
 using Disqord.Bot;
-using Disqord.Hosting;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
