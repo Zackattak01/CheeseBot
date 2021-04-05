@@ -96,5 +96,24 @@ namespace CheeseBot.Services
             dbContext.Update(guildSettings);
             await dbContext.SaveChangesAsync();
         }
+
+        public async Task<bool> GuildIsPermittedAsync(Snowflake guildId)
+        {
+            var settings = await GetGuildSettingsAsync(guildId);
+            return settings.IsPermitted;
+        }
+
+        public async Task PermitGuildAsync(Snowflake guildId)
+        {
+            var guildSettings = await GetGuildSettingsAsync(guildId);
+            
+            using var scope = _services.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<CheeseBotDbContext>();
+
+            guildSettings.IsPermitted = true;
+
+            dbContext.Update(guildSettings);
+            await dbContext.SaveChangesAsync();
+        }
     }
 }

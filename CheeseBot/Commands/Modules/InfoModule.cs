@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using CheeseBot.Commands.Checks;
 using CheeseBot.Extensions;
 using Disqord;
 using Disqord.Bot;
@@ -54,7 +55,5 @@ namespace CheeseBot.Commands.Modules
             
             return Response(embedBuilder);
         }
-        
-        
     }
 }

@@ -11,6 +11,8 @@ namespace CheeseBot.EfCore.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Snowflake GuildId { get; set; }
+
+        public bool IsPermitted { get; set; } = false;
         
         public HashSet<IPrefix> Prefixes { get; }
 
