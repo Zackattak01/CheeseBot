@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using CheeseBot.EfCore;
+using CheeseBot.Extensions;
 using CheeseBot.Services;
 using Disqord;
 using Disqord.Bot;
@@ -44,13 +45,11 @@ namespace CheeseBot
                     services.AddCheeseBotServices();
                 })
                 .ConfigureAppConfiguration(configuration => configuration.AddJsonFile(ConfigPath))
-                .ConfigureDiscordBot((context, bot) =>
+                .ConfigureDiscordBot<CheeseDisqordBot>((context, bot) =>
                 {
                     bot.Token = context.Configuration["discord:token"];
                     bot.OwnerIds = new[] {new Snowflake(Global.AuthorId)};
                     bot.Intents = GatewayIntents.All;
-                    
-                    
                 })
                 .Build();
 

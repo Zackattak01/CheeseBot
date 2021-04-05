@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using CheeseBot.Services;
 using Disqord;
 using Disqord.Bot;
-using Disqord.Utilities;
 using Qmmands;
 
 namespace CheeseBot.Commands.Modules
@@ -46,50 +45,36 @@ namespace CheeseBot.Commands.Modules
         }
 
         [Command("add")]
-        public async Task<DiscordCommandResult> AddPrefixAsync([Remainder] string prefix)
+        public async Task<DiscordCommandResult> AddPrefixAsync([Remainder] IPrefix prefix)
         {
             var currentPrefixes = await _guildSettingsService.GetGuildPrefixesAsync(Context.GuildId);
-
-            IPrefix newPrefix;
-
-            if (Mention.TryParseUser(prefix, out var result))
-            {
-                if (result != Context.Bot.CurrentUser.Id)
-                    return Response("You cannot enable mentions for users other than myself as a prefix.");
-                newPrefix = new MentionPrefix(result);
-            }
-            else
-                newPrefix = new StringPrefix(prefix);
 
             if (currentPrefixes.Count >= DefaultGuildSettingsProvider.MaxNumberOfPrefixes)
                 return Response(
                     $"Your server has reached the max number of prefixes ({DefaultGuildSettingsProvider.MaxNumberOfPrefixes})");
-            else if (currentPrefixes.Contains(newPrefix))
+            else if (currentPrefixes.Contains(prefix))
                 return Response($"Prefix: \"{prefix}\" is already enabled on this server.");
+            else if (prefix is MentionPrefix mentionPrefix && mentionPrefix.UserId != Context.Bot.CurrentUser.Id)
+                return Response("You cannot enable mentions for users other than myself as a prefix.");
 
-            await _guildSettingsService.AddPrefixAsync(Context.GuildId, newPrefix);
+            await _guildSettingsService.AddPrefixAsync(Context.GuildId, prefix);
             
             return Response($"Ok, the prefix \"{prefix}\" will now be recognized on this server.");
         }
 
         [Command("remove")]
-        public async Task<DiscordCommandResult> RemovePrefixAsync([Remainder] string prefix)
+        public async Task<DiscordCommandResult> RemovePrefixAsync([Remainder] IPrefix prefix)
         {
             var currentPrefixes = await _guildSettingsService.GetGuildPrefixesAsync(Context.GuildId);
 
-            IPrefix prefixToRemove;
+            
 
-            if (Mention.TryParseUser(prefix, out var result))
-                prefixToRemove = new MentionPrefix(result);
-            else
-                prefixToRemove = new StringPrefix(prefix);
-
-            if (!currentPrefixes.Contains(prefixToRemove))
+            if (!currentPrefixes.Contains(prefix))
                 return Response($"The prefix \"{prefix}\" is not enabled on this server.");
             else if (currentPrefixes.Count == 1)
                 return Response("You cannot remove the last enabled prefix on this server.");
 
-            await _guildSettingsService.RemovePrefixAsync(Context.GuildId, prefixToRemove);
+            await _guildSettingsService.RemovePrefixAsync(Context.GuildId, prefix);
 
             return Response($"Ok, the prefix \"{prefix}\" will no longer be recognized on this server.");
         }
