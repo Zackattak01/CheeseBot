@@ -10,24 +10,22 @@ using Microsoft.Extensions.Logging;
 
 namespace CheeseBot.Services
 {
-    public class DefaultGuildSettingsProvider : DiscordClientService
+    public class DefaultGuildSettingsProvider : CheeseBotService
     {
-        public HashSet<IPrefix> DefaultPrefixes { get; private set; } 
+        public const int MaxNumberOfPrefixes = 5;
         
-        public DefaultGuildSettingsProvider(ILogger<DefaultGuildSettingsProvider> logger, DiscordClientBase client) 
-            : base(logger, client)
+        public HashSet<IPrefix> DefaultPrefixes { get; } 
+        
+        public DefaultGuildSettingsProvider(Token token, ILogger<DefaultGuildSettingsProvider> logger) 
+            : base(logger)
         {
+            if (token is not BotToken botToken)
+                throw new Exception("Token was not expected type");
             
-        }
-
-        public override async Task StartAsync(CancellationToken cancellationToken)
-        {
-            //TODO: Is it right to just pass along the CT? Never worked with CTs really
-            //await Client.WaitUntilReadyAsync(cancellationToken);
             DefaultPrefixes = new HashSet<IPrefix>
             {
                 new StringPrefix("?"),
-                //new MentionPrefix(Client.CurrentUser.Id)
+                new MentionPrefix(botToken.Id)
             };
             
             Logger.LogInformation("Default settings setup!");

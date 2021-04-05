@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Disqord;
 using Disqord.Bot;
 
 namespace CheeseBot.EfCore.Entities
@@ -9,11 +10,11 @@ namespace CheeseBot.EfCore.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public ulong GuildId { get; set; }
+        public Snowflake GuildId { get; set; }
         
         public HashSet<IPrefix> Prefixes { get; }
 
-        public GuildSettings(ulong guildId, HashSet<IPrefix> prefixes)
+        public GuildSettings(Snowflake guildId, HashSet<IPrefix> prefixes)
         {
             GuildId = guildId;
             Prefixes = prefixes;

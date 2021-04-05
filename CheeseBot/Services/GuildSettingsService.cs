@@ -12,24 +12,39 @@ using Microsoft.Extensions.Logging;
 
 namespace CheeseBot.Services
 {
-    public class GuildSettingsService : DiscordClientService
+    public class GuildSettingsService : CheeseBotService
     {
         private readonly Dictionary<ulong, GuildSettings> _guildSettingsCache;
 
         private readonly IServiceProvider _services;
 
         private readonly DefaultGuildSettingsProvider _defaultGuildSettingsProvider;
-        
-        
+
+
         public GuildSettingsService(IServiceProvider services, 
                                     DefaultGuildSettingsProvider defaultGuildSettingsProvider, 
-                                    ILogger<GuildSettingsService> logger, 
-                                    DiscordClientBase client) 
-                                    : base(logger, client)
+                                    ILogger<GuildSettingsService> logger) 
+                                    : base(logger)
         {
             _services = services;
             _defaultGuildSettingsProvider = defaultGuildSettingsProvider;
             _guildSettingsCache = new Dictionary<ulong, GuildSettings>();
+        }
+
+        private async Task<GuildSettings> FindOrCreateGuildSettings(Snowflake guildId)
+        {
+            using var scope = _services.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<CheeseBotDbContext>();
+            var guildSettings = await dbContext.GuildSettings.FindAsync(guildId);
+
+            if (guildSettings is null)
+            {
+                guildSettings = _defaultGuildSettingsProvider.CreateDefaultGuildSettings(guildId);
+                await dbContext.AddAsync(guildSettings);
+                await dbContext.SaveChangesAsync();
+            }
+            
+            return guildSettings;
         }
 
         public async Task<GuildSettings> GetGuildSettingsAsync(Snowflake guildId)
@@ -50,26 +65,38 @@ namespace CheeseBot.Services
             
         }
 
-        private async Task<GuildSettings> FindOrCreateGuildSettings(Snowflake guildId)
-        {
-            using var scope = _services.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<CheeseBotDbContext>();
-            var guildSettings = await dbContext.GuildSettings.FindAsync(guildId);
-
-            if (guildSettings is null)
-            {
-                guildSettings = _defaultGuildSettingsProvider.CreateDefaultGuildSettings(guildId);
-                await dbContext.AddAsync(guildSettings);
-                await dbContext.SaveChangesAsync();
-            }
-            
-            return guildSettings;
-        }
-
         public async Task<HashSet<IPrefix>> GetGuildPrefixesAsync(Snowflake guildId)
         {
             var settings = await GetGuildSettingsAsync(guildId);
             return settings.Prefixes;
+        }
+
+        public async Task AddPrefixAsync(Snowflake guildId, IPrefix prefix)
+        {
+            var guildSettings = await GetGuildSettingsAsync(guildId);
+            
+            using var scope = _services.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<CheeseBotDbContext>();
+            
+            //TODO: This is dangerous; prefixes should not be directly mutable
+            guildSettings.Prefixes.Add(prefix);
+
+            dbContext.Update(guildSettings);
+            await dbContext.SaveChangesAsync();
+        }
+        
+        public async Task RemovePrefixAsync(Snowflake guildId, IPrefix prefix)
+        {
+            var guildSettings = await GetGuildSettingsAsync(guildId);
+            
+            using var scope = _services.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<CheeseBotDbContext>();
+            
+            //TODO: This is dangerous; prefixes should not be directly mutable
+            guildSettings.Prefixes.Remove(prefix);
+
+            dbContext.Update(guildSettings);
+            await dbContext.SaveChangesAsync();
         }
     }
 }

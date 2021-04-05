@@ -16,7 +16,7 @@
       <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.2" />
-      <PackageReference Include="Qmmands" Version="4.0.0-nightly-00253" />
+      <PackageReference Include="Qmmands" Version="4.0.0" />
       <PackageReference Include="Serilog.Extensions.Hosting" Version="4.1.2" />
       <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
       <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
@@ -25,29 +25,15 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="Disqord, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\..\Disqord\src\Disqord\bin\Release\net5.0\Disqord.dll</HintPath>
-      </Reference>
-      <Reference Include="Disqord.Bot, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\..\Disqord\src\Disqord.Bot\bin\Release\net5.0\Disqord.Bot.dll</HintPath>
-      </Reference>
-      <Reference Include="Disqord.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\..\Disqord\src\Disqord\bin\Release\net5.0\Disqord.Core.dll</HintPath>
-      </Reference>
-      <Reference Include="Disqord.Gateway, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\..\Disqord\src\Disqord\bin\Release\net5.0\Disqord.Gateway.dll</HintPath>
-      </Reference>
-      <Reference Include="Disqord.Gateway.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\..\Disqord\src\Disqord\bin\Release\net5.0\Disqord.Gateway.Api.dll</HintPath>
-      </Reference>
-      <Reference Include="Disqord.Rest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\..\Disqord\src\Disqord\bin\Release\net5.0\Disqord.Rest.dll</HintPath>
-      </Reference>
-      <Reference Include="Disqord.Rest.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\..\Disqord\src\Disqord\bin\Release\net5.0\Disqord.Rest.Api.dll</HintPath>
-      </Reference>
+        <ProjectReference Include="..\..\Disqord\src\Disqord.Bot\Disqord.Bot.csproj" />
+        <ProjectReference Include="..\..\Disqord\src\Disqord.Core\Disqord.Core.csproj" />
+        <ProjectReference Include="..\..\Disqord\src\Disqord.Gateway.Api\Disqord.Gateway.Api.csproj" />
+        <ProjectReference Include="..\..\Disqord\src\Disqord.Gateway\Disqord.Gateway.csproj" />
+        <ProjectReference Include="..\..\Disqord\src\Disqord.Rest.Api\Disqord.Rest.Api.csproj" />
+        <ProjectReference Include="..\..\Disqord\src\Disqord.Rest\Disqord.Rest.csproj" />
+        <ProjectReference Include="..\..\Disqord\src\Disqord\Disqord.csproj" />
     </ItemGroup>
-
+    
     <ItemGroup>
         <None Update="config.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
