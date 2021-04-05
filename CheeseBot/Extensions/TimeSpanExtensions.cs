@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace CheeseBot
+namespace CheeseBot.Extensions
 {
     public static class TimeSpanExtensions
     {

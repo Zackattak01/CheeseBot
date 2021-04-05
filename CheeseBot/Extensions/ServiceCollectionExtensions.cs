@@ -3,7 +3,7 @@ using System.Reflection;
 using CheeseBot.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CheeseBot
+namespace CheeseBot.Extensions
 {
     public static class ServiceCollectionExtensions
     {
