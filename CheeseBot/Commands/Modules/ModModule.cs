@@ -20,7 +20,7 @@ namespace CheeseBot.Commands.Modules
         }
         
         [Command("clean")]
-        [Description("Clean up after myself")]
+        [Description("Clean up after myself.")]
         [RequireAuthorChannelPermissions(Permission.ManageMessages)]
         [RequireBotChannelPermissions(Permission.ManageMessages)]
         public async Task CleanAsync([Minimum(1)] int numberToSearch = 100)
@@ -59,7 +59,7 @@ namespace CheeseBot.Commands.Modules
         }
 
         [Command("nuke")]
-        [Description("Nuke the last specified amount of message in a channel")]
+        [Description("Nuke the last specified amount of message in a channel.")]
         [RequireAuthorChannelPermissions(Permission.ManageMessages)]
         [RequireBotChannelPermissions(Permission.ManageMessages)]
         public async Task NukeAsync([Minimum(1)] int numberToNuke = 100)

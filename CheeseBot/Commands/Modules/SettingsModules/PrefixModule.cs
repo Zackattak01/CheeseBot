@@ -20,7 +20,8 @@ namespace CheeseBot.Commands.Modules
         }
 
         [Command]
-        public async Task DisplayPrefixAsync()
+        [Description("Displays the current prefixes that are recognized on this server.")]
+        public async Task<DiscordCommandResult> DisplayPrefixAsync()
         {
             var prefixes = await _guildSettingsService.GetGuildPrefixesAsync(Context.GuildId);
 
@@ -41,10 +42,11 @@ namespace CheeseBot.Commands.Modules
             
             var responseString = "My prefixes for this guild are: " + string.Join(", ", formattedPrefixList);
             
-            await Response(responseString);
+            return Response(responseString);
         }
 
         [Command("add")]
+        [Description("Adds the specified prefix.")]
         public async Task<DiscordCommandResult> AddPrefixAsync([Remainder] IPrefix prefix)
         {
             var currentPrefixes = await _guildSettingsService.GetGuildPrefixesAsync(Context.GuildId);
@@ -63,11 +65,10 @@ namespace CheeseBot.Commands.Modules
         }
 
         [Command("remove")]
+        [Description("Removes the specified prefix.")]
         public async Task<DiscordCommandResult> RemovePrefixAsync([Remainder] IPrefix prefix)
         {
             var currentPrefixes = await _guildSettingsService.GetGuildPrefixesAsync(Context.GuildId);
-
-            
 
             if (!currentPrefixes.Contains(prefix))
                 return Response($"The prefix \"{prefix}\" is not enabled on this server.");
