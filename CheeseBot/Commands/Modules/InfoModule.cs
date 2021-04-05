@@ -32,15 +32,13 @@ namespace CheeseBot.Commands.Modules
             var authorString = Context.Bot.GatewayClient.GetUser(authorId).ToString();
 
             var uptimeString = (DateTime.Now - Process.GetCurrentProcess().StartTime).GetHumanReadableTimeFormat();
-
-            //TODO: CHECK UP
-            //at this time of writing this Guild.Members is null
-            //i believe that its not implemented yet
+            
             if (Context.GuildId is not null)
             {
                 var member = Context.Bot.GetMember(Context.GuildId.Value, authorId);
+               
                 if (member is not null)
-                    authorString = member.ToString();
+                    authorString = member.Mention;
             }
 
             var embedBuilder = new LocalEmbedBuilder()
@@ -48,9 +46,10 @@ namespace CheeseBot.Commands.Modules
                 .WithTitle(Context.Bot.CurrentUser.Name)
                 .AddField("Author", authorString, true)
                 .AddField("Uptime", uptimeString, true)
-                .AddBlankField()
+                .AddBlankField(isInline:true)
                 .AddField("Source Code", Markdown.Link("GitHub", Global.CheeseBotRepo), true)
-                .AddField("Library", Markdown.Link("Disqord " + Library.Version, Library.RepositoryUrl), true);
+                .AddField("Library", Markdown.Link("Disqord " + Library.Version, Library.RepositoryUrl), true)
+                .AddBlankField(isInline:true);
 
 
             return Response(embedBuilder);
