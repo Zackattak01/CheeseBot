@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using CheeseBot.EfCore;
 using CheeseBot.EfCore.Entities;
@@ -63,56 +64,14 @@ namespace CheeseBot.Services
             
         }
 
-        public async Task<HashSet<IPrefix>> GetGuildPrefixesAsync(Snowflake guildId)
+        //this method is really just a crutch for the extension method impls;  we dont need to see it normally
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public async Task UpdateGuildSettingsAsync(GuildSettings settings)
         {
-            var settings = await GetGuildSettingsAsync(guildId);
-            return settings.Prefixes;
-        }
-
-        public async Task AddPrefixAsync(Snowflake guildId, IPrefix prefix)
-        {
-            var guildSettings = await GetGuildSettingsAsync(guildId);
-            
-            using var scope = _services.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<CheeseBotDbContext>();
-            
-            //TODO: This is dangerous; prefixes should not be directly mutable
-            guildSettings.Prefixes.Add(prefix);
-
-            dbContext.Update(guildSettings);
-            await dbContext.SaveChangesAsync();
-        }
-        
-        public async Task RemovePrefixAsync(Snowflake guildId, IPrefix prefix)
-        {
-            var guildSettings = await GetGuildSettingsAsync(guildId);
-            
-            using var scope = _services.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<CheeseBotDbContext>();
-            
-            //TODO: This is dangerous; prefixes should not be directly mutable
-            guildSettings.Prefixes.Remove(prefix);
-
-            dbContext.Update(guildSettings);
-            await dbContext.SaveChangesAsync();
-        }
-
-        public async Task<bool> GuildIsPermittedAsync(Snowflake guildId)
-        {
-            var settings = await GetGuildSettingsAsync(guildId);
-            return settings.IsPermitted;
-        }
-
-        public async Task PermitGuildAsync(Snowflake guildId)
-        {
-            var guildSettings = await GetGuildSettingsAsync(guildId);
-            
             using var scope = _services.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<CheeseBotDbContext>();
 
-            guildSettings.IsPermitted = true;
-
-            dbContext.Update(guildSettings);
+            dbContext.Update(settings);
             await dbContext.SaveChangesAsync();
         }
     }

@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using CheeseBot.Extensions;
 using CheeseBot.Services;
 using Disqord.Bot;
 using Microsoft.Extensions.DependencyInjection;

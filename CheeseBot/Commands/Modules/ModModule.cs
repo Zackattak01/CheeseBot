@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CheeseBot.Extensions;
 using CheeseBot.Services;
 using Disqord;
 using Disqord.Bot;
@@ -10,15 +11,8 @@ using Qmmands;
 
 namespace CheeseBot.Commands.Modules
 {
-    public class ModModule : DiscordGuildModuleBase
+    public class ModModule : GuildSettingsModule
     {
-        private readonly GuildSettingsService _guildSettingsService;
-        
-        public ModModule(GuildSettingsService guildSettingsService)
-        {
-            _guildSettingsService = guildSettingsService;
-        }
-        
         [Command("clean")]
         [Description("Clean up after myself.")]
         [RequireAuthorChannelPermissions(Permission.ManageMessages)]
@@ -28,8 +22,6 @@ namespace CheeseBot.Commands.Modules
             var messages = await Context.Bot.FetchMessagesAsync(Context.ChannelId, numberToSearch);
             var idsToDelete = new HashSet<Snowflake>();
 
-            var prefixes = await _guildSettingsService.GetGuildPrefixesAsync(Context.GuildId);
-            
             foreach (var message in messages)
             {
                 if(message is ISystemMessage)
@@ -41,7 +33,7 @@ namespace CheeseBot.Commands.Modules
                 }
                 else
                 {
-                    foreach (var prefix in prefixes)
+                    foreach (var prefix in Settings.Prefixes)
                     {
                         switch (prefix)
                         {
