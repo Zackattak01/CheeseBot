@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using CheeseBot.EfCore;
 using CheeseBot.Extensions;
 using CheeseBot.Services;
@@ -42,6 +43,7 @@ namespace CheeseBot
                     var connString = context.Configuration["postgres:connection_string"];
                     services.AddDbContext<CheeseBotDbContext>(x => x.UseNpgsql(connString).UseSnakeCaseNamingConvention());
                     services.AddPrefixProvider<CheeseBotPrefixProvider>();
+                    services.AddSingleton<Random>();//TODO: Cryptographic random... just for fun
                     services.AddCheeseBotServices();
                 })
                 .ConfigureAppConfiguration(configuration => configuration.AddJsonFile(ConfigPath))
