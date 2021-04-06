@@ -17,7 +17,6 @@ namespace CheeseBot.EfCore
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             modelBuilder.Entity<GuildSettings>(modelBuilder =>
             {
                 modelBuilder.Property(x => x.GuildId)
@@ -29,8 +28,6 @@ namespace CheeseBot.EfCore
                         static prefixes => prefixes.Select(x => x.ToString()).ToArray(),
                         static arr => new HashSet<IPrefix>(arr.Select(StringToPrefix)));
             });
-
-
         }
 
         private static IPrefix StringToPrefix(string prefix)
@@ -40,21 +37,6 @@ namespace CheeseBot.EfCore
             else
                 return new StringPrefix(prefix);
         }
-        
-        // private static string PrefixToString(IPrefix prefix)
-        // {
-        //     return prefix.ToString();
-        // }
-        //
-        // private static IPrefix StringToPrefix(string str)
-        // {
-        //     if (Mention.TryParseUser(str, out var result))
-        //         return new MentionPrefix(result);
-        //     else
-        //         return new StringPrefix(str);
-        // }
-
-        
     }
     
 }

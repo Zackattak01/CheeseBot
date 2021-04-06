@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CheeseBot.Extensions;
-using CheeseBot.Services;
 using Disqord;
 using Disqord.Bot;
 using Disqord.Rest;
@@ -33,7 +31,7 @@ namespace CheeseBot.Commands.Modules
                 }
                 else
                 {
-                    foreach (var prefix in Settings.Prefixes)
+                    foreach (var prefix in CurrentGuildSettings.Prefixes)
                     {
                         switch (prefix)
                         {

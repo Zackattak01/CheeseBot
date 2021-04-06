@@ -9,8 +9,6 @@ namespace CheeseBot.Commands.Checks
 {
     public class GuildIsPermitted : DiscordGuildCheckAttribute
     {
-        
-
         public override async ValueTask<CheckResult> CheckAsync(DiscordGuildCommandContext context)
         {
             var guildSettingsService = context.Services.GetRequiredService<GuildSettingsService>();

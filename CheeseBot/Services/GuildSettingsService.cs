@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using CheeseBot.EfCore;
 using CheeseBot.EfCore.Entities;
 using Disqord;
-using Disqord.Bot;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 

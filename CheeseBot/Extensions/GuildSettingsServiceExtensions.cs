@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using CheeseBot.Services;
 using Disqord;
 using Disqord.Bot;
-using Disqord.Rest.Api;
 
 namespace CheeseBot.Extensions
 {

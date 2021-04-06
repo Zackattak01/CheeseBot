@@ -17,9 +17,9 @@ namespace CheeseBot.Commands.Modules
         [Description("Displays the current prefixes that are recognized on this server.")]
         public DiscordCommandResult DisplayPrefixAsync()
         {
-            var formattedPrefixList = new List<string>(Settings.Prefixes.Count);
+            var formattedPrefixList = new List<string>(CurrentGuildSettings.Prefixes.Count);
 
-            foreach (var prefix in Settings.Prefixes)
+            foreach (var prefix in CurrentGuildSettings.Prefixes)
             {
                 switch (prefix)
                 {
@@ -42,10 +42,10 @@ namespace CheeseBot.Commands.Modules
         public async Task<DiscordCommandResult> AddPrefixAsync([Remainder] IPrefix prefix)
         {
 
-            if (Settings.Prefixes.Count >= DefaultGuildSettingsProvider.MaxNumberOfPrefixes)
+            if (CurrentGuildSettings.Prefixes.Count >= DefaultGuildSettingsProvider.MaxNumberOfPrefixes)
                 return Response(
                     $"Your server has reached the max number of prefixes ({DefaultGuildSettingsProvider.MaxNumberOfPrefixes})");
-            else if (Settings.Prefixes.Contains(prefix))
+            else if (CurrentGuildSettings.Prefixes.Contains(prefix))
                 return Response($"Prefix: \"{prefix}\" is already enabled on this server.");
             else if (prefix is MentionPrefix mentionPrefix && mentionPrefix.UserId != Context.Bot.CurrentUser.Id)
                 return Response("You cannot enable mentions for users other than myself as a prefix.");
@@ -59,11 +59,9 @@ namespace CheeseBot.Commands.Modules
         [Description("Removes the specified prefix.")]
         public async Task<DiscordCommandResult> RemovePrefixAsync([Remainder] IPrefix prefix)
         {
-            var currentPrefixes = await GuildSettingsService.GetGuildPrefixesAsync(Context.GuildId);
-
-            if (!currentPrefixes.Contains(prefix))
+            if (!CurrentGuildSettings.Prefixes.Contains(prefix))
                 return Response($"The prefix \"{prefix}\" is not enabled on this server.");
-            else if (currentPrefixes.Count == 1)
+            else if (CurrentGuildSettings.Prefixes.Count == 1)
                 return Response("You cannot remove the last enabled prefix on this server.");
 
             await GuildSettingsService.RemovePrefixAsync(Context.GuildId, prefix);

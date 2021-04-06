@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using CheeseBot.Extensions;
-using CheeseBot.Services;
 using Disqord.Bot;
 using Qmmands;
 
@@ -12,7 +11,7 @@ namespace CheeseBot.Commands.Modules
         [RequireBotOwner]
         public async Task<DiscordCommandResult> PermitAsync()
         {
-            if (!Settings.IsPermitted)
+            if (!CurrentGuildSettings.IsPermitted)
             {
                 await GuildSettingsService.SetPermittedStateAsync(Context.GuildId, true);
                 return Response("This guild has been permitted!");
@@ -26,7 +25,7 @@ namespace CheeseBot.Commands.Modules
         [RequireBotOwner]
         public async Task<DiscordCommandResult> UnpermitAsync()
         {
-            if (Settings.IsPermitted)
+            if (CurrentGuildSettings.IsPermitted)
             {
                 await GuildSettingsService.SetPermittedStateAsync(Context.GuildId, false);
                 return Response("This guild has been unpermitted!");
