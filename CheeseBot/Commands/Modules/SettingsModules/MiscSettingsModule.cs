@@ -9,11 +9,11 @@ namespace CheeseBot.Commands.Modules
     {
         [Command("permit")]
         [RequireBotOwner]
-        public async Task<DiscordCommandResult> PermitAsync()
+        public DiscordCommandResult PermitAsync()
         {
             if (!CurrentGuildSettings.IsPermitted)
             {
-                await GuildSettingsService.SetPermittedStateAsync(Context.GuildId, true);
+                CurrentGuildSettings.IsPermitted = true;
                 return Response("This guild has been permitted!");
             }
             else
@@ -23,11 +23,11 @@ namespace CheeseBot.Commands.Modules
 
         [Command("unpermit")]
         [RequireBotOwner]
-        public async Task<DiscordCommandResult> UnpermitAsync()
+        public DiscordCommandResult UnpermitAsync()
         {
             if (CurrentGuildSettings.IsPermitted)
             {
-                await GuildSettingsService.SetPermittedStateAsync(Context.GuildId, false);
+                CurrentGuildSettings.IsPermitted = false;
                 return Response("This guild has been unpermitted!");
             }
             else

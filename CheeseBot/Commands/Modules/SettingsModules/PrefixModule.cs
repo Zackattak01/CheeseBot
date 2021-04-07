@@ -39,7 +39,7 @@ namespace CheeseBot.Commands.Modules
 
         [Command("add")]
         [Description("Adds the specified prefix.")]
-        public async Task<DiscordCommandResult> AddPrefixAsync([Remainder] IPrefix prefix)
+        public  DiscordCommandResult AddPrefixAsync([Remainder] IPrefix prefix)
         {
 
             if (CurrentGuildSettings.Prefixes.Count >= DefaultGuildSettingsProvider.MaxNumberOfPrefixes)
@@ -50,21 +50,21 @@ namespace CheeseBot.Commands.Modules
             else if (prefix is MentionPrefix mentionPrefix && mentionPrefix.UserId != Context.Bot.CurrentUser.Id)
                 return Response("You cannot enable mentions for users other than myself as a prefix.");
 
-            await GuildSettingsService.AddPrefixAsync(Context.GuildId, prefix);
+            CurrentGuildSettings.Prefixes.Add(prefix);
             
             return Response($"Ok, the prefix \"{prefix}\" will now be recognized on this server.");
         }
 
         [Command("remove")]
         [Description("Removes the specified prefix.")]
-        public async Task<DiscordCommandResult> RemovePrefixAsync([Remainder] IPrefix prefix)
+        public DiscordCommandResult RemovePrefixAsync([Remainder] IPrefix prefix)
         {
             if (!CurrentGuildSettings.Prefixes.Contains(prefix))
                 return Response($"The prefix \"{prefix}\" is not enabled on this server.");
             else if (CurrentGuildSettings.Prefixes.Count == 1)
                 return Response("You cannot remove the last enabled prefix on this server.");
 
-            await GuildSettingsService.RemovePrefixAsync(Context.GuildId, prefix);
+            CurrentGuildSettings.Prefixes.Remove(prefix);
 
             return Response($"Ok, the prefix \"{prefix}\" will no longer be recognized on this server.");
         }

@@ -52,6 +52,7 @@ namespace CheeseBot
                     bot.Token = context.Configuration["discord:token"];
                     bot.OwnerIds = new[] {new Snowflake(Global.AuthorId)};
                     bot.Intents = GatewayIntents.All;
+                    
                 })
                 .Build();
 

@@ -14,7 +14,7 @@ namespace CheeseBot.EfCore.Entities
 
         public bool IsPermitted { get; set; } = false;
         
-        public HashSet<IPrefix> Prefixes { get; }//TODO: Readonly set
+        public HashSet<IPrefix> Prefixes { get; }
 
         public GuildSettings(Snowflake guildId, HashSet<IPrefix> prefixes)
         {
