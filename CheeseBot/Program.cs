@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using CheeseBot.EfCore;
 using CheeseBot.Extensions;
 using CheeseBot.Services;
@@ -22,7 +23,7 @@ namespace CheeseBot
     {
         private const string ConfigPath = "./config.json";
         
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var host = new HostBuilder()
                 .ConfigureLogging(x =>
@@ -58,7 +59,7 @@ namespace CheeseBot
 
             using (host)
             {
-                host.Run();
+                await host.RunAsync();
             }
         }
     }
