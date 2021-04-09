@@ -6,6 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Disqord.Bot" Version="1.0.0-04092021-1" />
       <PackageReference Include="EFCore.NamingConventions" Version="5.0.2" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.4">
         <PrivateAssets>all</PrivateAssets>
@@ -22,16 +23,6 @@
       <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
       <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
       <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\..\Disqord\src\Disqord.Bot\Disqord.Bot.csproj" />
-        <ProjectReference Include="..\..\Disqord\src\Disqord.Core\Disqord.Core.csproj" />
-        <ProjectReference Include="..\..\Disqord\src\Disqord.Gateway.Api\Disqord.Gateway.Api.csproj" />
-        <ProjectReference Include="..\..\Disqord\src\Disqord.Gateway\Disqord.Gateway.csproj" />
-        <ProjectReference Include="..\..\Disqord\src\Disqord.Rest.Api\Disqord.Rest.Api.csproj" />
-        <ProjectReference Include="..\..\Disqord\src\Disqord.Rest\Disqord.Rest.csproj" />
-        <ProjectReference Include="..\..\Disqord\src\Disqord\Disqord.csproj" />
     </ItemGroup>
     
     <ItemGroup>
