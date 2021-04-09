@@ -4,7 +4,7 @@ using CheeseBot.EfCore.Entities;
 using CheeseBot.Services;
 using Disqord.Bot;
 
-namespace CheeseBot.Commands
+namespace CheeseBot.Commands.Modules
 {
     public abstract class GuildSettingsModule : DiscordGuildModuleBase
     {
