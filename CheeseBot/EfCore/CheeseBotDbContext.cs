@@ -3,7 +3,6 @@ using System.Linq;
 using CheeseBot.EfCore.Entities;
 using Disqord;
 using Disqord.Bot;
-using Disqord.Utilities;
 using Microsoft.EntityFrameworkCore;
 
 namespace CheeseBot.EfCore

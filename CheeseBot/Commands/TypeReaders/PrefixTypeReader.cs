@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
+using Disqord;
 using Disqord.Bot;
-using Disqord.Utilities;
 using Qmmands;
 
 namespace CheeseBot.Commands.TypeReaders

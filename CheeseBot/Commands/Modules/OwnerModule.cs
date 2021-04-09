@@ -12,7 +12,6 @@ namespace CheeseBot.Commands.Modules
         {  
             //TODO: log out
             //cant find the methods rn
-            // Context.Bot.StoppingToken.ca
             Environment.Exit(0);
         }
         

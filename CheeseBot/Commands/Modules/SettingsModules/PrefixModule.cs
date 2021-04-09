@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using CheeseBot.Extensions;
 using CheeseBot.Services;
 using Disqord;
 using Disqord.Bot;

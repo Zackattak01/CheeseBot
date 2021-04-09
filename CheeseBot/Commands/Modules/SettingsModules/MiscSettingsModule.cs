@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-using CheeseBot.Extensions;
 using Disqord.Bot;
 using Qmmands;
 
