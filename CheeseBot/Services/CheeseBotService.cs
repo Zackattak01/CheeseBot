@@ -5,7 +5,7 @@ namespace CheeseBot.Services
 {
     public abstract class CheeseBotService : ILogging
     {
-        public CheeseBotService(ILogger logger)
+        protected CheeseBotService(ILogger logger)
         {
             Logger = logger;
         }

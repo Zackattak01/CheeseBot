@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using CheeseBot.Disqord;
 using CheeseBot.EfCore;
 using CheeseBot.Extensions;
 using CheeseBot.Services;

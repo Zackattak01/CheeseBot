@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Qmmands;
 
-namespace CheeseBot
+namespace CheeseBot.Disqord
 {
     //screwed myself over with the name of project lol
     public class CheeseDisqordBot : DiscordBot
