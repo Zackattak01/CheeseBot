@@ -3,9 +3,9 @@ using Disqord;
 using Disqord.Bot;
 using Qmmands;
 
-namespace CheeseBot.Commands.TypeReaders
+namespace CheeseBot.Commands.TypeParsers
 {
-    public class PrefixTypeReader : DiscordTypeParser<IPrefix>
+    public class PrefixTypeParser : DiscordTypeParser<IPrefix>
     {
         public override ValueTask<TypeParserResult<IPrefix>> ParseAsync(Parameter parameter, string value, DiscordCommandContext context)
         {
