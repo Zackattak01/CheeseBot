@@ -13,6 +13,7 @@ using Qmmands;
 
 namespace CheeseBot.Commands.Modules
 {
+    [Group("note", "notes")]
     public class NoteModule : DiscordModuleBase
     {
         private readonly CheeseBotDbContext _dbContext;
@@ -22,8 +23,8 @@ namespace CheeseBot.Commands.Modules
             _dbContext = dbContext;
         }
         
-        [Command("note")]
-        public async Task<DiscordCommandResult> NoteAsync(string content)
+        [Command("", "create")]
+        public async Task<DiscordCommandResult> CreateNoteAsync(string content)
         {
             var note = new Note(Context.Author.Id, content, DateTime.Now);
             await _dbContext.AddAsync(note);
@@ -31,10 +32,13 @@ namespace CheeseBot.Commands.Modules
             return Response("Note taken!");
         }
         
-        [Command("notes")]
+        [Command("list", "")]
         public async Task<DiscordCommandResult> ListNotesAsync()
         {
-            var notes = await _dbContext.Notes.AsNoTracking().Where(x => x.OwnerId == Context.Author.Id).ToListAsync();
+            var notes = await _dbContext.Notes.AsNoTracking()
+                .Where(x => x.OwnerId == Context.Author.Id)
+                .OrderByDescending(x => x.CreatedOn)
+                .ToListAsync();
 
             switch (notes.Count)
             {
@@ -63,6 +67,37 @@ namespace CheeseBot.Commands.Modules
                     return Pages(new FieldBasedPageProvider(fieldBuilders, 5));
                 }
             }
+        }
+        
+        [Command("delete", "remove")]
+        public async Task<DiscordCommandResult> DeleteNoteAsync(int noteId)
+        {
+            var note = await _dbContext.Notes.FindAsync(noteId);
+
+            if (note is null)
+                return Response("A note with that id does not exist");
+            else if (note.OwnerId != Context.Author.Id)
+                return Response("You cannot delete other peoples reminders!");
+
+            _dbContext.Notes.Remove(note);
+            await _dbContext.SaveChangesAsync();
+            return Response("Note deleted!");
+        }
+        
+        [Command("edit")]
+        public async Task<DiscordCommandResult> EditNoteAsync(int noteId, [Remainder] string newContent)
+        {
+            var note = await _dbContext.Notes.FindAsync(noteId);
+
+            if (note is null)
+                return Response("A note with that id does not exist");
+            else if (note.OwnerId != Context.Author.Id)
+                return Response("You cannot edit other peoples reminders!");
+
+            note.Content = newContent;
+            
+            await _dbContext.SaveChangesAsync();
+            return Response("Note edited!");
         }
     }
 }

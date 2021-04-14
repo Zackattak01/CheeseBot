@@ -4,6 +4,7 @@ using CheeseBot.EfCore.Entities;
 using Disqord;
 using Disqord.Bot;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CheeseBot.EfCore
 {
@@ -17,12 +18,14 @@ namespace CheeseBot.EfCore
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            var snowflakeConverter = new ValueConverter<Snowflake, ulong>(
+                static snowflake => snowflake,
+                static @ulong => new Snowflake(@ulong));
+            
             modelBuilder.Entity<GuildSettings>(modelBuilder =>
             {
                 modelBuilder.Property(x => x.GuildId)
-                    .HasConversion(
-                        static snowflake => (ulong) snowflake, 
-                        static @ulong => new Snowflake(@ulong));
+                    .HasConversion(snowflakeConverter);
                 modelBuilder.Property(x => x.Prefixes)
                     .HasConversion(
                         static prefixes => prefixes.Select(x => x.ToString()).ToArray(),
@@ -32,9 +35,7 @@ namespace CheeseBot.EfCore
             modelBuilder.Entity<Note>(modelBuilder =>
             {
                 modelBuilder.Property(x => x.OwnerId)
-                    .HasConversion(
-                        static snowflake => (ulong) snowflake, 
-                        static @ulong => new Snowflake(@ulong));
+                    .HasConversion(snowflakeConverter);
             });
         }
 
