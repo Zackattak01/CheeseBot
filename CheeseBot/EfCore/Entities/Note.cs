@@ -1,14 +1,12 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using CheeseBot.Extensions;
 using Disqord;
 
 namespace CheeseBot.EfCore.Entities
 {
     public class Note
     {
-        private const string TodayFormatString = "a\\t h:mm tt";
-        private const string DateFormatString = "on MM/dd/yy a\\t h:mm tt";
-        
         [Key]
         public int Id { get; set; }
         
@@ -25,16 +23,10 @@ namespace CheeseBot.EfCore.Entities
             CreatedOn = createdOn;
         }
 
-        private string GetTimeString()
-        {
-            var returnString = CreatedOn.ToString(CreatedOn.Date == DateTime.Now.Date ? TodayFormatString : DateFormatString);
-
-            return returnString;
-        }
-
         public override string ToString()
         {
-            return $"{Content} (Created {GetTimeString()})";
+            var article = CreatedOn.Date == DateTime.Today ? "at" : "on";
+            return $"{Content} (Created {article} {CreatedOn.Humanize()})";
         }
     }
 }

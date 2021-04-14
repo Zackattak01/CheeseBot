@@ -7,7 +7,6 @@ using CheeseBot.EfCore;
 using CheeseBot.EfCore.Entities;
 using Disqord;
 using Disqord.Bot;
-using Disqord.Extensions.Interactivity.Menus.Paged;
 using Microsoft.EntityFrameworkCore;
 using Qmmands;
 

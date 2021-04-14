@@ -13,11 +13,14 @@ namespace CheeseBot.Extensions
         private const string MinutesFormat = "%m' mins '";
         private const string SecondFormat = "%s' sec '";
         private const string SecondsFormat = "%s' secs '";
+        
+        private const string TodayFormatString = "h:mm tt";
+        private const string DateFormatString = "MM/dd/yy a\\t h:mm tt";
 
 
         //simple formatter for timespans to avoid:  0 days 0 hours 0 minutes 30 seconds
         //instead it will produce:  30 seconds
-        public static string GetHumanReadableTimeFormat(this TimeSpan ts)
+        public static string Humanize(this TimeSpan ts)
         {
             //"%d' days '%h' hours '%m' mins '%s' secs'"
             var formatBuilder = new StringBuilder();
@@ -44,5 +47,9 @@ namespace CheeseBot.Extensions
 
             return ts.ToString(formatBuilder.ToString());
         }
+
+        public static string Humanize(this DateTime dt)
+            => dt.ToString(dt.Date == DateTime.Today ? TodayFormatString : DateFormatString);
+
     }
 }

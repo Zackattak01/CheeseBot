@@ -32,7 +32,7 @@ namespace CheeseBot.Commands.Modules
 
             var authorString = Context.Bot.GetUser(authorId).ToString();
 
-            var uptimeString = (DateTime.Now - Process.GetCurrentProcess().StartTime).GetHumanReadableTimeFormat();
+            var uptimeString = (DateTime.Now - Process.GetCurrentProcess().StartTime).Humanize();
             
             if (Context.GuildId is not null)
             {
