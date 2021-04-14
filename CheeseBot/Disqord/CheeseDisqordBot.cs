@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using CheeseBot.Commands.TypeReaders;
+using CheeseBot.Commands.TypeParsers;
 using Disqord;
 using Disqord.Bot;
 using Microsoft.Extensions.Logging;
@@ -19,7 +19,8 @@ namespace CheeseBot.Disqord
 
         protected override ValueTask AddTypeParsersAsync(CancellationToken cancellationToken = new())
         {
-            Commands.AddTypeParser(new PrefixTypeReader());
+            Commands.AddTypeParser(new PrefixTypeParser());
+            Commands.AddTypeParser(new DateTimeTypeParser());
             return base.AddTypeParsersAsync(cancellationToken);
         }
     }
