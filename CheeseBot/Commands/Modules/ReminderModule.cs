@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,6 +28,9 @@ namespace CheeseBot.Commands.Modules
         [Command("", "create")]
         public async Task<DiscordCommandResult> ReminderAsync([Remainder] Reminder reminder)
         {
+            if (reminder.ExecutionTime <= DateTime.Now)
+                return Response("Reminder time cannot be in the past or now.");
+            
             await _reminderService.AddReminderAsync(reminder);
             return Response($"Ok, I will remind you to \"{reminder.Value}\" {reminder.GetTimeString()} (Id:{reminder.Id})");
         }
@@ -50,6 +54,20 @@ namespace CheeseBot.Commands.Modules
 
             return Pages(new FieldBasedPageProvider(builders, 5));
 
+        }
+        
+        [Command("remove", "cancel")]
+        public async Task<DiscordCommandResult> RemoveAsync(int id)
+        {
+            var reminder = await _dbContext.Reminders.FindAsync(id);
+
+            if (reminder is null)
+                return Response($"A reminder with id: \"{id}\" does not exist.");
+            else if (reminder.UserId != Context.Author.Id)
+                return Response("You cannot remove other peoples reminders.");
+
+            await _reminderService.RemoveReminderAsync(reminder);
+            return Response($"Ok, I will no longer remind you to \"{reminder.Value}\" {reminder.GetTimeString()}");
         }
     }
 }

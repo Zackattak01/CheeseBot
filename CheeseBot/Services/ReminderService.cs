@@ -51,7 +51,17 @@ namespace CheeseBot.Services
 
             await dbContext.Reminders.AddAsync(reminder);
             await dbContext.SaveChangesAsync();
-            ScheduleReminder(reminder);
+
+            // prevents very small time values from showing errors to the user
+            try
+            {
+                ScheduleReminder(reminder);
+            }
+            catch (ArgumentException e)
+            {
+                await SendReminderAsync(reminder);
+            }
+            
         }
         
         public async Task RemoveReminderAsync(Reminder reminder)
