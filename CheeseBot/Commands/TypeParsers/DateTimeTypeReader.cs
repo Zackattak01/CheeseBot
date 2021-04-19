@@ -4,7 +4,6 @@ using Disqord.Bot;
 using HumanTimeParser.Core.Parsing;
 using HumanTimeParser.English;
 using Qmmands;
-using Serilog.Data;
 
 namespace CheeseBot.Commands.TypeParsers
 {
