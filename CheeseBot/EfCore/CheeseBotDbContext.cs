@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CheeseBot.EfCore.Entities;
+using CheeseBot.Extensions;
 using Disqord;
 using Disqord.Bot;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ namespace CheeseBot.EfCore
     {
         public DbSet<GuildSettings> GuildSettings { get; set; }
         public DbSet<Note> Notes { get; set; }
+        public DbSet<Reminder> Reminders { get; set; }
 
         public CheeseBotDbContext(DbContextOptions<CheeseBotDbContext> options)
             : base(options) { }
@@ -21,21 +23,15 @@ namespace CheeseBot.EfCore
             var snowflakeConverter = new ValueConverter<Snowflake, ulong>(
                 static snowflake => snowflake,
                 static @ulong => new Snowflake(@ulong));
+
+            modelBuilder.UseValueConverterForType<Snowflake>(snowflakeConverter);
             
             modelBuilder.Entity<GuildSettings>(modelBuilder =>
             {
-                modelBuilder.Property(x => x.GuildId)
-                    .HasConversion(snowflakeConverter);
                 modelBuilder.Property(x => x.Prefixes)
                     .HasConversion(
                         static prefixes => prefixes.Select(x => x.ToString()).ToArray(),
                         static arr => new HashSet<IPrefix>(arr.Select(StringToPrefix)));
-            });
-
-            modelBuilder.Entity<Note>(modelBuilder =>
-            {
-                modelBuilder.Property(x => x.OwnerId)
-                    .HasConversion(snowflakeConverter);
             });
         }
 

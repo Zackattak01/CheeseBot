@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using Disqord.Events;
 
 namespace CheeseBot.Scheduling
 {
@@ -56,6 +55,9 @@ namespace CheeseBot.Scheduling
             }
         }
 
+        public void Cancel()
+            => Dispose();
+
         public bool Equals(ScheduledTask other)
         {
             if (other is null)
@@ -81,7 +83,7 @@ namespace CheeseBot.Scheduling
         {
             _timer.Dispose();
             var handler = Disposed;
-            handler?.Invoke(this, new EventArgs());
+            handler?.Invoke(this, EventArgs.Empty);
         }
     }
 }

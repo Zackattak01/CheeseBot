@@ -25,7 +25,7 @@ namespace CheeseBot.Services
                 new MentionPrefix(botToken.Id)
             };
             
-            Logger.LogInformation("Default settings setup!");
+            Logger.LogInformation("Default settings setup.");
         }
 
         public GuildSettings CreateDefaultGuildSettings(Snowflake guildId)

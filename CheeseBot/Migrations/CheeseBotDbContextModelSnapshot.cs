@@ -64,6 +64,44 @@ namespace CheeseBot.Migrations
 
                     b.ToTable("notes");
                 });
+
+            modelBuilder.Entity("CheeseBot.EfCore.Entities.Reminder", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<ulong>("ChannelId")
+                        .HasColumnType("numeric(20,0)")
+                        .HasColumnName("channel_id");
+
+                    b.Property<DateTime>("ExecutionTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("execution_time");
+
+                    b.Property<ulong>("GuildId")
+                        .HasColumnType("numeric(20,0)")
+                        .HasColumnName("guild_id");
+
+                    b.Property<ulong>("OriginalMessageId")
+                        .HasColumnType("numeric(20,0)")
+                        .HasColumnName("original_message_id");
+
+                    b.Property<ulong>("UserId")
+                        .HasColumnType("numeric(20,0)")
+                        .HasColumnName("user_id");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("text")
+                        .HasColumnName("value");
+
+                    b.HasKey("Id")
+                        .HasName("pk_reminders");
+
+                    b.ToTable("reminders");
+                });
 #pragma warning restore 612, 618
         }
     }
