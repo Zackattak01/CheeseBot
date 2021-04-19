@@ -1,19 +1,21 @@
 using System;
+using System.Diagnostics.Eventing.Reader;
 using System.Threading.Tasks;
 using System.Timers;
+using Disqord.Events;
+
 // using Timer = System.Timers.Timer;
 
 namespace CheeseBot.Scheduling
 {
-    public delegate Task AsyncTimerElapsedHandler(AsyncTimer timer);
-    
+
     public sealed class AsyncTimer : IDisposable
     {
         private readonly Timer _timer;
 
         private double _remainingInterval;
 
-        public event AsyncTimerElapsedHandler Elapsed;
+        public event AsynchronousEventHandler<EventArgs> Elapsed;
         
         public bool AutoReset { get; }
         
@@ -71,7 +73,7 @@ namespace CheeseBot.Scheduling
             var handler = Elapsed;
             if (handler is not null)
             {
-                _ = handler(this);
+                _ = handler(this, new EventArgs());
             }
             
             HandleAutoReset();

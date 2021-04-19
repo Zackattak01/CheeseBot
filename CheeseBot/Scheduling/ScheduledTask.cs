@@ -1,10 +1,9 @@
 using System;
 using System.Threading.Tasks;
+using Disqord.Events;
 
 namespace CheeseBot.Scheduling
 {
-
-    public delegate Task UnhandledScheduledTaskExceptionHandler(ScheduledTask scheduledTask);
     public sealed class ScheduledTask : IEquatable<ScheduledTask>, IDisposable
     {
         private static int _idCounter;
@@ -18,7 +17,8 @@ namespace CheeseBot.Scheduling
 
         public DateTime ExecutionTime { get; }
 
-        public event UnhandledScheduledTaskExceptionHandler UnhandledException;
+        public event EventHandler<UnhandledExceptionEventArgs> UnhandledException;
+        public event EventHandler Disposed;
         
         public ScheduledTask(Func<Task> task, DateTime executionTime, bool recurring = false)
         {
@@ -31,7 +31,7 @@ namespace CheeseBot.Scheduling
             _timer.Start();
         }
 
-        private async Task AsyncTimerElapsed(AsyncTimer timer)
+        private async Task AsyncTimerElapsed(object sender, EventArgs eventArgs)
         {
             try
             {
@@ -40,10 +40,7 @@ namespace CheeseBot.Scheduling
             catch (Exception e)
             {
                 var handler = UnhandledException;
-                if (handler is not null)
-                {
-                    await handler(this);
-                }
+                handler?.Invoke(this, new UnhandledExceptionEventArgs(e, false));
             }
             
 
@@ -53,9 +50,9 @@ namespace CheeseBot.Scheduling
                 _timer.Dispose();
                 _timer = AsyncTimer.Create(new TimeSpan(24, 0, 0), true); //create a timer that has the correct interval
             }
-            else if(!Recurring)
+            else if(!Recurring) // timer is not going to fire anymore, dispose this object
             {
-                _timer.Dispose();
+                Dispose();
             }
         }
 
@@ -81,7 +78,10 @@ namespace CheeseBot.Scheduling
         }
 
         public void Dispose()
-            => _timer.Dispose();
-        
+        {
+            _timer.Dispose();
+            var handler = Disposed;
+            handler?.Invoke(this, new EventArgs());
+        }
     }
 }
