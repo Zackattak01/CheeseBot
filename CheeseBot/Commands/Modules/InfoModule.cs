@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using CheeseBot.Extensions;
+using CheeseBot.Services;
 using Disqord;
 using Disqord.Bot;
 using Disqord.Gateway;
@@ -12,6 +13,12 @@ namespace CheeseBot.Commands.Modules
 {
     public class InfoModule : DiscordModuleBase
     {
+        private readonly SchedulingService _scheduler;
+        public InfoModule(SchedulingService scheduler)
+        {
+            _scheduler = scheduler;
+        }
+    
         [Command("ping")]
         [Description("Plays a quick game of Ping Pong.")]
         public async Task PingAsync()
@@ -53,6 +60,13 @@ namespace CheeseBot.Commands.Modules
                 .AddBlankField(isInline:true);
             
             return Response(embedBuilder);
+        }
+        
+        [Command("Test")]
+        public void TestAsync()
+        {
+            
+            _scheduler.ScheduleRecurring(DateTime.Now.AddSeconds(5), () => throw new Exception("test ex"));
         }
     }
 }
