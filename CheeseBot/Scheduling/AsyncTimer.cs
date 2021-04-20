@@ -19,8 +19,11 @@ namespace CheeseBot.Scheduling
         
         public double Interval { get; }
 
-        private AsyncTimer(double interval, bool autoReset)
+        public AsyncTimer(double interval, bool autoReset = false)
         {
+            if (interval <= 0)
+                throw new ArgumentException($"{nameof(interval)} cannot be less than or equal to zero");
+            
             Interval = interval;
             AutoReset = autoReset;
             
@@ -28,6 +31,12 @@ namespace CheeseBot.Scheduling
             _timer = new Timer();
             
             InitTimerHandlers();
+        }
+
+        public AsyncTimer(TimeSpan interval, bool autoReset = false)
+            : this(interval.TotalMilliseconds, autoReset)
+        {
+            
         }
 
         private void InitTimerHandlers()
@@ -84,22 +93,6 @@ namespace CheeseBot.Scheduling
 
             _timer.Elapsed -= TimerElapsed;
             InitTimerHandlers();
-        }
-
-        public static AsyncTimer Create(TimeSpan timeSpan, bool autoReset = false)
-        {
-            if (timeSpan <= TimeSpan.Zero)
-                throw new ArgumentException($"{nameof(timeSpan)} cannot be less than or equal to TimeSpan.Zero");
-
-            return new AsyncTimer(timeSpan.TotalMilliseconds, autoReset);
-        }
-        
-        public static AsyncTimer Create(double interval, bool autoReset = false)
-        {
-            if (interval <= 0)
-                throw new ArgumentException($"{nameof(interval)} cannot be less than or equal to zero");
-
-            return new AsyncTimer(interval, autoReset);
         }
 
         public void Start()

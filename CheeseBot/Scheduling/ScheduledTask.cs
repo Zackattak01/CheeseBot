@@ -25,7 +25,7 @@ namespace CheeseBot.Scheduling
             ExecutionTime = executionTime;
             Recurring = recurring;
             _task = task;
-            _timer = AsyncTimer.Create(executionTime - DateTime.Now);
+            _timer = new AsyncTimer(executionTime - DateTime.Now);
             _timer.Elapsed += AsyncTimerElapsed;
             _timer.Start();
         }
@@ -47,7 +47,7 @@ namespace CheeseBot.Scheduling
             if (Recurring && !_timer.AutoReset)
             {
                 _timer.Dispose();
-                _timer = AsyncTimer.Create(new TimeSpan(24, 0, 0), true); //create a timer that has the correct interval
+                _timer = new AsyncTimer(new TimeSpan(24, 0, 0), true); //create a timer that has the correct interval
             }
             else if(!Recurring) // timer is not going to fire anymore, dispose this object
             {

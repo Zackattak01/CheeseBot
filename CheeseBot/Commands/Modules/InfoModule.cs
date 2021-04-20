@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using CheeseBot.Extensions;
-using CheeseBot.Services;
 using Disqord;
 using Disqord.Bot;
 using Disqord.Gateway;
