@@ -18,6 +18,7 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
+using ILogger = Serilog.ILogger;
 
 namespace CheeseBot
 {
@@ -58,7 +59,15 @@ namespace CheeseBot
                     
                 })
                 .Build();
-
+            
+            using (var scope = host.Services.CreateScope())
+            {
+                var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+                var context = scope.ServiceProvider.GetRequiredService<CheeseBotDbContext>();
+                logger.LogInformation("Migrating database....");
+                await context.Database.MigrateAsync();
+                logger.LogInformation("Done migrating database.");
+            }
             
             using (host)
             {
