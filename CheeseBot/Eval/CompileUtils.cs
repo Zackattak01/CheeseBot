@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,8 @@ namespace CheeseBot.Eval
 
     public static class CompileUtils
     {
+        private static IEnumerable<MetadataReference> _references = null;
+        
         public static ICompileResult CompileCommandModule(string moduleName, string code)
         {
             var stringBuilder = new StringBuilder();
@@ -27,17 +30,14 @@ namespace CheeseBot.Eval
         {
             var tree = SyntaxFactory.ParseSyntaxTree(code);
 
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(x => !x.IsDynamic && !string.IsNullOrWhiteSpace(x.Location));
-
             var compilation = CSharpCompilation.Create(assemblyName)
                 .WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary))
-                .AddReferences(assemblies.Select(assembly => MetadataReference.CreateFromFile(assembly.Location)))
+                .AddReferences(GetReferences())
                 .AddSyntaxTrees(tree);
-
 
             using var stream = new MemoryStream();
             var compilationResult = compilation.Emit(stream);
+            
 
             if (compilationResult.Success)
             {
@@ -48,8 +48,19 @@ namespace CheeseBot.Eval
                 return new SuccessfulCompileResult(alc, compilationResult);
             }
 
-
             return new FailedCompileResult(compilationResult);
+        }
+
+        private static IEnumerable<MetadataReference> GetReferences()
+        {
+            if (_references is not null)
+                return _references;
+            
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(x => !x.IsDynamic && !string.IsNullOrWhiteSpace(x.Location));
+
+            _references = assemblies.Select(assembly => MetadataReference.CreateFromFile(assembly.Location));
+            return _references;
         }
     }
 }

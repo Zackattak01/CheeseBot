@@ -67,10 +67,11 @@ namespace CheeseBot.Commands.Modules
         [RunMode(RunMode.Parallel)]
         public async Task<DiscordCommandResult> EvalAsync([Remainder] string code = null)
         {
-            if (code == null) 
+            if (code == null)
             {
-                if (Context.Message.ReferencedMessage.HasValue)
-                    code = Context.Message.ReferencedMessage.Value.Content;
+                var messageRef = Context.Message.ReferencedMessage.GetValueOrDefault();
+                if (messageRef is not null)
+                    code = messageRef.Content;
                 else
                     return Response("More code needed, sir.");
             }

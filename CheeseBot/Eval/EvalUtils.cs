@@ -10,9 +10,8 @@ namespace CheeseBot.Eval
             "System.Text", "System.Collections.Generic", "System.Reflection",
             "Disqord", "Disqord.Rest", "Disqord.Bot",
             "Disqord.Rest.Api", "Disqord.Gateway", "Disqord.Gateway.Api",
-            "Disqord.Gateway.Default", "Disqord.Gateway.Api",
-            "Qmmands",
-            "CheeseBot"
+            "Disqord.Gateway.Default", "Qmmands",
+            "CheeseBot", "CheeseBot.Services"
         };
 
         private static readonly Regex SingleCodeBlockRegex = new Regex(@"```(?<language>(?:\w+)?)(?:\n)?(?<code>.*?)```", RegexOptions.Compiled | RegexOptions.Singleline);
