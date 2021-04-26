@@ -36,7 +36,7 @@ namespace CheeseBot.Eval
                 .AddSyntaxTrees(tree);
 
 
-            var stream = new MemoryStream();
+            using var stream = new MemoryStream();
             var compilationResult = compilation.Emit(stream);
 
             if (compilationResult.Success)
@@ -47,6 +47,7 @@ namespace CheeseBot.Eval
                 alc.LoadFromStream(stream);
                 return new SuccessfulCompileResult(alc, compilationResult);
             }
+
 
             return new FailedCompileResult(compilationResult);
         }

@@ -55,6 +55,14 @@ namespace CheeseBot.Commands.Modules
             return Response($"I am currently allocated {mbUsed}mb");
         }
 
+        [Command("gc", "collect")]
+        public DiscordCommandResult CollectGarbage()
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            return Response("Garbage collected!");
+        }
+
         [Command("eval", "evaluate")]
         [RunMode(RunMode.Parallel)]
         public async Task<DiscordCommandResult> EvalAsync([Remainder] string code = null)

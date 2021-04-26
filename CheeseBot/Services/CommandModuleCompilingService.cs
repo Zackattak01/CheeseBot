@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using CheeseBot.Eval;
 using Disqord;
 using Microsoft.Extensions.Logging;
@@ -46,20 +47,23 @@ namespace CheeseBot.Services
             return result;
         }
 
+         
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public bool RemoveModules(Snowflake id)
         {
             if (!_loadedModules.TryGetValue(id, out var context))
                 return false;
-
             
             foreach (var module in context.Modules)
                 _commandService.RemoveModule(module);
             Logger.LogInformation($"Removed {context.Modules.Count()} module(s).");
+            
+            _loadedModules.Remove(id);
 
+            // TODO: Im fairly certain this isn't being unloaded properly
+            // Memory doesnt seem to be released even after the assemblyloadcontext obj is collected
             context.AssemblyLoadContext.Unload();
             Logger.LogInformation($"Unloaded assembly load context.");
-
-            _loadedModules.Remove(id);
             return true;
         }
 
