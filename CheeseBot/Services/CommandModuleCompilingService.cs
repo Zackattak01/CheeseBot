@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Loader;
 using CheeseBot.Eval;
 using Disqord;
-using Disqord.Bot;
 using Microsoft.Extensions.Logging;
-using Npgsql.Replication;
 using Qmmands;
 
 namespace CheeseBot.Services
@@ -27,7 +24,9 @@ namespace CheeseBot.Services
 
         public ICompileResult CreateModules(Snowflake id, string code)
         {
+            Logger.LogInformation("Compiling module code...");
             var result = CompileUtils.CompileCommandModule(id.ToString(), code);
+            Logger.LogInformation("Done compiling module code.");
 
             if (result is SuccessfulCompileResult successfulResult)
             {
@@ -37,8 +36,9 @@ namespace CheeseBot.Services
 
                 var assembly = context.Assemblies.First();
 
-                var modules = _commandService.AddModules(assembly);
                 
+                var modules = _commandService.AddModules(assembly);
+                Logger.LogInformation($"Added {modules.Count} module(s).");
                 
                 _loadedModules.Add(id, new CommandModuleLoadContext(context, modules));
             }
@@ -51,10 +51,13 @@ namespace CheeseBot.Services
             if (!_loadedModules.TryGetValue(id, out var context))
                 return false;
 
+            
             foreach (var module in context.Modules)
                 _commandService.RemoveModule(module);
+            Logger.LogInformation($"Removed {context.Modules.Count()} module(s).");
 
             context.AssemblyLoadContext.Unload();
+            Logger.LogInformation($"Unloaded assembly load context.");
 
             _loadedModules.Remove(id);
             return true;
