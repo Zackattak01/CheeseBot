@@ -16,8 +16,7 @@ namespace CheeseBot.Commands.Modules
         [Description("Plays a quick game of Ping Pong.")]
         public async Task PingAsync()
         {
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
+            var stopwatch = Stopwatch.StartNew();
             var msg = await Response("Pong: *loading* response time");
             stopwatch.Stop();
 
