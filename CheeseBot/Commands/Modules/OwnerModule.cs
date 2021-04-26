@@ -3,8 +3,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using CheeseBot.Eval;
+using CheeseBot.Extensions;
+using CheeseBot.Services;
 using Disqord;
 using Disqord.Bot;
+using Disqord.Extensions.Interactivity.Menus.Paged;
 using Disqord.Rest;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
@@ -17,6 +20,13 @@ namespace CheeseBot.Commands.Modules
     [RequireBotOwner]
     public class OwnerModule : DiscordModuleBase
     {
+        private readonly CommandModuleCompilingService _commandModuleCompilingService;
+        public OwnerModule(CommandModuleCompilingService commandModuleCompilingService)
+        {
+            _commandModuleCompilingService = commandModuleCompilingService;
+        }
+
+
         [Command("shutdown", "stop", "die", "kill")]
         [Description("Shuts down and does not restart it")]
         public void Shutdown()
@@ -37,7 +47,7 @@ namespace CheeseBot.Commands.Modules
         
         [Command("eval", "evaluate")]
         [RunMode(RunMode.Parallel)]
-        public async Task<DiscordCommandResult> Eval([Remainder] string code = null)
+        public async Task<DiscordCommandResult> EvalAsync([Remainder] string code = null)
         {
             if (code == null) 
             {
@@ -105,6 +115,74 @@ namespace CheeseBot.Commands.Modules
                 Context.Bot.Logger.LogError(ex, "An unexpected exception occurred when evaluating code.");
                 return Response($"An unexpected exception occurred: {ex.Message}.");
             }
-}
+        }
+
+        [Command("load")]
+        [RunMode(RunMode.Parallel)]
+        public DiscordCommandResult Load([Remainder] string code = null)
+        {
+            var id = Context.Message.Id;
+            if (code == null) 
+            {
+                if (Context.Message.ReferencedMessage.HasValue)
+                {
+                    code = Context.Message.ReferencedMessage.Value.Content;
+                    id = Context.Message.ReferencedMessage.Value.Id;
+                }
+                else
+                    return Response("More code needed, sir.");
+            }
+            code = EvalUtils.TrimCode(code);
+
+            if (_commandModuleCompilingService.IsModuleLoaded(id))
+                return Response("That code is already loaded.");
+
+            ICompileResult result;
+            try
+            {
+                result = _commandModuleCompilingService.CreateModules(id, code);
+            }
+            catch (CommandMappingException mappingException)
+            {
+                return Response(mappingException.Message);
+            }
+            
+            
+            switch (result)
+            {
+                case SuccessfulCompileResult:
+                    return Response("Loaded command module(s).");
+                case FailedCompileResult failedResult:
+                {
+                    var errorString = string.Join('\n', failedResult.Errors);
+                    if (errorString.Length > LocalMessageBuilder.MAX_CONTENT_LENGTH)
+                    {
+                        var pages = errorString.SplitInParts(LocalMessageBuilder.MAX_CONTENT_LENGTH);
+                        return Pages(pages.Select(x => new Page(x)));
+                    }
+                    else
+                    {
+                        return Response($"Command module loading failed:\n {errorString}");
+                    }
+                }
+                default:
+                    return Response("The space time continuum is screwed up again.");
+            }
+        }
+
+        [Command("unload")]
+        public DiscordCommandResult Unload(Snowflake? id = null)
+        {
+            if (id is null)
+            {
+                if (Context.Message.ReferencedMessage.HasValue)
+                    id = Context.Message.ReferencedMessage.Value.Id;
+                else
+                    return Response("Please provide an id");
+            }
+
+            var result = _commandModuleCompilingService.RemoveModules(id.Value);
+            return Response(result ? "Module(s) unloaded" : "No modules are loaded under that id");
+        }
     }
 }
