@@ -52,7 +52,7 @@ namespace CheeseBot.Commands.Modules
         {
             using var process = Process.GetCurrentProcess();
             var mbUsed = process.WorkingSet64 / ByteToMbConversionFactor;
-            return Response($"I am currently allocated {mbUsed}mb");
+            return Response($"2 I am currently allocated {mbUsed}mb");
         }
 
         [Command("eval", "evaluate")]
