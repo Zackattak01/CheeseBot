@@ -32,7 +32,8 @@ namespace CheeseBot.Commands.Modules
 
             var authorString = Context.Bot.GetUser(authorId).ToString();
 
-            var uptimeString = (DateTime.Now - Process.GetCurrentProcess().StartTime).Humanize();
+            using var process = Process.GetCurrentProcess();
+            var uptimeString = (DateTime.Now - process.StartTime).Humanize();
             
             if (Context.GuildId is not null)
             {
