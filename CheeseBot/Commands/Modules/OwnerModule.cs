@@ -20,6 +20,8 @@ namespace CheeseBot.Commands.Modules
     [RequireBotOwner]
     public class OwnerModule : DiscordModuleBase
     {
+        private const int ByteToMbConversionFactor = 1000000;
+        
         private readonly CommandModuleCompilingService _commandModuleCompilingService;
         public OwnerModule(CommandModuleCompilingService commandModuleCompilingService)
         {
@@ -44,7 +46,15 @@ namespace CheeseBot.Commands.Modules
             //cant find the methods rn
             Environment.Exit(1);
         }
-        
+
+        [Command("mem", "memory")]
+        public DiscordCommandResult Memory()
+        {
+            using var process = Process.GetCurrentProcess();
+            var mbUsed = process.WorkingSet64 / ByteToMbConversionFactor;
+            return Response($"I am currently allocated {mbUsed}mb");
+        }
+
         [Command("eval", "evaluate")]
         [RunMode(RunMode.Parallel)]
         public async Task<DiscordCommandResult> EvalAsync([Remainder] string code = null)
