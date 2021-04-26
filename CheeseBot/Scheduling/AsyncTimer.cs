@@ -1,12 +1,11 @@
 using System;
+using System.Threading.Tasks;
 using System.Timers;
-using Disqord.Events;
-
-// using Timer = System.Timers.Timer;
 
 namespace CheeseBot.Scheduling
 {
-
+    public delegate Task AsynchronousEventHandler<T>(object sender, T e) where T : EventArgs;
+    
     public sealed class AsyncTimer : IDisposable
     {
         private readonly Timer _timer;
