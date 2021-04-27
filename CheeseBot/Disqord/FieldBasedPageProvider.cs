@@ -41,8 +41,7 @@ namespace CheeseBot.Disqord
         }
 
         public ValueTask<Page> GetPageAsync(PagedMenu menu)
-        {
-            return new(_pages[menu.CurrentPageIndex]);
-        }
+            => new(_pages[menu.CurrentPageIndex]);
+        
     }
 }

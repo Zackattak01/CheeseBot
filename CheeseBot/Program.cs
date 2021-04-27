@@ -48,7 +48,7 @@ namespace CheeseBot
                     services.AddSingleton<Random>();//TODO: Cryptographic random... just for fun
                     services.AddCheeseBotServices();
                 })
-                .ConfigureAppConfiguration(configuration => configuration.AddJsonFile(ConfigPath))
+                .ConfigureHostConfiguration(configuration => configuration.AddJsonFile(ConfigPath))
                 .ConfigureDiscordBot<CheeseDisqordBot>((context, bot) =>
                 {
                     bot.Token = context.Configuration["discord:token"];
@@ -56,7 +56,7 @@ namespace CheeseBot
                     bot.Intents = GatewayIntents.All;
                 })
                 .Build();
-            
+
             using (var scope = host.Services.CreateScope())
             {
                 var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
@@ -65,7 +65,7 @@ namespace CheeseBot
                 await context.Database.MigrateAsync();
                 logger.LogInformation("Done migrating database.");
             }
-            
+
             using (host)
             {
                 await host.RunAsync();
