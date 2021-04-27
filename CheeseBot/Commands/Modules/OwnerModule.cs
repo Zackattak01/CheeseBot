@@ -138,6 +138,18 @@ namespace CheeseBot.Commands.Modules
 
         [Command("load")]
         [RunMode(RunMode.Parallel)]
+        public async Task<DiscordCommandResult> Load(Snowflake id)
+        {
+            var msg = await Context.Bot.FetchMessageAsync(Context.ChannelId, id);
+
+            if (msg is null)
+                return Response("A message with that id does not exist");
+            
+            return Load(id, msg.Content);
+        }
+
+        [Command("load")]
+        [RunMode(RunMode.Parallel)]
         public DiscordCommandResult Load([Remainder] string code = null)
         {
             var id = Context.Message.Id;
@@ -151,6 +163,33 @@ namespace CheeseBot.Commands.Modules
                 else
                     return Response("More code needed, sir.");
             }
+
+            return Load(id, code);
+        }
+
+        [Command("unload")]
+        public DiscordCommandResult Unload(Snowflake? id = null)
+        {
+            if (id is null)
+            {
+                if (Context.Message.ReferencedMessage.HasValue)
+                    id = Context.Message.ReferencedMessage.Value.Id;
+                else
+                    return Response("Please provide an id");
+            }
+
+            var result = _commandModuleCompilingService.RemoveModules(id.Value);
+            return Response(result ? "Module(s) unloaded" : "No modules are loaded under that id");
+        }
+
+        [Command("break")]
+        public void Break()
+        {
+            Console.WriteLine("break");
+        }
+
+        private DiscordCommandResult Load(Snowflake id, string code)
+        {
             code = EvalUtils.TrimCode(code);
 
             if (_commandModuleCompilingService.IsModuleLoaded(id))
@@ -187,21 +226,6 @@ namespace CheeseBot.Commands.Modules
                 default:
                     return Response("The space time continuum is screwed up again.");
             }
-        }
-
-        [Command("unload")]
-        public DiscordCommandResult Unload(Snowflake? id = null)
-        {
-            if (id is null)
-            {
-                if (Context.Message.ReferencedMessage.HasValue)
-                    id = Context.Message.ReferencedMessage.Value.Id;
-                else
-                    return Response("Please provide an id");
-            }
-
-            var result = _commandModuleCompilingService.RemoveModules(id.Value);
-            return Response(result ? "Module(s) unloaded" : "No modules are loaded under that id");
         }
     }
 }

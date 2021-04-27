@@ -59,10 +59,7 @@ namespace CheeseBot.Services
             Logger.LogInformation($"Removed {context.Modules.Count()} module(s).");
             
             _loadedModules.Remove(id);
-
-            // TODO: Im fairly certain this isn't being unloaded properly
-            // Memory doesnt seem to be released even after the assemblyloadcontext obj is collected
-            // This results in around a +40mb usage per command 
+            
             context.AssemblyLoadContext.Unload();
             Logger.LogInformation($"Unloaded assembly load context.");
             return true;

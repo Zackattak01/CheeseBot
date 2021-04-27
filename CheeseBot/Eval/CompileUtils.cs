@@ -8,7 +8,10 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace CheeseBot.Eval
 {
-
+    // A lot of memory is being allocated when compiling (somewhere between 40 to 80mb PER compilation)
+    // This memory is not being reclaimed by the GC
+    // At first I thought it was memory leak, but it stops "leaking" memory at around 1300-1400mb
+    // Are these caches being built up by the compiler?
     public static class CompileUtils
     {
         private static IEnumerable<MetadataReference> _references = null;
