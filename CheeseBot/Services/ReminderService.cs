@@ -42,8 +42,6 @@ namespace CheeseBot.Services
             await RescheduleExistingReminders();
         }
 
-        // public async Task AddReminderAsync()
-
         public async Task AddReminderAsync(Reminder reminder)
         {
             using var scope = _services.CreateScope();
@@ -57,7 +55,7 @@ namespace CheeseBot.Services
             {
                 ScheduleReminder(reminder);
             }
-            catch (ArgumentException e)
+            catch (ArgumentException)
             {
                 await SendReminderAsync(reminder);
             }

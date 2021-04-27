@@ -29,12 +29,10 @@ namespace CheeseBot.Commands.Modules
         }
 
 
-        [Command("shutdown", "stop", "die", "kill")]
+        [Command("shutdown", "stop", "die", "kill", "exit")]
         [Description("Shuts down and does not restart it")]
         public void Shutdown()
-        {  
-            //TODO: log out
-            //cant find the methods rn
+        {
             Environment.Exit(0);
         }
         
