@@ -9,6 +9,7 @@ using Disqord;
 using Disqord.Bot;
 using Disqord.Bot.Hosting;
 using Disqord.Gateway;
+using HumanTimeParser.English;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,6 +47,7 @@ namespace CheeseBot
                     services.AddDbContext<CheeseBotDbContext>(x => x.UseNpgsql(connString).UseSnakeCaseNamingConvention());
                     services.AddPrefixProvider<CheeseBotPrefixProvider>();
                     services.AddSingleton<Random>();//TODO: Cryptographic random... just for fun
+                    services.AddSingleton<EnglishTimeParser>();
                     services.AddCheeseBotServices();
                 })
                 .ConfigureHostConfiguration(configuration => configuration.AddJsonFile(ConfigPath))

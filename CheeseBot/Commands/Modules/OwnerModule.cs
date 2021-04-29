@@ -32,18 +32,13 @@ namespace CheeseBot.Commands.Modules
         [Command("shutdown", "stop", "die", "kill", "exit")]
         [Description("Shuts down and does not restart it")]
         public void Shutdown()
-        {
-            Environment.Exit(0);
-        }
+            => Environment.Exit(0);
+        
         
         [Command("restart", "update")]
         [Description("Shuts down and does restarts it")]
         public void Restart()
-        {  
-            //TODO: log out
-            //cant find the methods rn
-            Environment.Exit(1);
-        }
+            => Environment.Exit(1);
 
         [Command("mem", "memory")]
         public DiscordCommandResult Memory()
@@ -178,12 +173,6 @@ namespace CheeseBot.Commands.Modules
 
             var result = _commandModuleCompilingService.RemoveModules(id.Value);
             return Response(result ? "Module(s) unloaded" : "No modules are loaded under that id");
-        }
-
-        [Command("break")]
-        public void Break()
-        {
-            Console.WriteLine("break");
         }
 
         private DiscordCommandResult Load(Snowflake id, string code)
