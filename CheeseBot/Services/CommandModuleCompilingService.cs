@@ -32,7 +32,7 @@ namespace CheeseBot.Services
             if (result is SuccessfulCompileResult successfulResult)
             {
                 var context = successfulResult.AssemblyLoadContext;
-                if (!context.Assemblies.Any() || context.Assemblies.Count() > 1)
+                if (context.Assemblies.Count() != 1)
                     throw new Exception("Assemblies loaded in load context is not equal to 1.  This should not happen.");
 
                 var assembly = context.Assemblies.First();

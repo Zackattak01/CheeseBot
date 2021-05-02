@@ -48,11 +48,10 @@ namespace CheeseBot.Commands.Modules
                     var eb = new LocalEmbedBuilder().WithColor(Global.DefaultEmbedColor);
 
                     foreach (var note in notes)
-                    {
                         eb.AddField($"Note {note.Id}" , note.ToString());
-                    }
-
-                    return Response(eb);
+                    
+                    var content = $"You have {notes.Count} {(notes.Count == 1 ? "note" : "notes")}";
+                    return Response(content, eb);
                 }
                 default:
                 {
@@ -62,8 +61,9 @@ namespace CheeseBot.Commands.Modules
                     {
                         fieldBuilders.Add(new LocalEmbedFieldBuilder().WithName($"Note {note.Id}").WithValue(note.ToString()));
                     }
-                    
-                    return Pages(new FieldBasedPageProvider(fieldBuilders, 5));
+
+                    var config = FieldBasedPageProviderConfiguration.Default.WithContent($"You have {notes.Count} notes");
+                    return Pages(new FieldBasedPageProvider(fieldBuilders, config));
                 }
             }
         }

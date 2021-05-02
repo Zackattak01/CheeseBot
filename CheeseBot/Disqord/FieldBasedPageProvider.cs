@@ -11,18 +11,21 @@ namespace CheeseBot.Disqord
     {
         private readonly List<Page> _pages;
 
+        private readonly FieldBasedPageProviderConfiguration _configuration;
+
         public int PageCount { get; }
 
-        public FieldBasedPageProvider(IEnumerable<LocalEmbedFieldBuilder> fields, int fieldsPerPage)
+        public FieldBasedPageProvider(IEnumerable<LocalEmbedFieldBuilder> fields, FieldBasedPageProviderConfiguration configuration = null)
         {
+            _configuration = configuration ?? FieldBasedPageProviderConfiguration.Default;
             _pages = new List<Page>();
 
             var fieldArray = fields as LocalEmbedFieldBuilder[] ?? fields.ToArray();
             var totalFields = fieldArray.Length;
             // this is ugly, but ambiguous calls and math.ceiling returning a double forced my hand
-            PageCount = (int)Math.Ceiling((decimal)totalFields / fieldsPerPage);
+            PageCount = (int)Math.Ceiling((decimal)totalFields / _configuration.FieldsPerPage);
             
-            CreatePages(fieldArray, fieldsPerPage);
+            CreatePages(fieldArray, _configuration.FieldsPerPage);
         }
 
         private void CreatePages(LocalEmbedFieldBuilder[] fields, int fieldsPerPage)
@@ -36,7 +39,10 @@ namespace CheeseBot.Disqord
                     Color = Global.DefaultEmbedColor
                 };
 
-                _pages.Add(new Page(embedBuilder));
+                if (_configuration.AutoGeneratePageTitles)
+                    embedBuilder.WithTitle($"Page {_pages.Count + 1}/{PageCount}");
+
+                _pages.Add(new Page(_configuration.Content, embedBuilder));
             }
         }
 

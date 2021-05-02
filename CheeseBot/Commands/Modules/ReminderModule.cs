@@ -42,18 +42,32 @@ namespace CheeseBot.Commands.Modules
                 .Where(x => x.UserId == Context.Author.Id)
                 .OrderBy(x => x.ExecutionTime)
                 .ToListAsync();
-            
-            if (reminders.Count == 0)
-                return Response("You have no reminders");
-            
-            var builders = new List<LocalEmbedFieldBuilder>(reminders.Count);
 
-            foreach (var reminder in reminders)
-                builders.Add(new LocalEmbedFieldBuilder().WithName($"Reminder {reminder.Id}").WithValue(reminder.ToString()));
+            switch (reminders.Count)
+            {
+                case 0:
+                    return Response("You have no reminders");
+                case <= 5:
+                {
+                    var eb = new LocalEmbedBuilder().WithColor(Global.DefaultEmbedColor);
+
+                    foreach (var reminder in reminders)
+                        eb.AddField($"Reminder {reminder.Id}" , reminder.ToString());
+                    
+                    var content = $"You have {reminders.Count} {(reminders.Count == 1 ? "reminder" : "reminders")}";
+                    return Response(content, eb);
+                }
+                default:
+                {
+                    var builders = new List<LocalEmbedFieldBuilder>(reminders.Count);
+
+                    foreach (var reminder in reminders)
+                        builders.Add(new LocalEmbedFieldBuilder().WithName($"Reminder {reminder.Id}").WithValue(reminder.ToString()));
             
-
-            return Pages(new FieldBasedPageProvider(builders, 5));
-
+                    var config = FieldBasedPageProviderConfiguration.Default.WithContent($"You have {reminders.Count} reminders");
+                    return Pages(new FieldBasedPageProvider(builders, config));
+                }
+            }
         }
         
         [Command("remove", "cancel")]
