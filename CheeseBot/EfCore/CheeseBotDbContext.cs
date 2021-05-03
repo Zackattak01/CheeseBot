@@ -14,6 +14,7 @@ namespace CheeseBot.EfCore
         public DbSet<GuildSettings> GuildSettings { get; set; }
         public DbSet<Note> Notes { get; set; }
         public DbSet<Reminder> Reminders { get; set; }
+        public DbSet<UserStopwatch> Stopwatches { get; set; }
 
         public CheeseBotDbContext(DbContextOptions<CheeseBotDbContext> options)
             : base(options) { }

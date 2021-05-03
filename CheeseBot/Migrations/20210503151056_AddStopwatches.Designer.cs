@@ -3,15 +3,17 @@ using System;
 using CheeseBot.EfCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace CheeseBot.Migrations
 {
     [DbContext(typeof(CheeseBotDbContext))]
-    partial class CheeseBotDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210503151056_AddStopwatches")]
+    partial class AddStopwatches
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

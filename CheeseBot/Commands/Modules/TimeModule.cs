@@ -17,7 +17,7 @@ namespace CheeseBot.Commands.Modules
             else if (time > now)
                 return Response($"The time until {time.Humanize()} is {(time - now).Humanize()}");
             else if (time == now)
-                return Response($"Your an idiot... the time you provided is *now*");
+                return Response("Your an idiot... the time you provided is *now*");
 
             return Response("You broke the spacetime continuum.");
         }
