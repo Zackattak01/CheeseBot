@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using CheeseBot.Extensions;
 using Disqord;
-using Disqord.Rest.Api;
 
 namespace CheeseBot.EfCore.Entities
 {
@@ -31,12 +30,15 @@ namespace CheeseBot.EfCore.Entities
             StartDate = DateTime.Now;
         }
 
+        public void Stop()
+            => EndDate = DateTime.Now;
+
         public override string ToString()
         {
             if (!IsFinished)
                 return (DateTime.Now - StartDate).Humanize();
             else
-                return (EndDate.Value - StartDate).Humanize();
+                return (EndDate!.Value - StartDate).Humanize();
         }
     }
 }

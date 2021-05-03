@@ -1,11 +1,8 @@
-using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using CheeseBot.EfCore;
 using CheeseBot.EfCore.Entities;
 using CheeseBot.Extensions;
 using Disqord.Bot;
-using Microsoft.EntityFrameworkCore;
 using Qmmands;
 
 namespace CheeseBot.Commands.Modules
