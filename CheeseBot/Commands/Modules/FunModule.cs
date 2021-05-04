@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using CheeseBot.Extensions;
 using Disqord;
@@ -10,6 +11,33 @@ namespace CheeseBot.Commands.Modules
 {
     public class FunModule : DiscordModuleBase
     {
+        private static readonly IReadOnlyList<string> EightBallResponses = new[]
+        {
+            // good
+            "It is certain.",
+            "It is decidedly so.",
+            "Without a doubt.",
+            "Yes – definitely.",
+            "You may rely on it.",
+            "As I see it, yes.",
+            "Most likely.",
+            "Outlook good.",
+            "Yes.",
+            "Signs point to yes.",
+            // uncertain
+            "Reply hazy, try again.",
+            "Ask again later.",
+            "Better not tell you now.",
+            "Cannot predict now.",
+            "Concentrate and ask again.",
+            // bad
+            "Don't count on it.",
+            "My reply is no.",
+            "My sources say no.",
+            "Outlook not so good.",
+            "Very doubtful. "
+        };
+        
         private readonly Random _random;
         
         public FunModule(Random random)
@@ -71,5 +99,9 @@ namespace CheeseBot.Commands.Modules
             await msg.AddReactionAsync(new LocalEmoji("👍"));
             await msg.AddReactionAsync(new LocalEmoji("👎"));
         }
+
+        [Command("8ball")]
+        public DiscordCommandResult EightBall([Remainder] string question)
+            => Response(EightBallResponses[_random.Next(0, EightBallResponses.Count)]);
     }
 }
