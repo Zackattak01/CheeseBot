@@ -1,6 +1,9 @@
 using System;
+using System.Threading.Tasks;
+using CheeseBot.Extensions;
 using Disqord;
 using Disqord.Bot;
+using Disqord.Rest;
 using Qmmands;
 
 namespace CheeseBot.Commands.Modules
@@ -19,6 +22,7 @@ namespace CheeseBot.Commands.Modules
         public DiscordCommandResult Choose([Minimum(2)] params string[] choices)
             => Response(choices[_random.Next(0, choices.Length)]);
             
+        [RequireGuild]
         [Command("pp")]
         public DiscordCommandResult PP(IMember user = null)
         {
@@ -41,6 +45,31 @@ namespace CheeseBot.Commands.Modules
             if (min > max)
                 return Response("Seriously? Obviously the minimum has to be less than the maximum :rolling_eyes:");
             return Response($"Your random number between {min} and {max} is: {_random.Next(min, max + 1)}");
+        }
+        
+        [RequireGuild]
+        [Command("vote", "poll")]
+        public async Task VoteAsync([Remainder] string poll)
+        {
+            if (Context is not DiscordGuildCommandContext guildContext)
+            {
+                await Response("This is why we cant have nice things.  Report this immediately or else...");
+                return;
+            }
+            
+            await Context.Message.DeleteAsync();
+            var eb = new LocalEmbedBuilder()
+                .WithDefaultColor()
+                .WithAuthor(x =>
+                {
+                    x.WithIconUrl(guildContext.Author.GetAvatarUrl());
+                    x.WithName($"{guildContext.Author.GetDisplayName()}'s Poll");
+                })
+                .WithDescription(poll);
+            
+            var msg = await Response(eb);
+            await msg.AddReactionAsync(new LocalEmoji("👍"));
+            await msg.AddReactionAsync(new LocalEmoji("👎"));
         }
     }
 }
