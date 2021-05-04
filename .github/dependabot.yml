@@ -1,6 +1,6 @@
 version: 2
 updates:
 - package-ecosystem: "nuget"
-  directory: "/CheeseBot"
+  directory: "/"
   schedule:
     interval: "weekly"
