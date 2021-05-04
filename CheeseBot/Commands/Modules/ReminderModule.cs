@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CheeseBot.Disqord;
 using CheeseBot.EfCore;
 using CheeseBot.EfCore.Entities;
+using CheeseBot.Extensions;
 using CheeseBot.Services;
 using Disqord;
 using Disqord.Bot;
@@ -49,7 +50,7 @@ namespace CheeseBot.Commands.Modules
                     return Response("You have no reminders");
                 case <= 5:
                 {
-                    var eb = new LocalEmbedBuilder().WithColor(Global.DefaultEmbedColor);
+                    var eb = new LocalEmbedBuilder().WithDefaultColor();
 
                     foreach (var reminder in reminders)
                         eb.AddField($"Reminder {reminder.Id}" , reminder.ToString());

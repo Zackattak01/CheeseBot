@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CheeseBot.Disqord;
 using CheeseBot.EfCore;
 using CheeseBot.EfCore.Entities;
+using CheeseBot.Extensions;
 using Disqord;
 using Disqord.Bot;
 using Microsoft.EntityFrameworkCore;
@@ -45,7 +46,7 @@ namespace CheeseBot.Commands.Modules
                     return Response("You have no notes");
                 case <= 5:
                 {
-                    var eb = new LocalEmbedBuilder().WithColor(Global.DefaultEmbedColor);
+                    var eb = new LocalEmbedBuilder().WithDefaultColor();
 
                     foreach (var note in notes)
                         eb.AddField($"Note {note.Id}" , note.ToString());

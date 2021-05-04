@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using CheeseBot.EfCore;
 using CheeseBot.EfCore.Entities;
-using CheeseBot.Extensions;
 using Disqord.Bot;
 using Qmmands;
 

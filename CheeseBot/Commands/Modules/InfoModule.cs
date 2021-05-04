@@ -43,7 +43,7 @@ namespace CheeseBot.Commands.Modules
             }
 
             var embedBuilder = new LocalEmbedBuilder()
-                .WithColor(Global.DefaultEmbedColor)
+                .WithDefaultColor()
                 .WithTitle(Context.Bot.CurrentUser.Name)
                 .AddField("Author", authorString, true)
                 .AddField("Uptime", uptimeString, true)
