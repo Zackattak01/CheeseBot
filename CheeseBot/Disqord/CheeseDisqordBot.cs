@@ -22,6 +22,7 @@ namespace CheeseBot.Disqord
             Commands.AddTypeParser(new PrefixTypeParser());
             Commands.AddTypeParser(new DateTimeTypeParser());
             Commands.AddTypeParser(new ReminderTypeParser());
+            Commands.AddTypeParser(new UserTypeParser());
             return base.AddTypeParsersAsync(cancellationToken);
         }
     }

@@ -31,7 +31,7 @@ namespace CheeseBot.Commands.TypeParsers
                     reminderValue.Trim()
                 );
 
-                return new ValueTask<TypeParserResult<Reminder>>(new TypeParserResult<Reminder>(reminder));
+                return new ValueTask<TypeParserResult<Reminder>>(Success(reminder));
         }
     }
 }

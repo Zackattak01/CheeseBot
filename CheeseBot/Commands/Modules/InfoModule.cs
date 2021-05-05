@@ -54,5 +54,15 @@ namespace CheeseBot.Commands.Modules
             
             return Response(embedBuilder);
         }
+
+        [Command("ui", "user")]
+        public DiscordCommandResult UserInfo(IUser user)
+            => Response(user.CreateInfoEmbed());
+        
+        [Command("ui", "user")]
+        public DiscordCommandResult UserInfo(IMember user)
+            => Response(user.CreateInfoEmbed());
+
+        
     }
 }
