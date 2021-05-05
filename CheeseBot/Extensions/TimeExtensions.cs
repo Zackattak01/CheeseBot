@@ -50,6 +50,5 @@ namespace CheeseBot.Extensions
 
         public static string Humanize(this DateTime dt)
             => dt.ToString(dt.Date == DateTime.Today ? TodayFormatString : DateFormatString);
-
     }
 }

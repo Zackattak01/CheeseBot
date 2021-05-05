@@ -12,28 +12,27 @@ namespace CheeseBot.Extensions
         
         public static LocalEmbedBuilder CreateInfoEmbed(this IUser user)
         {
+            const string dtoFormat = "M/d/yy h:mm tt zzz";
+
             var eb = new LocalEmbedBuilder()
                 .WithDefaultColor()
+                .WithTitle(user.ToString())
                 .WithThumbnailUrl(user.GetAvatarUrl())
-                .AddField("Joined Discord On", user.CreatedAt, isInline: true);
+                .AddField("Joined Discord On", user.CreatedAt.ToString(dtoFormat), isInline: true);
 
-            
-            
             if (user is IMember member)
             {
-                eb.WithTitle(member.Nick is null ? member.ToString() : $"{member} ({member.Nick})");
+                if (member.Nick is not null)
+                    eb.Title += $" ({member.Nick})";
 
-                 
                 if (member.JoinedAt.HasValue)
-                    eb.AddField("Joined Server On", member.JoinedAt.Value.ToString(), isInline: true);
-
+                    eb.AddField("Joined Server On", member.JoinedAt.Value.ToString(dtoFormat), isInline: true);
 
                 if (member.BoostedAt is not null)
-                    eb.AddField("Boosting Since", member.BoostedAt, isInline: true);
+                    eb.AddField("Boosting Since", member.BoostedAt.Value.ToString(dtoFormat), isInline: true);
 
                 eb.FillLineWithEmptyFields();
-
-
+                
                 if (member.GetPresence() is { } presence)
                 {
                     eb.AddField("Status", presence.Status.ToString(), isInline: true);
@@ -70,8 +69,9 @@ namespace CheeseBot.Extensions
 
 
             }
-            else
-                eb.WithTitle(user.ToString());
+
+            if (user.IsBot)
+                eb.Title += " (Bot)";
             
             return eb;
         }
