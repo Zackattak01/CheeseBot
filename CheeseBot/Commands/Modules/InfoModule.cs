@@ -51,16 +51,17 @@ namespace CheeseBot.Commands.Modules
                 .AddField("Source Code", Markdown.Link("GitHub", Global.CheeseBotRepo), true)
                 .AddField("Library", Markdown.Link("Disqord " + Library.Version, Library.RepositoryUrl), true)
                 .AddBlankField(isInline:true);
-            
             return Response(embedBuilder);
         }
 
         [Command("ui", "user")]
+        [Description("Gets info about the specified user")]
         public DiscordCommandResult UserInfo([Remainder] IUser user)
             => Response(user.CreateInfoEmbed());
         
         [Command("ui", "user")]
         [Priority(1)]
+        [Description("Gets info about the specified user")]
         public DiscordCommandResult UserInfo([Remainder] IMember member)
             => Response(member.CreateInfoEmbed());
 

@@ -17,7 +17,7 @@ namespace CheeseBot.Disqord
             IPrefixProvider prefixes, ICommandQueue queue, CommandService commands, IServiceProvider services,
             DiscordClient client) : base(options, logger, prefixes, queue, commands, services, client) { }
 
-        protected override ValueTask AddTypeParsersAsync(CancellationToken cancellationToken = new())
+        protected override ValueTask AddTypeParsersAsync(CancellationToken cancellationToken = default)
         {
             Commands.AddTypeParser(new PrefixTypeParser());
             Commands.AddTypeParser(new DateTimeTypeParser());

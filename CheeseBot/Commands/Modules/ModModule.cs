@@ -43,7 +43,7 @@ namespace CheeseBot.Commands.Modules
                     }
                 }
             }
-
+            
             await Context.Bot.DeleteMessagesAsync(Context.ChannelId, idsToDelete);
         }
 

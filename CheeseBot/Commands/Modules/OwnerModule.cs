@@ -41,6 +41,7 @@ namespace CheeseBot.Commands.Modules
             => Environment.Exit(1);
 
         [Command("mem", "memory")]
+        [Description("Gets memory usage.")]
         public DiscordCommandResult Memory()
         {
             using var process = Process.GetCurrentProcess();
@@ -49,6 +50,7 @@ namespace CheeseBot.Commands.Modules
         }
 
         [Command("gc", "collect")]
+        [Description("Collects ~~you~~ garbage...")]
         public DiscordCommandResult CollectGarbage()
         {
             GC.Collect();
@@ -58,6 +60,7 @@ namespace CheeseBot.Commands.Modules
 
         [Command("eval", "evaluate")]
         [RunMode(RunMode.Parallel)]
+        [Description("Evaluates your garbage code. (seriously just open an IDE)")]
         public async Task<DiscordCommandResult> EvalAsync([Remainder] string code = null)
         {
             if (code == null)
@@ -131,6 +134,7 @@ namespace CheeseBot.Commands.Modules
 
         [Command("load")]
         [RunMode(RunMode.Parallel)]
+        [Description("Loads your garbage modules. (seriously just open an IDE)")]
         public async Task<DiscordCommandResult> Load(Snowflake id)
         {
             var msg = await Context.Bot.FetchMessageAsync(Context.ChannelId, id);
@@ -143,6 +147,7 @@ namespace CheeseBot.Commands.Modules
 
         [Command("load")]
         [RunMode(RunMode.Parallel)]
+        [Description("Loads your garbage modules. (seriously just open an IDE)")]
         public DiscordCommandResult Load([Remainder] string code = null)
         {
             var id = Context.Message.Id;
@@ -161,6 +166,7 @@ namespace CheeseBot.Commands.Modules
         }
 
         [Command("unload")]
+        [Description("Unloads your modules. (Finally I can get rid of this garbage)")]
         public DiscordCommandResult Unload(Snowflake? id = null)
         {
             if (id is null)

@@ -7,8 +7,6 @@ using Qmmands;
 namespace CheeseBot.Commands.Modules
 {
     [Group("prefix", "prefixes")]
-    [RequireAuthorGuildPermissions(Permission.Administrator, Group = "Permission")]
-    [RequireBotOwner(Group = "Permission")]
     public class PrefixModule : GuildSettingsModule
     {
         [Command]
@@ -37,6 +35,8 @@ namespace CheeseBot.Commands.Modules
 
         [Command("add")]
         [Description("Adds the specified prefix.")]
+        [RequireAuthorGuildPermissions(Permission.Administrator, Group = "Permission")]
+        [RequireBotOwner(Group = "Permission")]
         public  DiscordCommandResult AddPrefixAsync([Remainder] IPrefix prefix)
         {
 
@@ -55,6 +55,8 @@ namespace CheeseBot.Commands.Modules
 
         [Command("remove")]
         [Description("Removes the specified prefix.")]
+        [RequireAuthorGuildPermissions(Permission.Administrator, Group = "Permission")]
+        [RequireBotOwner(Group = "Permission")]
         public DiscordCommandResult RemovePrefixAsync([Remainder] IPrefix prefix)
         {
             if (!CurrentGuildSettings.Prefixes.Contains(prefix))

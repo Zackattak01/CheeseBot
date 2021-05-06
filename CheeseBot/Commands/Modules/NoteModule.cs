@@ -24,6 +24,7 @@ namespace CheeseBot.Commands.Modules
         }
         
         [Command("", "create")]
+        [Description("Takes a note.  I'll hold it for you since I know your forgetful.")]
         public async Task<DiscordCommandResult> CreateNoteAsync(string content)
         {
             var note = new Note(Context.Author.Id, content, DateTime.Now);
@@ -33,6 +34,7 @@ namespace CheeseBot.Commands.Modules
         }
         
         [Command("list", "")]
+        [Description("Lists all your notes.  In a nice format just because I'm a good guy.")]
         public async Task<DiscordCommandResult> ListNotesAsync()
         {
             var notes = await _dbContext.Notes.AsNoTracking()
@@ -70,6 +72,7 @@ namespace CheeseBot.Commands.Modules
         }
         
         [Command("delete", "remove")]
+        [Description("Removes a reminder.")]
         public async Task<DiscordCommandResult> DeleteNoteAsync(int noteId)
         {
             var note = await _dbContext.Notes.FindAsync(noteId);
@@ -85,6 +88,7 @@ namespace CheeseBot.Commands.Modules
         }
         
         [Command("edit")]
+        [Description("Edits a note because we know you messed about the first time.")]
         public async Task<DiscordCommandResult> EditNoteAsync(int noteId, [Remainder] string newContent)
         {
             var note = await _dbContext.Notes.FindAsync(noteId);

@@ -17,6 +17,7 @@ namespace CheeseBot.Commands.Modules
         }
         
         [Command]
+        [Description("View your currently running stopwatch")]
         public async Task<DiscordCommandResult> ViewStopwatchAsync()
         {
             var sw = await FindStopwatchAsync();
@@ -30,6 +31,7 @@ namespace CheeseBot.Commands.Modules
         } 
         
         [Command("start", "new")]
+        [Description("Oh? Now I have to keep time for you? Fine. Starts a new reminder.")]
         public async Task<DiscordCommandResult> StartAsync()
         {
             var sw = await FindStopwatchAsync();
@@ -48,6 +50,7 @@ namespace CheeseBot.Commands.Modules
         }
         
         [Command("stop", "end")]
+        [Description("Done using me? Good. Stops your stopwatch.")]
         public async Task<DiscordCommandResult> StopAsync()
         {
             var sw = await FindStopwatchAsync();
@@ -62,6 +65,7 @@ namespace CheeseBot.Commands.Modules
         }
 
         [Command("reset", "restart")]
+        [Description("Great. Here we go again. I'll restart your stopwatch.  This time.")]
         public async Task<DiscordCommandResult> ResetAsync()
         {
             var sw = await FindStopwatchAsync();

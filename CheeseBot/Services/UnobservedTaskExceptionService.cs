@@ -11,7 +11,7 @@ namespace CheeseBot.Services
         {
             // only raised on a garbage collection
             TaskScheduler.UnobservedTaskException += 
-                (_, e) => Logger.LogError($"Unobserved observed task exception:\n {e.Exception.InnerException}");
+                (_, e) => Logger.LogError($"Unobserved task exception:\n {e.Exception.InnerException}");
             
             Logger.LogInformation("Unobserved task exception handling setup.");
         }

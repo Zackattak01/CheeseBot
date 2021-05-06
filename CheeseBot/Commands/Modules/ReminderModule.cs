@@ -27,6 +27,7 @@ namespace CheeseBot.Commands.Modules
         }
 
         [Command("", "create")]
+        [Description("Creates a reminder because you we know you forgot *something* :rolling_eyes:")]
         public async Task<DiscordCommandResult> ReminderAsync([Remainder] Reminder reminder)
         {
             if (reminder.ExecutionTime <= DateTime.Now)
@@ -37,6 +38,7 @@ namespace CheeseBot.Commands.Modules
         }
 
         [Command("list", "")]
+        [Description("Lists your reminders.  I might even paginate them.")]
         public async Task<DiscordCommandResult> ListAsync()
         {
             var reminders = await _dbContext.Reminders.AsNoTracking()
@@ -72,6 +74,7 @@ namespace CheeseBot.Commands.Modules
         }
         
         [Command("remove", "cancel")]
+        [Description("Removes your reminder")]
         public async Task<DiscordCommandResult> RemoveAsync(int id)
         {
             var reminder = await _dbContext.Reminders.FindAsync(id);

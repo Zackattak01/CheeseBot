@@ -13,7 +13,7 @@ namespace CheeseBot.Extensions
         public static LocalEmbedBuilder CreateInfoEmbed(this IUser user)
         {
             const string dtoFormat = "M/d/yy h:mm tt zzz";
-
+            
             var eb = new LocalEmbedBuilder()
                 .WithDefaultColor()
                 .WithTitle(user.ToString())
@@ -24,7 +24,7 @@ namespace CheeseBot.Extensions
             {
                 if (member.Nick is not null)
                     eb.Title += $" ({member.Nick})";
-
+                
                 if (member.JoinedAt.HasValue)
                     eb.AddField("Joined Server On", member.JoinedAt.Value.ToString(dtoFormat), isInline: true);
 

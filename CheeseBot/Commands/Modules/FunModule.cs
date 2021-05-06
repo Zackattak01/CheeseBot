@@ -52,6 +52,7 @@ namespace CheeseBot.Commands.Modules
             
         [RequireGuild]
         [Command("pp")]
+        [Description(":eyes:")]
         public DiscordCommandResult PP(IMember user = null)
         {
             var size = _random.Next(-1, 12);
@@ -60,14 +61,17 @@ namespace CheeseBot.Commands.Modules
         }
 
         [Command("random", "rand")]
+        [Description("Gets the next number I can find laying around")]
         public DiscordCommandResult Random()
             => Response($"Your random number is: {_random.Next()}");
 
         [Command("random", "rand")]
+        [Description("Gets the next number I can find laying around with a max value")]
         public DiscordCommandResult Random([Minimum(0)] int max)
             => Response($"Your random number with a maximum of {max} is: {_random.Next(max + 1)}");
         
         [Command("random", "rand")]
+        [Description("Your so needy.  Fine.  Ill get the next number with between a min and a max.")]
         public DiscordCommandResult Random(int min, int max)
         {
             if (min > max)
@@ -77,6 +81,7 @@ namespace CheeseBot.Commands.Modules
         
         [RequireGuild]
         [Command("vote", "poll")]
+        [Description("A poll.  You only use this command because it has an embed.")]
         public async Task VoteAsync([Remainder] string poll)
         {
             if (Context is not DiscordGuildCommandContext guildContext)
@@ -101,6 +106,7 @@ namespace CheeseBot.Commands.Modules
         }
 
         [Command("8ball")]
+        [Description("My word is final.")]
         public DiscordCommandResult EightBall([Remainder] string question)
             => Response(EightBallResponses[_random.Next(0, EightBallResponses.Count)]);
     }

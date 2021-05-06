@@ -9,6 +9,7 @@ namespace CheeseBot.Commands.Modules
     public class TimeModule : DiscordModuleBase
     {
         [Command("until", "since")]
+        [Description("Since you cant calculate time.  I'll do it for you.")]
         public DiscordCommandResult TimeDifference([Remainder] DateTime time)
         {
             var now = DateTime.Now;
