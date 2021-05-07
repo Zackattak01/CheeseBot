@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using CheeseBot.Disqord;
 using CheeseBot.EfCore;
@@ -48,6 +49,7 @@ namespace CheeseBot
                     services.AddPrefixProvider<CheeseBotPrefixProvider>();
                     services.AddSingleton<Random>();//TODO: Cryptographic random... just for fun
                     services.AddSingleton<EnglishTimeParser>();
+                    services.AddSingleton<HttpClient>();
                     services.AddCheeseBotServices();
                 })
                 .ConfigureHostConfiguration(configuration => configuration.AddJsonFile(ConfigPath))
