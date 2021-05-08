@@ -22,20 +22,20 @@ namespace CheeseBot.Commands.Modules
         [Command]
         public async Task<DiscordCommandResult> SourceAsync(string path)
         {
-            var (contents, filename) = await _sourceBrowser.GetFileContents(path);
+            var sourceFile = await _sourceBrowser.GetFileContents(path);
 
-            if (contents == null && filename == null)
-                return Response("File could not be found");
+            if (sourceFile is null)
+                return Response("File could not be found or something else went wrong.");
 
-            if (contents!.Length > LocalMessageBuilder.MAX_CONTENT_LENGTH)
+            if (sourceFile.Content.Length > LocalMessageBuilder.MAX_CONTENT_LENGTH)
             {
-                var stream = new MemoryStream(Encoding.Default.GetBytes(contents));
-                var msg = new LocalMessageBuilder().WithAttachments(new LocalAttachment(stream, filename)).Build();
+                var stream = new MemoryStream(Encoding.Default.GetBytes(sourceFile.Content));
+                var msg = new LocalMessageBuilder().WithAttachments(new LocalAttachment(stream, sourceFile.Filename)).Build();
                 return Response(msg);
             }
 
 
-            return Response(Markdown.CodeBlock("csharp", contents));
+            return Response(Markdown.CodeBlock("csharp", sourceFile.Content));
         }
 
         [Command("link")]
