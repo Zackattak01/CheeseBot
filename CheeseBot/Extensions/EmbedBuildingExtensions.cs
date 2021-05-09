@@ -1,3 +1,4 @@
+using System;
 using Disqord;
 
 namespace CheeseBot.Extensions
@@ -27,13 +28,26 @@ namespace CheeseBot.Extensions
 
             while (currentInlineFieldCount % 3 != 0)
             {
-                eb.AddBlankField(isInline: true);
+                eb.AddInlineBlankField();
                 currentInlineFieldCount++;
             }
 
             return eb;
         }
+
+        public static LocalEmbedBuilder AddInlineField(this LocalEmbedBuilder eb, string name, string value)
+            => eb.AddField(name, value, true);
         
+        public static LocalEmbedBuilder AddInlineField(this LocalEmbedBuilder eb, string name, object value)
+            => eb.AddField(name, value, true);
         
+        public static LocalEmbedBuilder AddInlineField(this LocalEmbedBuilder eb, LocalEmbedFieldBuilder efb)
+            => eb.AddField(efb);
+        
+        public static LocalEmbedBuilder AddInlineField(this LocalEmbedBuilder eb, Action<LocalEmbedFieldBuilder> action)
+            => eb.AddField(action);
+        
+        public static LocalEmbedBuilder AddInlineBlankField(this LocalEmbedBuilder eb)
+            => eb.AddBlankField(true);
     }
 }

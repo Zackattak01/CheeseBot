@@ -18,7 +18,7 @@ namespace CheeseBot.Extensions
                 .WithDefaultColor()
                 .WithTitle(user.ToString())
                 .WithThumbnailUrl(user.GetAvatarUrl())
-                .AddField("Joined Discord On", user.CreatedAt.ToString(dtoFormat), isInline: true);
+                .AddInlineField("Joined Discord On", user.CreatedAt.ToString(dtoFormat));
 
             if (user is IMember member)
             {
@@ -26,19 +26,19 @@ namespace CheeseBot.Extensions
                     eb.Title += $" ({member.Nick})";
                 
                 if (member.JoinedAt.HasValue)
-                    eb.AddField("Joined Server On", member.JoinedAt.Value.ToString(dtoFormat), isInline: true);
+                    eb.AddInlineField("Joined Server On", member.JoinedAt.Value.ToString(dtoFormat));
 
                 if (member.BoostedAt is not null)
-                    eb.AddField("Boosting Since", member.BoostedAt.Value.ToString(dtoFormat), isInline: true);
+                    eb.AddInlineField("Boosting Since", member.BoostedAt.Value.ToString(dtoFormat));
 
                 eb.FillLineWithEmptyFields();
                 
                 if (member.GetPresence() is { } presence)
                 {
-                    eb.AddField("Status", presence.Status.ToString(), isInline: true);
+                    eb.AddInlineField("Status", presence.Status.ToString());
 
                     if (presence.Activities.Count > 0)
-                        eb.AddField("Activities", string.Join('\n', presence.Activities), isInline: true);
+                        eb.AddInlineField("Activities", string.Join('\n', presence.Activities));
 
                     eb.FillLineWithEmptyFields();
                 }

@@ -45,19 +45,19 @@ namespace CheeseBot.Commands.Modules
             var embedBuilder = new LocalEmbedBuilder()
                 .WithDefaultColor()
                 .WithTitle(Context.Bot.CurrentUser.Name)
-                .AddField("Author", authorString, true)
-                .AddField("Uptime", uptimeString, true)
-                .AddBlankField(isInline:true)
-                .AddField("Source Code", Markdown.Link("GitHub", Global.CheeseBotRepo), true)
-                .AddField("Library", Markdown.Link("Disqord " + Library.Version, Library.RepositoryUrl), true)
-                .AddBlankField(isInline:true);
+                .AddInlineField("Author", authorString)
+                .AddInlineField("Uptime", uptimeString)
+                .AddInlineBlankField()
+                .AddInlineField("Source Code", Markdown.Link("GitHub", Global.CheeseBotRepo))
+                .AddInlineField("Library", Markdown.Link("Disqord " + Library.Version, Library.RepositoryUrl))
+                .AddInlineBlankField();
             return Response(embedBuilder);
         }
 
         [Command("ui", "user")]
         [Description("Gets info about the specified user")]
-        public DiscordCommandResult UserInfo([Remainder] IUser user)
-            => Response(user.CreateInfoEmbed());
+        public DiscordCommandResult UserInfo([Remainder] IUser user = null)
+            => Response((user ?? Context.Author).CreateInfoEmbed());
         
         [Command("ui", "user")]
         [Priority(1)]
