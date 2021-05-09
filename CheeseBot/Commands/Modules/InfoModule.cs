@@ -65,6 +65,10 @@ namespace CheeseBot.Commands.Modules
         public DiscordCommandResult UserInfo([Remainder] IMember member)
             => Response(member.CreateInfoEmbed());
 
-        
+        [Command("si", "server")]
+        [Description("Gets info about the current server")]
+        [RequireGuild]
+        public DiscordCommandResult ServerInfo()
+            => Response(((DiscordGuildCommandContext) Context).Guild.CreateInfoEmbed());
     }
 }
