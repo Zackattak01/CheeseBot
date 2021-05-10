@@ -20,11 +20,13 @@ namespace CheeseBot.Services
         private readonly HttpClient _httpClient;
         private readonly SchedulingService _scheduler;
         private readonly Dictionary<Uri, GitHubSourceFile> _contentCache;
+        private readonly HashSet<int> _scheduledCacheRemovalTasks;
 
         public GitHubSourceBrowser(HttpClient httpClient, SchedulingService scheduler, ILogger<GitHubSourceBrowser> logger) : base(logger)
         {
             _httpClient = httpClient;
             _scheduler = scheduler;
+            _scheduledCacheRemovalTasks = new HashSet<int>();
             _contentCache = new Dictionary<Uri, GitHubSourceFile>();
         }
 
@@ -57,8 +59,11 @@ namespace CheeseBot.Services
             {
                 Logger.LogInformation($"Cached content for {sourceFile.Filename} expired after {MinutesToCacheContent} minutes.");
                 _contentCache.Remove(uri);
+                _scheduledCacheRemovalTasks.Remove(scheduledTask.Id);
                 return Task.CompletedTask;
             });
+
+            _scheduledCacheRemovalTasks.Add(scheduledTask.Id);
 
             if (lineSelection is not null)
             {
@@ -78,6 +83,18 @@ namespace CheeseBot.Services
             var pathWithoutSelection = path[..lineSelectorIndex];
             var pathWithExtension = GetPathWithExtension(pathWithoutSelection);
             return GithubRepoBaseLink + pathWithExtension + path[(lineSelectorIndex)..];
+        }
+
+        public void ClearContentCache()
+        {
+            foreach (var taskId in _scheduledCacheRemovalTasks)
+            {
+                _scheduler.CancelScheduledTask(taskId);
+            }
+            
+            _scheduledCacheRemovalTasks.Clear();
+            
+            _contentCache.Clear();
         }
 
         // simple check to add a file extension if one was not provided

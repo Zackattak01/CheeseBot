@@ -16,9 +16,9 @@ namespace CheeseBot.GitHub
         public override string TransformContent(string fullContent)
         {
             var lines = fullContent.Split('\n');
-            var start = Math.Min(StartLine - 1, lines.Length);
+            var start = Math.Min(StartLine, lines.Length);
             var end = Math.Min(EndLine, lines.Length);
-            return string.Join('\n', lines[start..end]);
+            return string.Join('\n', lines[(start - 1)..end]);
         }
     }
 }
