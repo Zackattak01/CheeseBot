@@ -7,7 +7,7 @@ namespace CheeseBot.Scheduling
     {
         private static int _idCounter;
 
-        private readonly Func<Task> _task;
+        private readonly Func<ScheduledTask,Task> _task;
 
         private AsyncTimer _timer;
         public int Id { get; }
@@ -19,7 +19,7 @@ namespace CheeseBot.Scheduling
         public event EventHandler<UnhandledExceptionEventArgs> UnhandledException;
         public event EventHandler Disposed;
         
-        public ScheduledTask(Func<Task> task, DateTime executionTime, bool recurring = false)
+        public ScheduledTask(Func<ScheduledTask, Task> task, DateTime executionTime, bool recurring = false)
         {
             Id = _idCounter++;
             ExecutionTime = executionTime;
@@ -34,7 +34,7 @@ namespace CheeseBot.Scheduling
         {
             try
             {
-                await _task();
+                await _task(this);
             }
             catch (Exception e)
             {

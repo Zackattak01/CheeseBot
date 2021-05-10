@@ -53,7 +53,7 @@ namespace CheeseBot.Services
             
             Logger.LogInformation($"Fetched github source file: {sourceFile.Filename}. Caching contents for {MinutesToCacheContent} minutes");
             
-            _scheduler.Schedule(DateTime.Now.AddMinutes(MinutesToCacheContent), () =>
+            var scheduledTask = _scheduler.Schedule(DateTime.Now.AddMinutes(MinutesToCacheContent), (scheduledTask) =>
             {
                 Logger.LogInformation($"Cached content for {sourceFile.Filename} expired after {MinutesToCacheContent} minutes.");
                 _contentCache.Remove(uri);

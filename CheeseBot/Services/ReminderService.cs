@@ -115,7 +115,7 @@ namespace CheeseBot.Services
 
         private void ScheduleReminder(Reminder reminder)
         {
-            var scheduledTask = _scheduler.Schedule(reminder.ExecutionTime, () => SendReminderAsync(reminder));
+            var scheduledTask = _scheduler.Schedule(reminder.ExecutionTime, (_) => SendReminderAsync(reminder));
             _scheduledReminderDict.Add(reminder.Id, scheduledTask);
         }
 

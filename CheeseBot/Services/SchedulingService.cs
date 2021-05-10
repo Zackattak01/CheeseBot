@@ -15,7 +15,7 @@ namespace CheeseBot.Services
             _scheduledTaskDict = new Dictionary<int, ScheduledTask>();
         }
 
-        public ScheduledTask Schedule(DateTime time, Func<Task> task)
+        public ScheduledTask Schedule(DateTime time, Func<ScheduledTask, Task> task)
         {
             var scheduledTask = new ScheduledTask(task, time);
             scheduledTask.Disposed += ScheduledTaskDisposed;
@@ -25,7 +25,7 @@ namespace CheeseBot.Services
             return scheduledTask;
         }
 
-        public ScheduledTask ScheduleRecurring(DateTime time, Func<Task> task)
+        public ScheduledTask ScheduleRecurring(DateTime time, Func<ScheduledTask, Task> task)
         {
             var scheduledTask = new ScheduledTask(task, time, true);
             scheduledTask.Disposed += ScheduledTaskDisposed;
@@ -33,6 +33,17 @@ namespace CheeseBot.Services
             
             _scheduledTaskDict.Add(scheduledTask.Id, scheduledTask);
             return scheduledTask;
+        }
+
+        public bool CancelScheduledTask(int id)
+        {
+            if (TryGetScheduledTask(id, out var task))
+            {
+                task.Cancel();
+                return true;
+            }
+
+            return false;
         }
 
         public bool TryGetScheduledTask(int id, out ScheduledTask task)
