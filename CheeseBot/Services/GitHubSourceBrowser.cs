@@ -50,10 +50,10 @@ namespace CheeseBot.Services
                 return null;
 
             var content = await response.Content.ReadAsStringAsync();
-            var sourceFile = new GitHubSourceFile(uri, path.Split('/').Last(), content);
+            var sourceFile = new GitHubSourceFile(uri, uri.ToString().Split('/').Last(), content);
             _contentCache.Add(uri, sourceFile);
             
-            Logger.LogInformation($"Fetched github source file: {sourceFile.Filename}. Caching contents for {MinutesToCacheContent} minutes");
+            Logger.LogInformation($"Fetched github source file: {sourceFile.Filename} Caching contents for {MinutesToCacheContent} minutes");
             
             var scheduledTask = _scheduler.Schedule(DateTime.Now.AddMinutes(MinutesToCacheContent), (scheduledTask) =>
             {
