@@ -8,7 +8,7 @@ namespace CheeseBot.GitHub
         
         public string Filename { get; }
         
-        public string Content { get; }
+        public virtual string Content { get; }
         
         public GitHubSourceFile(Uri uri, string filename, string content)
         {
