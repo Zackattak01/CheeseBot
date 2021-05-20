@@ -16,11 +16,14 @@ namespace CheeseBot.Commands.Modules
         [Description("Plays a quick game of Ping Pong.")]
         public async Task PingAsync()
         {
+            var now = DateTimeOffset.Now;
+            const string responseString = "Pong:\nREST: {0}ms\nGateway: {1}ms";
+            
             var stopwatch = Stopwatch.StartNew();
-            var msg = await Response("Pong: *loading* response time");
+            var msg = await Response(string.Format(responseString, "*loading*", "*loading*"));
             stopwatch.Stop();
 
-            await msg.ModifyAsync(x => x.Content = $"Pong: {stopwatch.ElapsedMilliseconds}ms response time");
+            await msg.ModifyAsync(x => x.Content = string.Format(responseString, stopwatch.ElapsedMilliseconds, (int)(now - Context.Message.CreatedAt).TotalMilliseconds));
         }
 
         [Command("info")]
