@@ -55,7 +55,7 @@ namespace CheeseBot.Services
             
             Logger.LogInformation($"Fetched github source file: {sourceFile.Filename} Caching contents for {MinutesToCacheContent} minutes");
             
-            var scheduledTask = _scheduler.Schedule(DateTime.Now.AddMinutes(MinutesToCacheContent), (scheduledTask) =>
+            var scheduledTask = _scheduler.Schedule(DateTime.Now.AddMinutes(MinutesToCacheContent), scheduledTask =>
             {
                 Logger.LogInformation($"Cached content for {sourceFile.Filename} expired after {MinutesToCacheContent} minutes.");
                 _contentCache.Remove(uri);
@@ -88,10 +88,8 @@ namespace CheeseBot.Services
         public void ClearContentCache()
         {
             foreach (var taskId in _scheduledCacheRemovalTasks)
-            {
                 _scheduler.CancelScheduledTask(taskId);
-            }
-            
+
             _scheduledCacheRemovalTasks.Clear();
             
             _contentCache.Clear();

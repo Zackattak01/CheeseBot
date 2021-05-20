@@ -12,6 +12,7 @@ using Disqord.Rest;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Qmmands;
 
@@ -23,22 +24,27 @@ namespace CheeseBot.Commands.Modules
         private const int ByteToMbConversionFactor = 1000000;
         
         private readonly CommandModuleCompilingService _commandModuleCompilingService;
-        public OwnerModule(CommandModuleCompilingService commandModuleCompilingService)
+        private readonly IHostApplicationLifetime _lifetime;
+        public OwnerModule(CommandModuleCompilingService commandModuleCompilingService, IHostApplicationLifetime lifetime)
         {
             _commandModuleCompilingService = commandModuleCompilingService;
+            _lifetime = lifetime;
+        }
+        
+        [Command("shutdown", "stop", "die", "kill", "exit")]
+        public async Task Shutdown()
+        {
+            await Response("Shutting down");
+            _lifetime.StopApplication();
         }
 
-
-        [Command("shutdown", "stop", "die", "kill", "exit")]
-        [Description("Shuts down and does not restart it")]
-        public void Shutdown()
-            => Environment.Exit(0);
-        
-        
         [Command("restart", "update")]
-        [Description("Shuts down and does restarts it")]
-        public void Restart()
-            => Environment.Exit(1);
+        public async Task Restart()
+        {
+            await Response("Restarting");
+            Environment.ExitCode = 1;
+            _lifetime.StopApplication();
+        }
 
         [Command("mem", "memory")]
         [Description("Gets memory usage.")]
