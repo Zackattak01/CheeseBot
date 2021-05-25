@@ -115,18 +115,21 @@ namespace CheeseBot.Commands.Modules
                     {
                         var eb = new LocalEmbedBuilder()
                             .WithTitle("Execution Failure")
-                            .WithDescription(state.Exception.ToString())
+                            .WithDescription(state.Exception.ToString().SplitInParts(LocalEmbedBuilder.MAX_DESCRIPTION_LENGTH).First())
                             .WithColor(Color.Red)
                             .WithFooter($"{stopwatch.Elapsed.TotalMilliseconds}ms");
                         return Response(eb);
                     }
-                    if (state.ReturnValue == null || state.ReturnValue is string value && string.IsNullOrWhiteSpace(value))
+                    
+                    switch (state.ReturnValue)
                     {
-                        return Reaction(new LocalEmoji("✅"));
-                    }
-                    else
-                    {
-                        return Response(state.ReturnValue.ToString());
+                        case null:
+                        case string value when string.IsNullOrWhiteSpace(value):
+                            return Reaction(new LocalEmoji("✅"));
+                        case DiscordCommandResult commandResult:
+                            return commandResult;
+                        default:
+                            return Response(state.ReturnValue.ToString());
                     }
                 }
                 
