@@ -5,7 +5,7 @@ namespace CheeseBot.Eval
 {
     public class EvalGlobals
     {
-        public DiscordCommandContext Context { get; }
+        public virtual DiscordCommandContext Context { get; }
         public EvalGlobals(DiscordCommandContext context)
         {
             Context = context;

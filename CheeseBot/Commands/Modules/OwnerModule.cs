@@ -81,7 +81,8 @@ namespace CheeseBot.Commands.Modules
             var scriptOptions = ScriptOptions.Default
                 .WithImports(EvalUtils.EvalNamespaces)
                 .WithReferences(AppDomain.CurrentDomain.GetAssemblies().Where(x => !x.IsDynamic && !string.IsNullOrWhiteSpace(x.Location)));
-            var script = CSharpScript.Create(code, scriptOptions, typeof(EvalGlobals));
+            
+            var script = CSharpScript.Create(code, scriptOptions, Context is DiscordGuildCommandContext ? typeof(EvalGuildGlobals) : typeof(EvalGlobals));
             try
             {
                 using (Context.Bot.BeginTyping(Context.ChannelId))
@@ -109,7 +110,7 @@ namespace CheeseBot.Commands.Modules
                             eb.AddField($"Skipped {diagnostics.Length - 4} {(diagnostics.Length - 4 > 1 ? "errors" : "error")}", "You should be able to fix it.");
                         return Response(eb);
                     }
-                    var globals = new EvalGlobals(Context);
+                    var globals = Context is DiscordGuildCommandContext guildContext ? new EvalGuildGlobals(guildContext) : new EvalGlobals(Context);
                     var state = await script.RunAsync(globals, _ => true);
                     if (state.Exception != null)
                     {
