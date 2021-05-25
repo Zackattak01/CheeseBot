@@ -10,10 +10,10 @@ namespace CheeseBot.Commands.TypeParsers
     {
         public override async ValueTask<TypeParserResult<IUser>> ParseAsync(Parameter parameter, string value, DiscordGuildCommandContext context)
         {
-            if (!Snowflake.TryParse(value, out var id))
-                return Failure("Please enter a valid discord id.");
-            
-            return Success(await context.Bot.FetchUserAsync(id));
+            if (!Snowflake.TryParse(value, out var id) || await context.Bot.FetchUserAsync(id) is not { } user)
+                return Failure("Please enter a valid user id.");
+
+            return Success(user);
         }
     }
 }
