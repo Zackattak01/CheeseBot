@@ -16,14 +16,14 @@ namespace CheeseBot.Commands.Modules
         [Description("Plays a quick game of Ping Pong.")]
         public async Task PingAsync()
         {
-            var now = DateTimeOffset.Now;
             const string responseString = "Pong:\nREST: {0}ms\nGateway: {1}ms";
-            
+            var gatewayLatency = DateTimeOffset.Now - Context.Message.CreatedAt;
+
             var stopwatch = Stopwatch.StartNew();
             var msg = await Response(string.Format(responseString, "*loading*", "*loading*"));
             stopwatch.Stop();
 
-            await msg.ModifyAsync(x => x.Content = string.Format(responseString, stopwatch.ElapsedMilliseconds, (int)(now - Context.Message.CreatedAt).TotalMilliseconds));
+            await msg.ModifyAsync(x => x.Content = string.Format(responseString, stopwatch.ElapsedMilliseconds, (int)gatewayLatency.TotalMilliseconds));
         }
 
         [Command("info")]
@@ -73,5 +73,22 @@ namespace CheeseBot.Commands.Modules
         [RequireGuild]
         public DiscordCommandResult ServerInfo()
             => Response(((DiscordGuildCommandContext) Context).Guild.CreateInfoEmbed());
+
+        [Command("av", "avatar")]
+        public DiscordCommandResult Avatar(IUser user, int size = 2048)
+        {
+            if (size < 16 || size > 2048 || (size & (size - 1)) != 0)
+                return Response("Invalid size!  Size must be a power of 2 and between 16 and 2048.");
+
+            return Response(user.GetAvatarUrl(size: size));
+        }
+
+        [Command("av", "avatar")]
+        public DiscordCommandResult Avatar(IMember member, int size = 2048)
+            => Avatar(member as IUser, size);
+        
+        [Command("av", "avatar")]
+        public DiscordCommandResult Avatar(int size = 2048)
+            => Avatar(Context.Author, size);
     }
 }
