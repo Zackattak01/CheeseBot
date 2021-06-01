@@ -48,21 +48,21 @@ namespace CheeseBot.Commands.Modules
                     return Response("You have no notes");
                 case <= 5:
                 {
-                    var eb = new LocalEmbedBuilder().WithDefaultColor();
+                    var e = new LocalEmbed().WithDefaultColor();
 
                     foreach (var note in notes)
-                        eb.AddField($"Note {note.Id}" , note.ToString());
+                        e.AddField($"Note {note.Id}" , note.ToString());
                     
                     var content = $"You have {notes.Count} {(notes.Count == 1 ? "note" : "notes")}";
-                    return Response(content, eb);
+                    return Response(content, e);
                 }
                 default:
                 {
-                    var fieldBuilders = new List<LocalEmbedFieldBuilder>(notes.Count);
+                    var fieldBuilders = new List<LocalEmbedField>(notes.Count);
 
                     foreach (var note in notes)
                     {
-                        fieldBuilders.Add(new LocalEmbedFieldBuilder().WithName($"Note {note.Id}").WithValue(note.ToString()));
+                        fieldBuilders.Add(new LocalEmbedField().WithName($"Note {note.Id}").WithValue(note.ToString()));
                     }
 
                     var config = FieldBasedPageProviderConfiguration.Default.WithContent($"You have {notes.Count} notes");

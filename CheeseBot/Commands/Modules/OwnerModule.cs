@@ -92,7 +92,7 @@ namespace CheeseBot.Commands.Modules
                     stopwatch.Stop();
                     if (diagnostics.Any(x => x.Severity == DiagnosticSeverity.Error))
                     {
-                        var eb = new LocalEmbedBuilder()
+                        var e = new LocalEmbed()
                          .WithTitle("Compilation Failure")
                         .WithDescription($"{diagnostics.Length} {(diagnostics.Length > 1 ? "errors" : "error")}")
                         .WithColor(Color.Red)
@@ -103,23 +103,23 @@ namespace CheeseBot.Commands.Modules
                                 break;
                             var diagnostic = diagnostics[i];
                             var lineSpan = diagnostic.Location.GetLineSpan().Span;
-                            eb.AddField($"Error `{diagnostic.Id}` at {lineSpan.Start} - {lineSpan.End}", diagnostic.GetMessage());
+                            e.AddField($"Error `{diagnostic.Id}` at {lineSpan.Start} - {lineSpan.End}", diagnostic.GetMessage());
                         }
                          
                         if (diagnostics.Length > 4) 
-                            eb.AddField($"Skipped {diagnostics.Length - 4} {(diagnostics.Length - 4 > 1 ? "errors" : "error")}", "You should be able to fix it.");
-                        return Response(eb);
+                            e.AddField($"Skipped {diagnostics.Length - 4} {(diagnostics.Length - 4 > 1 ? "errors" : "error")}", "You should be able to fix it.");
+                        return Response(e);
                     }
                     var globals = Context is DiscordGuildCommandContext guildContext ? new EvalGuildGlobals(guildContext) : new EvalGlobals(Context);
                     var state = await script.RunAsync(globals, _ => true);
                     if (state.Exception != null)
                     {
-                        var eb = new LocalEmbedBuilder()
+                        var e = new LocalEmbed()
                             .WithTitle("Execution Failure")
-                            .WithDescription(state.Exception.ToString().SplitInParts(LocalEmbedBuilder.MAX_DESCRIPTION_LENGTH).First())
+                            .WithDescription(state.Exception.ToString().SplitInParts(LocalEmbed.MAX_DESCRIPTION_LENGTH).First())
                             .WithColor(Color.Red)
                             .WithFooter($"{stopwatch.Elapsed.TotalMilliseconds}ms");
-                        return Response(eb);
+                        return Response(e);
                     }
                     
                     switch (state.ReturnValue)
@@ -216,9 +216,9 @@ namespace CheeseBot.Commands.Modules
                 case FailedCompileResult failedResult:
                 {
                     var errorString = string.Join('\n', failedResult.Errors);
-                    if (errorString.Length > LocalMessageBuilder.MAX_CONTENT_LENGTH)
+                    if (errorString.Length > LocalMessage.MAX_CONTENT_LENGTH)
                     {
-                        var pages = errorString.SplitInParts(LocalMessageBuilder.MAX_CONTENT_LENGTH);
+                        var pages = errorString.SplitInParts(LocalMessage.MAX_CONTENT_LENGTH);
                         return Pages(pages.Select(x => new Page(x)));
                     }
                     else

@@ -6,33 +6,33 @@ namespace CheeseBot.Extensions
 {
     public static class GuildExtensions
     {
-        public static LocalEmbedBuilder CreateInfoEmbed(this CachedGuild guild)
+        public static LocalEmbed CreateInfoEmbed(this CachedGuild guild)
         {
-            var eb = new LocalEmbedBuilder()
+            var e = new LocalEmbed()
                 .WithDefaultColor()
                 .WithTitle(guild.Name)
                 .WithThumbnailUrl(guild.GetIconUrl());
 
             if (guild.Description is not null)
-                eb.WithDescription(guild.Description);
+                e.WithDescription(guild.Description);
 
             if (guild.GetMember(guild.OwnerId) is { } owner)
-                eb.AddInlineField("Owner", owner.Mention);
+                e.AddInlineField("Owner", owner.Mention);
             
-            eb.AddInlineField("Member Count", guild.MemberCount);
-            eb.AddInlineField("Role Count", guild.Roles.Count);
-            eb.FillLineWithEmptyFields();
+            e.AddInlineField("Member Count", guild.MemberCount);
+            e.AddInlineField("Role Count", guild.Roles.Count);
+            e.FillLineWithEmptyFields();
 
             var channels = guild.GetChannels();
-            eb.AddInlineField("Channel Count", channels.Count);
-            eb.AddInlineField("Text Channel Count", channels.Count(x => x.Value is CachedTextChannel));
-            eb.AddInlineField("Voice Channel Count", channels.Count(x => x.Value is CachedVoiceChannel));
+            e.AddInlineField("Channel Count", channels.Count);
+            e.AddInlineField("Text Channel Count", channels.Count(x => x.Value is CachedTextChannel));
+            e.AddInlineField("Voice Channel Count", channels.Count(x => x.Value is CachedVoiceChannel));
 
-            eb.AddInlineField("Boost Level", guild.BoostTier);
-            eb.AddInlineField("Emoji Count", guild.Emojis.Count);
-            eb.AddInlineField("Locale", guild.PreferredLocale);
+            e.AddInlineField("Boost Level", guild.BoostTier);
+            e.AddInlineField("Emoji Count", guild.Emojis.Count);
+            e.AddInlineField("Locale", guild.PreferredLocale);
 
-            return eb;
+            return e;
         }
     }
 }

@@ -90,16 +90,12 @@ namespace CheeseBot.Commands.Modules
             }
             
             await Context.Message.DeleteAsync();
-            var eb = new LocalEmbedBuilder()
+            var e = new LocalEmbed()
                 .WithDefaultColor()
-                .WithAuthor(x =>
-                {
-                    x.WithIconUrl(guildContext.Author.GetAvatarUrl());
-                    x.WithName($"{guildContext.Author.GetDisplayName()}'s Poll");
-                })
+                .WithAuthor($"{guildContext.Author.GetDisplayName()}'s Poll", guildContext.Author.GetAvatarUrl())
                 .WithDescription(poll);
             
-            var msg = await Response(eb);
+            var msg = await Response(e);
             await msg.AddReactionAsync(new LocalEmoji("👍"));
             await msg.AddReactionAsync(new LocalEmoji("👎"));
         }

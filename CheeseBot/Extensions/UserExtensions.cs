@@ -10,37 +10,38 @@ namespace CheeseBot.Extensions
         public static string GetDisplayName(this IMember member)
             => member.Nick ?? member.Name;
         
-        public static LocalEmbedBuilder CreateInfoEmbed(this IUser user)
+        public static LocalEmbed CreateInfoEmbed(this IUser user)
         {
             const string dtoFormat = "M/d/yy h:mm tt zzz";
             
-            var eb = new LocalEmbedBuilder()
+            var e = new LocalEmbed()
                 .WithDefaultColor()
                 .WithTitle(user.ToString())
                 .WithThumbnailUrl(user.GetAvatarUrl())
-                .AddInlineField("Joined Discord On", user.CreatedAt.ToString(dtoFormat));
+                .AddInlineField("Joined Discord On", user.CreatedAt().ToString(dtoFormat));
 
+            user.CreatedAt();
             if (user is IMember member)
             {
                 if (member.Nick is not null)
-                    eb.Title += $" ({member.Nick})";
+                    e.Title += $" ({member.Nick})";
                 
                 if (member.JoinedAt.HasValue)
-                    eb.AddInlineField("Joined Server On", member.JoinedAt.Value.ToString(dtoFormat));
+                    e.AddInlineField("Joined Server On", member.JoinedAt.Value.ToString(dtoFormat));
 
                 if (member.BoostedAt is not null)
-                    eb.AddInlineField("Boosting Since", member.BoostedAt.Value.ToString(dtoFormat));
+                    e.AddInlineField("Boosting Since", member.BoostedAt.Value.ToString(dtoFormat));
 
-                eb.FillLineWithEmptyFields();
+                e.FillLineWithEmptyFields();
                 
                 if (member.GetPresence() is { } presence)
                 {
-                    eb.AddInlineField("Status", presence.Status.ToString());
+                    e.AddInlineField("Status", presence.Status.ToString());
 
                     if (presence.Activities.Count > 0)
-                        eb.AddInlineField("Activities", string.Join('\n', presence.Activities));
+                        e.AddInlineField("Activities", string.Join('\n', presence.Activities));
 
-                    eb.FillLineWithEmptyFields();
+                    e.FillLineWithEmptyFields();
                 }
                 
                 
@@ -65,15 +66,15 @@ namespace CheeseBot.Extensions
                 else
                     roleStr = string.Join('\n', member.RoleIds.Select(Mention.Role));
                 
-                eb.WithDescription($"Roles:\n {roleStr}");
+                e.WithDescription($"Roles:\n {roleStr}");
 
 
             }
 
             if (user.IsBot)
-                eb.Title += " (Bot)";
+                e.Title += " (Bot)";
             
-            return eb;
+            return e;
         }
     }
 }

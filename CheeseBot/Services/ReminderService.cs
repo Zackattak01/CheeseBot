@@ -102,8 +102,8 @@ namespace CheeseBot.Services
             if (channel is not null)
             {
                 var user = Client.GetUser(reminder.UserId) ?? await Client.FetchUserAsync(reminder.UserId);
-                var localMessage = new LocalMessageBuilder().WithContent(Mention.User(user))
-                    .WithEmbed(reminder.GetEmbed()).Build();
+                var localMessage = new LocalMessage().WithContent(Mention.User(user))
+                    .WithEmbed(reminder.GetEmbed());
 
                 await Client.SendMessageAsync(reminder.ChannelId, localMessage);
             }

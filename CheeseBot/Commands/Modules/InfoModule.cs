@@ -17,7 +17,7 @@ namespace CheeseBot.Commands.Modules
         public async Task PingAsync()
         {
             const string responseString = "Pong:\nREST: {0}ms\nGateway: {1}ms";
-            var gatewayLatency = DateTimeOffset.Now - Context.Message.CreatedAt;
+            var gatewayLatency = DateTimeOffset.Now - Context.Message.CreatedAt();
 
             var stopwatch = Stopwatch.StartNew();
             var msg = await Response(string.Format(responseString, "*loading*", "*loading*"));
@@ -45,7 +45,7 @@ namespace CheeseBot.Commands.Modules
                     authorString = member.Mention;
             }
 
-            var embedBuilder = new LocalEmbedBuilder()
+            var embedBuilder = new LocalEmbed()
                 .WithDefaultColor()
                 .WithTitle(Context.Bot.CurrentUser.Name)
                 .AddInlineField("Author", authorString)

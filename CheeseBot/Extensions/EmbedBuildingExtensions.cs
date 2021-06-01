@@ -5,18 +5,16 @@ namespace CheeseBot.Extensions
 {
     public static class EmbedBuildingExtensions
     {
-
+        public static LocalEmbed WithDefaultColor(this LocalEmbed e)
+            => e.WithColor(Global.DefaultEmbedColor);
         
-        public static LocalEmbedBuilder WithDefaultColor(this LocalEmbedBuilder eb)
-            => eb.WithColor(Global.DefaultEmbedColor);
-        
-        public static LocalEmbedBuilder FillLineWithEmptyFields(this LocalEmbedBuilder eb)
+        public static LocalEmbed FillLineWithEmptyFields(this LocalEmbed e)
         {
             var currentInlineFieldCount = 0;
             
-            for (var i = eb.Fields.Count - 1; i >= 0; i--)
+            for (var i = e.Fields.Count - 1; i >= 0; i--)
             {
-                if (!eb.Fields[i].IsInline)
+                if (!e.Fields[i].IsInline)
                     break;
 
                 currentInlineFieldCount++;
@@ -24,30 +22,27 @@ namespace CheeseBot.Extensions
 
             // line is already full
             if (currentInlineFieldCount % 3 == 0)
-                return eb;
+                return e;
 
             while (currentInlineFieldCount % 3 != 0)
             {
-                eb.AddInlineBlankField();
+                e.AddInlineBlankField();
                 currentInlineFieldCount++;
             }
 
-            return eb;
+            return e;
         }
 
-        public static LocalEmbedBuilder AddInlineField(this LocalEmbedBuilder eb, string name, string value)
-            => eb.AddField(name, value, true);
+        public static LocalEmbed AddInlineField(this LocalEmbed e, string name, string value)
+            => e.AddField(name, value, true);
         
-        public static LocalEmbedBuilder AddInlineField(this LocalEmbedBuilder eb, string name, object value)
-            => eb.AddField(name, value, true);
+        public static LocalEmbed AddInlineField(this LocalEmbed e, string name, object value)
+            => e.AddField(name, value, true);
         
-        public static LocalEmbedBuilder AddInlineField(this LocalEmbedBuilder eb, LocalEmbedFieldBuilder efb)
-            => eb.AddField(efb);
-        
-        public static LocalEmbedBuilder AddInlineField(this LocalEmbedBuilder eb, Action<LocalEmbedFieldBuilder> action)
-            => eb.AddField(action);
-        
-        public static LocalEmbedBuilder AddInlineBlankField(this LocalEmbedBuilder eb)
-            => eb.AddBlankField(true);
+        public static LocalEmbed AddInlineField(this LocalEmbed e, LocalEmbedField ef)
+            => e.AddField(ef);
+
+        public static LocalEmbed AddInlineBlankField(this LocalEmbed e)
+            => e.AddBlankField(true);
     }
 }

@@ -52,20 +52,20 @@ namespace CheeseBot.Commands.Modules
                     return Response("You have no reminders");
                 case <= 5:
                 {
-                    var eb = new LocalEmbedBuilder().WithDefaultColor();
+                    var e = new LocalEmbed().WithDefaultColor();
 
                     foreach (var reminder in reminders)
-                        eb.AddField($"Reminder {reminder.Id}" , reminder.ToString());
+                        e.AddField($"Reminder {reminder.Id}" , reminder.ToString());
                     
                     var content = $"You have {reminders.Count} {(reminders.Count == 1 ? "reminder" : "reminders")}";
-                    return Response(content, eb);
+                    return Response(content, e);
                 }
                 default:
                 {
-                    var builders = new List<LocalEmbedFieldBuilder>(reminders.Count);
+                    var builders = new List<LocalEmbedField>(reminders.Count);
 
                     foreach (var reminder in reminders)
-                        builders.Add(new LocalEmbedFieldBuilder().WithName($"Reminder {reminder.Id}").WithValue(reminder.ToString()));
+                        builders.Add(new LocalEmbedField().WithName($"Reminder {reminder.Id}").WithValue(reminder.ToString()));
             
                     var config = FieldBasedPageProviderConfiguration.Default.WithContent($"You have {reminders.Count} reminders");
                     return Pages(new FieldBasedPageProvider(builders, config));
