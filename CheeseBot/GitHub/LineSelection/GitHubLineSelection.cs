@@ -29,7 +29,7 @@ namespace CheeseBot.GitHub
             else if (line[0] != LineIndicatorChar)
                 return false;
 
-            if (!int.TryParse(line[1..], out var selectedLine))
+            if (!int.TryParse(line[1..], out var selectedLine) || !(selectedLine > 0))
                 return false;
 
             singleLineSelection = new GitHubSingleLineSelection(selectedLine);
@@ -45,10 +45,10 @@ namespace CheeseBot.GitHub
             else if (lines[0][0] != LineIndicatorChar || lines[1][0] != LineIndicatorChar)
                 return false;
 
-            if (!int.TryParse(lines[0][1..], out var startLine) && startLine > 0)
+            if (!int.TryParse(lines[0][1..], out var startLine) || !(startLine > 0))
                 return false; 
             
-            if (!int.TryParse(lines[1][1..], out var endLine) && endLine >= startLine)
+            if (!int.TryParse(lines[1][1..], out var endLine) || !(endLine >= startLine))
                 return false;
 
             multiLineSelection = new GitHubMultiLineSelection(startLine, endLine);
