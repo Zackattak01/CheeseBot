@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace CheeseBot.Scheduling
 {
@@ -8,6 +9,7 @@ namespace CheeseBot.Scheduling
         private static int _idCounter;
 
         private readonly Func<ScheduledTask,Task> _task;
+        private readonly ILogger _logger;
 
         private AsyncTimer _timer;
         public int Id { get; }
@@ -15,45 +17,48 @@ namespace CheeseBot.Scheduling
         public bool Recurring { get; }
 
         public DateTime ExecutionTime { get; }
-
-        public event EventHandler<UnhandledExceptionEventArgs> UnhandledException;
+        
         public event EventHandler Disposed;
         
-        public ScheduledTask(Func<ScheduledTask, Task> task, DateTime executionTime, bool recurring = false)
+        public ScheduledTask(Func<ScheduledTask, Task> task, DateTime executionTime, ILogger logger, bool recurring = false)
         {
             Id = _idCounter++;
             ExecutionTime = executionTime;
             Recurring = recurring;
             _task = task;
+            _logger = logger;
             _timer = new AsyncTimer(executionTime - DateTime.Now);
+            InitTimer();
+        }
+
+        private void InitTimer()
+        {
             _timer.Elapsed += AsyncTimerElapsed;
+            _timer.UnhandledException += UnhandledException;
             _timer.Start();
         }
 
         private async Task AsyncTimerElapsed(object sender, EventArgs eventArgs)
         {
-            try
-            {
-                await _task(this);
-            }
-            catch (Exception e)
-            {
-                var handler = UnhandledException;
-                handler?.Invoke(this, new UnhandledExceptionEventArgs(e, false));
-            }
-            
-
             // ReSharper disable once ConvertIfStatementToSwitchStatement
             if (Recurring && !_timer.AutoReset)
             {
                 _timer.Dispose();
                 _timer = new AsyncTimer(new TimeSpan(24, 0, 0), true); //create a timer that has the correct interval
+                InitTimer();
             }
             else if(!Recurring) // timer is not going to fire anymore, dispose this object
             {
                 Dispose();
             }
+            
+            // execute the scheduled task last
+            await _task(this);
         }
+
+        private void UnhandledException(AsyncTimer sender, UnhandledExceptionEventArgs args)
+            => _logger.LogError($"A handler for a scheduled task (Id: {Id}) threw an exception\n {args.Exception}");
+        
 
         public void Cancel()
             => Dispose();

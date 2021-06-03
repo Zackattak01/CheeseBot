@@ -17,20 +17,18 @@ namespace CheeseBot.Services
 
         public ScheduledTask Schedule(DateTime time, Func<ScheduledTask, Task> task)
         {
-            var scheduledTask = new ScheduledTask(task, time);
+            var scheduledTask = new ScheduledTask(task, time, Logger);
             scheduledTask.Disposed += ScheduledTaskDisposed;
-            scheduledTask.UnhandledException += ScheduledTaskUnhandledException;
-            
+
             _scheduledTaskDict.Add(scheduledTask.Id, scheduledTask);
             return scheduledTask;
         }
 
         public ScheduledTask ScheduleRecurring(DateTime time, Func<ScheduledTask, Task> task)
         {
-            var scheduledTask = new ScheduledTask(task, time, true);
+            var scheduledTask = new ScheduledTask(task, time, Logger, true);
             scheduledTask.Disposed += ScheduledTaskDisposed;
-            scheduledTask.UnhandledException += ScheduledTaskUnhandledException;
-            
+
             _scheduledTaskDict.Add(scheduledTask.Id, scheduledTask);
             return scheduledTask;
         }
@@ -49,12 +47,6 @@ namespace CheeseBot.Services
         public bool TryGetScheduledTask(int id, out ScheduledTask task)
             => _scheduledTaskDict.TryGetValue(id, out task);
         
-        private void ScheduledTaskUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
-        {
-            var task = sender as ScheduledTask;
-            Logger.LogError(
-                $"A scheduled task with id: {task!.Id} threw an exception:\n {unhandledExceptionEventArgs.ExceptionObject}");
-        }
 
         private void ScheduledTaskDisposed(object sender, EventArgs e)
             => _scheduledTaskDict.Remove((sender as ScheduledTask)!.Id);

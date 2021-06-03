@@ -4,15 +4,14 @@ using System.Timers;
 
 namespace CheeseBot.Scheduling
 {
-    public delegate Task AsynchronousEventHandler<T>(object sender, T e) where T : EventArgs;
-    
     public sealed class AsyncTimer : IDisposable
     {
         private readonly Timer _timer;
 
         private double _remainingInterval;
 
-        public event AsynchronousEventHandler<EventArgs> Elapsed;
+        public event AsynchronousEventHandler<AsyncTimer, EventArgs> Elapsed;
+        public event Action<AsyncTimer, UnhandledExceptionEventArgs> UnhandledException;
         
         public bool AutoReset { get; }
         
@@ -35,7 +34,6 @@ namespace CheeseBot.Scheduling
         public AsyncTimer(TimeSpan interval, bool autoReset = false)
             : this(interval.TotalMilliseconds, autoReset)
         {
-            
         }
 
         private void InitTimerHandlers()
@@ -68,21 +66,29 @@ namespace CheeseBot.Scheduling
             _timer.Interval = _remainingInterval;
             _timer.Elapsed -= IntMaxValueHandler;
             _timer.Elapsed += TimerElapsed;
-            
         }
 
         private void TimerElapsed(object sender, ElapsedEventArgs e)
         {
-            // apparently this avoids a rare race condition
-            // its not likely I would ever produce one, considering the way I plan to use this class
-            // but at least we prevent it from happening
+            _ = TimerElapsedAsync(sender, e);
+            HandleAutoReset();
+        }
+
+        private async Task TimerElapsedAsync(object sender, ElapsedEventArgs e)
+        {
             var handler = Elapsed;
             if (handler is not null)
             {
-                _ = handler(this, new EventArgs());
+                try
+                {
+                    await handler(this, new EventArgs());
+                }
+                catch (Exception exception)
+                {
+                    var exceptionHandler = UnhandledException;
+                    exceptionHandler?.Invoke(this, new UnhandledExceptionEventArgs(exception));
+                }
             }
-            
-            HandleAutoReset();
         }
 
         private void HandleAutoReset()
@@ -97,14 +103,10 @@ namespace CheeseBot.Scheduling
         public void Start()
             => _timer.Start();
         
-
         public void Stop()
             => _timer.Stop();
-        
-        
+
         public void Dispose()
             => _timer.Dispose();
-        
-        
     }
 }
