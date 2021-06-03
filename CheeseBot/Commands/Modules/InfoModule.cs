@@ -14,12 +14,6 @@ namespace CheeseBot.Commands.Modules
 {
     public class InfoModule : DiscordModuleBase
     {
-        private readonly SchedulingService _schedulingService;
-        public InfoModule(SchedulingService schedulingService)
-        {
-            _schedulingService = schedulingService;
-        }
-
         [Command("ping")]
         [Description("Plays a quick game of Ping Pong.")]
         public async Task PingAsync()
@@ -98,22 +92,5 @@ namespace CheeseBot.Commands.Modules
         [Command("av", "avatar")]
         public DiscordCommandResult Avatar(int size = 2048)
             => Avatar(Context.Author, size);
-
-        [Command("timer")]
-        public void Timer()
-        {
-            // var timer = new AsyncTimer(5000, true);
-            // timer.Elapsed += (sender, args) =>
-            // {
-            //     Console.WriteLine("throwing");
-            //     throw new Exception("Testing exception");
-            // };
-            //
-            // timer.UnhandledException += (_, args) => Console.WriteLine("Unhandled Exception!\n" + args.Exception);
-            // timer.Start();
-
-            _schedulingService.ScheduleRecurring(DateTime.Now.AddSeconds(5),
-                task => throw new Exception("Doing exception things"));
-        }
     }
 }
