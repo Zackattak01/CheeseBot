@@ -12,10 +12,10 @@ namespace CheeseBot.Eval
         }
         
         public DiscordResponseCommandResult Response(string content, LocalAllowedMentions mentions = null)
-            => Response(content, mentions);
+            => Response(content, null, mentions);
 
         public DiscordResponseCommandResult Response(LocalEmbed embed)
-            => Response(embed);
+            => Response(null, embed);
 
         public DiscordResponseCommandResult Response(string content, LocalEmbed embed, LocalAllowedMentions mentions = null)
             => Response(new LocalMessage()
