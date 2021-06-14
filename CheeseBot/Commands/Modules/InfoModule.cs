@@ -2,8 +2,6 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using CheeseBot.Extensions;
-using CheeseBot.Scheduling;
-using CheeseBot.Services;
 using Disqord;
 using Disqord.Bot;
 using Disqord.Gateway;
@@ -30,23 +28,25 @@ namespace CheeseBot.Commands.Modules
 
         [Command("info")]
         [Description("Provides info about the bot.")]
-        public DiscordCommandResult InfoAsync()
+        public async Task<DiscordCommandResult> InfoAsync()
         {
             var authorId = Context.Bot.OwnerIds[0];
-
-            var authorString = Context.Bot.GetUser(authorId).ToString();
-
+            
             using var process = Process.GetCurrentProcess();
             var uptimeString = (DateTime.Now - process.StartTime).Humanize();
-            
+
+            string authorString = null;
+
             if (Context.GuildId is not null)
             {
-                var member = Context.Bot.GetMember(Context.GuildId.Value, authorId);
-               
-                if (member is not null)
-                    authorString = member.Mention;
+                var guildId = Context.GuildId.Value;
+                authorString = Context.Bot.GetMember(guildId, authorId)?.Mention ??
+                               (await Context.Bot.FetchMemberAsync(guildId, authorId))?.Mention;
             }
 
+            authorString ??= Context.Bot.GetUser(authorId)?.ToString() ??
+                             (await Context.Bot.FetchUserAsync(authorId))?.ToString();
+            
             var embedBuilder = new LocalEmbed()
                 .WithDefaultColor()
                 .WithTitle(Context.Bot.CurrentUser.Name)

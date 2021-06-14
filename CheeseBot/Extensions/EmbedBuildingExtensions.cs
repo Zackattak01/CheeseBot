@@ -1,4 +1,3 @@
-using System;
 using Disqord;
 
 namespace CheeseBot.Extensions

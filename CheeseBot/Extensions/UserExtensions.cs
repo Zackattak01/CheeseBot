@@ -19,8 +19,7 @@ namespace CheeseBot.Extensions
                 .WithTitle(user.ToString())
                 .WithThumbnailUrl(user.GetAvatarUrl())
                 .AddInlineField("Joined Discord On", user.CreatedAt().ToString(dtoFormat));
-
-            user.CreatedAt();
+            
             if (user is IMember member)
             {
                 if (member.Nick is not null)

@@ -19,10 +19,11 @@ namespace CheeseBot.Services
         private readonly DefaultGuildSettingsProvider _defaultGuildSettingsProvider;
 
 
-        public GuildSettingsService(IServiceProvider services, 
-                                    DefaultGuildSettingsProvider defaultGuildSettingsProvider, 
-                                    ILogger<GuildSettingsService> logger) 
-                                    : base(logger)
+        public GuildSettingsService(
+            IServiceProvider services, 
+            DefaultGuildSettingsProvider defaultGuildSettingsProvider, 
+            ILogger<GuildSettingsService> logger) 
+            : base(logger)
         {
             _services = services;
             _defaultGuildSettingsProvider = defaultGuildSettingsProvider;
