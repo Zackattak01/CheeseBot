@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Disqord;
+using Disqord.Extensions.Interactivity.Menus;
 using Disqord.Extensions.Interactivity.Menus.Paged;
 
 namespace CheeseBot.Disqord
@@ -42,12 +43,12 @@ namespace CheeseBot.Disqord
                 if (_configuration.AutoGeneratePageTitles)
                     embedBuilder.WithTitle($"Page {_pages.Count + 1}/{PageCount}");
 
-                _pages.Add(new Page(_configuration.Content, embedBuilder));
+                _pages.Add(new Page().WithContent(_configuration.Content).AddEmbed(embedBuilder));
             }
         }
 
-        public ValueTask<Page> GetPageAsync(PagedMenu menu)
-            => new(_pages[menu.CurrentPageIndex]);
+        public ValueTask<Page> GetPageAsync(PagedViewBase view)
+            => new(_pages[view.CurrentPageIndex]);
         
     }
 }

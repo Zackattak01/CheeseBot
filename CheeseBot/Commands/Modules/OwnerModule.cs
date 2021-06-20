@@ -216,10 +216,10 @@ namespace CheeseBot.Commands.Modules
                 case FailedCompileResult failedResult:
                 {
                     var errorString = string.Join('\n', failedResult.Errors);
-                    if (errorString.Length > LocalMessage.MAX_CONTENT_LENGTH)
+                    if (errorString.Length > LocalMessageBase.MAX_CONTENT_LENGTH)
                     {
-                        var pages = errorString.SplitInParts(LocalMessage.MAX_CONTENT_LENGTH);
-                        return Pages(pages.Select(x => new Page(x)));
+                        var pages = errorString.SplitInParts(LocalMessageBase.MAX_CONTENT_LENGTH);
+                        return Pages(pages.Select(x => new Page { Content = x }));
                     }
                     else
                     {

@@ -11,20 +11,20 @@ namespace CheeseBot.Eval
             Context = context;
         }
         
-        public DiscordResponseCommandResult Response(string content, LocalAllowedMentions mentions = null)
-            => Response(content, null, mentions);
+        public DiscordResponseCommandResult Response(string content)
+            => Response(new LocalMessage().WithContent(content));
 
-        public DiscordResponseCommandResult Response(LocalEmbed embed)
-            => Response(null, embed);
+        public DiscordResponseCommandResult Response(params LocalEmbed[] embeds)
+            => Response(new LocalMessage().WithEmbeds(embeds));
 
-        public DiscordResponseCommandResult Response(string content, LocalEmbed embed, LocalAllowedMentions mentions = null)
-            => Response(new LocalMessage()
-                .WithContent(content)
-                .WithEmbed(embed)
-                .WithAllowedMentions(mentions ?? LocalAllowedMentions.None));
+        public DiscordResponseCommandResult Response(string content, params LocalEmbed[] embeds)
+            => Response(new LocalMessage().WithContent(content).WithEmbeds(embeds));
 
         public DiscordResponseCommandResult Response(LocalMessage message)
-            => new(Context, message);
+        {
+            message.AllowedMentions ??= LocalAllowedMentions.None;
+            return new DiscordResponseCommandResult(Context, message);
+        }
 
     }
 }
