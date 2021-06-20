@@ -81,7 +81,7 @@ namespace CheeseBot.Scheduling
             {
                 try
                 {
-                    await handler(this, new EventArgs());
+                    await handler(this, EventArgs.Empty);
                 }
                 catch (Exception exception)
                 {

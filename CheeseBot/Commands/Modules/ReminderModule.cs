@@ -34,7 +34,7 @@ namespace CheeseBot.Commands.Modules
                 return Response("Reminder time cannot be in the past or now.");
             
             await _reminderService.AddReminderAsync(reminder);
-            return Response($"Ok, I will remind you to \"{reminder.Value}\" {reminder.GetTimeString()} (Id:{reminder.Id})");
+            return Response($"Ok, I will remind you to {Markdown.Code(reminder.Value)} {reminder.GetTimeString()} (Id:{reminder.Id})");
         }
 
         [Command("list", "")]
@@ -80,12 +80,12 @@ namespace CheeseBot.Commands.Modules
             var reminder = await _dbContext.Reminders.FindAsync(id);
 
             if (reminder is null)
-                return Response($"A reminder with id: \"{id}\" does not exist.");
+                return Response($"A reminder with id: {id} does not exist.");
             else if (reminder.UserId != Context.Author.Id)
                 return Response("You cannot remove other peoples reminders.");
 
             await _reminderService.RemoveReminderAsync(reminder);
-            return Response($"Ok, I will no longer remind you to \"{reminder.Value}\" {reminder.GetTimeString()}");
+            return Response($"Ok, I will no longer remind you to {Markdown.Code(reminder.Value)} {reminder.GetTimeString()}");
         }
     }
 }

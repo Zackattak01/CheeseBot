@@ -57,7 +57,7 @@ namespace CheeseBot.Scheduling
         }
 
         private void UnhandledException(AsyncTimer sender, UnhandledExceptionEventArgs args)
-            => _logger.LogError($"A handler for a scheduled task (Id: {Id}) threw an exception\n {args.Exception}");
+            => _logger.LogError($"A scheduled task with id {Id} threw an exception\n {args.Exception}");
         
 
         public void Cancel()
