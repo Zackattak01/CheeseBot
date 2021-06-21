@@ -1,0 +1,9 @@
+{
+  "discord" : {
+    "token" : "Your Discord Token"
+  },
+
+  "postgres": {
+    "connection_string" : "Your connection string"
+  }
+}

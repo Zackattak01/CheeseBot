@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+Update (){
+    git pull origin
+}
+
+Update
+
+until dotnet run -c Release; do
+    sleep 1
+    Update
+done
