@@ -6,7 +6,7 @@ Update (){
 
 Update
 
-until dotnet run -c Release; do
+until dotnet run -c Release --project CheeseBot; do
     sleep 1
     Update
 done
