@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using CheeseBot.Services;
 using Disqord;
@@ -41,16 +42,15 @@ namespace CheeseBot.Commands.Modules
         {
 
             if (CurrentGuildSettings.Prefixes.Count >= DefaultGuildSettingsProvider.MaxNumberOfPrefixes)
-                return Response(
-                    $"Your server has reached the max number of prefixes ({DefaultGuildSettingsProvider.MaxNumberOfPrefixes})");
+                return Response($"Your server has reached the max number of prefixes ({DefaultGuildSettingsProvider.MaxNumberOfPrefixes})");
             else if (CurrentGuildSettings.Prefixes.Contains(prefix))
-                return Response($"Prefix: \"{prefix}\" is already enabled on this server.");
+                return Response($"Prefix: {FormatPrefix(prefix)} is already enabled on this server.");
             else if (prefix is MentionPrefix mentionPrefix && mentionPrefix.UserId != Context.Bot.CurrentUser.Id)
                 return Response("You cannot enable mentions for users other than myself as a prefix.");
 
             CurrentGuildSettings.Prefixes.Add(prefix);
             
-            return Response($"Ok, the prefix \"{prefix}\" will now be recognized on this server.");
+            return Response($"Ok, the prefix {FormatPrefix(prefix)} will now be recognized on this server.");
         }
 
         [Command("remove")]
@@ -60,13 +60,24 @@ namespace CheeseBot.Commands.Modules
         public DiscordCommandResult RemovePrefixAsync([Remainder] IPrefix prefix)
         {
             if (!CurrentGuildSettings.Prefixes.Contains(prefix))
-                return Response($"The prefix \"{prefix}\" is not enabled on this server.");
+                return Response($"The prefix {FormatPrefix(prefix)} is not enabled on this server.");
             else if (CurrentGuildSettings.Prefixes.Count == 1)
                 return Response("You cannot remove the last enabled prefix on this server.");
 
             CurrentGuildSettings.Prefixes.Remove(prefix);
 
-            return Response($"Ok, the prefix \"{prefix}\" will no longer be recognized on this server.");
+            return Response($"Ok, the prefix {FormatPrefix(prefix)} will no longer be recognized on this server.");
         }
+
+        private string FormatPrefix(IPrefix prefix)
+        {
+            return prefix switch
+            {
+                StringPrefix => Markdown.Code(prefix),
+                MentionPrefix => prefix.ToString(),
+                _ => throw new ArgumentOutOfRangeException(nameof(prefix), prefix, null)
+            };
+        }
+        
     }
 }
