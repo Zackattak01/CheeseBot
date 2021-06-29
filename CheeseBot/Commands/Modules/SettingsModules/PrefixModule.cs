@@ -40,7 +40,6 @@ namespace CheeseBot.Commands.Modules
         [RequireBotOwner(Group = "Permission")]
         public  DiscordCommandResult AddPrefixAsync([Remainder] IPrefix prefix)
         {
-
             if (CurrentGuildSettings.Prefixes.Count >= DefaultGuildSettingsProvider.MaxNumberOfPrefixes)
                 return Response($"Your server has reached the max number of prefixes ({DefaultGuildSettingsProvider.MaxNumberOfPrefixes})");
             else if (CurrentGuildSettings.Prefixes.Contains(prefix))
