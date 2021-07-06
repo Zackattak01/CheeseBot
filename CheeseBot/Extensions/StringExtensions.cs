@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace CheeseBot.Extensions
 {
@@ -14,6 +15,32 @@ namespace CheeseBot.Extensions
 
             for (var i = 0; i < s.Length; i += partLength)
                 yield return s.Substring(i, Math.Min(partLength, s.Length - i));
+        }
+
+        public static string DeCamelCase(this string s)
+        {
+            const char space = ' ';
+            var stringBuilder = new StringBuilder();
+            
+            var lastWordIndex = 0;
+            for (var i = 0; i < s.Length; i++)
+            {
+                var isUpperCase = char.IsUpper(s[i]);
+                var isLastChar = i + 1 == s.Length;
+
+                if (isUpperCase)
+                {
+                    stringBuilder.Append(s[lastWordIndex..i]).Append(space);
+                    lastWordIndex = i;
+                }
+                
+                if (isLastChar)
+                {
+                    stringBuilder.Append(s[lastWordIndex..s.Length]).Append(space);
+                }
+            }
+
+            return stringBuilder.ToString().Trim();
         }
     }
 }
