@@ -15,18 +15,21 @@ namespace CheeseBot.Extensions
 
             if (guild.Description is not null)
                 e.WithDescription(guild.Description);
-
-            if (guild.GetMember(guild.OwnerId) is { } owner)
-                e.AddInlineField("Owner", owner.Mention);
             
+            e.AddInlineField("Owner", Mention.User(guild.OwnerId));
+
+            e.AddInlineField("Created On", Markdown.Timestamp(guild.CreatedAt()));
+            e.FillLineWithEmptyFields();
+
             e.AddInlineField("Member Count", guild.MemberCount);
             e.AddInlineField("Role Count", guild.Roles.Count);
-            e.FillLineWithEmptyFields();
 
             var channels = guild.GetChannels();
             e.AddInlineField("Channel Count", channels.Count);
+            
             e.AddInlineField("Text Channel Count", channels.Count(x => x.Value is CachedTextChannel));
             e.AddInlineField("Voice Channel Count", channels.Count(x => x.Value is CachedVoiceChannel));
+            e.AddInlineField("Category Count", channels.Count(x => x.Value is CachedCategoryChannel));
 
             e.AddInlineField("Boost Level", guild.BoostTier);
             e.AddInlineField("Emoji Count", guild.Emojis.Count);

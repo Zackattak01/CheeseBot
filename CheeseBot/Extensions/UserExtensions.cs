@@ -12,13 +12,11 @@ namespace CheeseBot.Extensions
         
         public static LocalEmbed CreateInfoEmbed(this IUser user)
         {
-            const string dtoFormat = "M/d/yy h:mm tt zzz";
-            
             var e = new LocalEmbed()
                 .WithDefaultColor()
                 .WithTitle(user.ToString())
                 .WithThumbnailUrl(user.GetAvatarUrl())
-                .AddInlineField("Joined Discord On", user.CreatedAt().ToString(dtoFormat));
+                .AddInlineField("Joined Discord On", Markdown.Timestamp(user.CreatedAt()));
             
             if (user is IMember member)
             {
@@ -26,10 +24,10 @@ namespace CheeseBot.Extensions
                     e.Title += $" ({member.Nick})";
                 
                 if (member.JoinedAt.HasValue)
-                    e.AddInlineField("Joined Server On", member.JoinedAt.Value.ToString(dtoFormat));
+                    e.AddInlineField("Joined Server On", Markdown.Timestamp(member.JoinedAt.Value));
 
                 if (member.BoostedAt is not null)
-                    e.AddInlineField("Boosting Since", member.BoostedAt.Value.ToString(dtoFormat));
+                    e.AddInlineField("Boosting Since", Markdown.Timestamp(member.BoostedAt.Value));
 
                 e.FillLineWithEmptyFields();
                 
