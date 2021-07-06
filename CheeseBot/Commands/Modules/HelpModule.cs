@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using CheeseBot.Extensions;
 using Disqord;
@@ -25,19 +26,6 @@ namespace CheeseBot.Commands.Modules
             return View(HelpView.Create(_commandService));
         }
 
-        private ListPageProvider CreateHelpPages()
-        {
-            var pages = new List<Page>();
-
-            foreach (var module in _commandService.GetAllModules())
-            {
-                var embed = new LocalEmbed().WithTitle(module.Name);
-                pages.Add(new Page().AddEmbed(embed));
-            }
-
-            return new ListPageProvider(pages);
-        }
-        
         public class HelpView : PagedViewBase
         {
             private HelpView(PageProvider provider, IList<LocalSelectionComponentOption> options)
@@ -91,19 +79,15 @@ namespace CheeseBot.Commands.Modules
                         .WithTitle(name);
 
                     foreach (var command in module.Commands)
-                    {
                         embed.AddField(command.GetHelpString(), command.Description ?? "No description");
-                    }
                     
                     pages.Add(new Page().AddEmbed(embed));
                     
                     selectionMap.Add(new LocalSelectionComponentOption(name, (i + 1).ToString()));
                 }
+                
                 return new HelpView(new ListPageProvider(pages), selectionMap);
             }
-
-            
-            
         }
     }
 }
