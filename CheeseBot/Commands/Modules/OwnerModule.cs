@@ -116,7 +116,7 @@ namespace CheeseBot.Commands.Modules
                     {
                         var e = new LocalEmbed()
                             .WithTitle("Execution Failure")
-                            .WithDescription(state.Exception.ToString().SplitInParts(LocalEmbed.MAX_DESCRIPTION_LENGTH).First())
+                            .WithDescription(state.Exception.ToString().SplitInParts(LocalEmbed.MaxDescriptionLength).First())
                             .WithColor(Color.Red)
                             .WithFooter($"{stopwatch.Elapsed.TotalMilliseconds}ms");
                         return Response(e);
@@ -216,9 +216,9 @@ namespace CheeseBot.Commands.Modules
                 case FailedCompileResult failedResult:
                 {
                     var errorString = string.Join('\n', failedResult.Errors);
-                    if (errorString.Length > LocalMessageBase.MAX_CONTENT_LENGTH)
+                    if (errorString.Length > LocalMessageBase.MaxContentLength)
                     {
-                        var pages = errorString.SplitInParts(LocalMessageBase.MAX_CONTENT_LENGTH);
+                        var pages = errorString.SplitInParts(LocalMessageBase.MaxContentLength);
                         return Pages(pages.Select(x => new Page { Content = x }));
                     }
                     else

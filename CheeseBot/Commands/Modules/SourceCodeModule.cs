@@ -30,7 +30,7 @@ namespace CheeseBot.Commands.Modules
             if (string.IsNullOrWhiteSpace(sourceFile.Content))
                 return Response("The selected text is only whitespace");
             
-            if (sourceFile.Content.Length > LocalMessage.MAX_CONTENT_LENGTH)
+            if (sourceFile.Content.Length > LocalMessageBase.MaxContentLength)
             {
                 var stream = new MemoryStream(Encoding.Default.GetBytes(sourceFile.Content));
                 var msg = new LocalMessage().WithAttachments(new LocalAttachment(stream, sourceFile.Filename));

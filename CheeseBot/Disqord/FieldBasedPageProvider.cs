@@ -7,13 +7,13 @@ using Disqord.Extensions.Interactivity.Menus.Paged;
 
 namespace CheeseBot.Disqord
 {
-    public class FieldBasedPageProvider : IPageProvider
+    public class FieldBasedPageProvider : PageProvider
     {
         private readonly List<Page> _pages;
 
         private readonly FieldBasedPageProviderConfiguration _configuration;
 
-        public int PageCount { get; }
+        public override int PageCount { get; }
 
         public FieldBasedPageProvider(IEnumerable<LocalEmbedField> fields, FieldBasedPageProviderConfiguration configuration = null)
         {
@@ -39,14 +39,14 @@ namespace CheeseBot.Disqord
                     Color = Global.DefaultEmbedColor
                 };
 
-                if (_configuration.AutoGeneratePageTitles)
-                    embedBuilder.WithTitle($"Page {_pages.Count + 1}/{PageCount}");
+                // if (_configuration.AutoGeneratePageTitles)
+                //     embedBuilder.WithTitle($"Page {_pages.Count + 1}/{PageCount}");
 
                 _pages.Add(new Page().WithContent(_configuration.Content).AddEmbed(embedBuilder));
             }
         }
 
-        public ValueTask<Page> GetPageAsync(PagedViewBase view)
+        public override ValueTask<Page> GetPageAsync(PagedViewBase view)
             => new(_pages[view.CurrentPageIndex]);
         
     }
