@@ -39,9 +39,6 @@ namespace CheeseBot.Disqord
                     Color = Global.DefaultEmbedColor
                 };
 
-                // if (_configuration.AutoGeneratePageTitles)
-                //     embedBuilder.WithTitle($"Page {_pages.Count + 1}/{PageCount}");
-
                 _pages.Add(new Page().WithContent(_configuration.Content).AddEmbed(embedBuilder));
             }
         }
