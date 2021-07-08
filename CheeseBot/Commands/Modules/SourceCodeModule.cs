@@ -10,6 +10,7 @@ namespace CheeseBot.Commands.Modules
 {
 
     [Group("src", "source", "file")]
+    [Description("Commands for browsing Cheese Bot's source code")]
     public class SourceCodeModule : DiscordModuleBase
     {
         private readonly GitHubSourceBrowser _sourceBrowser;

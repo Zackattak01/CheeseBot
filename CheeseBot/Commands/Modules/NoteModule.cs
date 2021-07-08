@@ -14,6 +14,7 @@ using Qmmands;
 namespace CheeseBot.Commands.Modules
 {
     [Group("note", "notes")]
+    [Description("Commands for managing notes")]
     public class NoteModule : DiscordModuleBase
     {
         private readonly CheeseBotDbContext _dbContext;

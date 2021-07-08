@@ -9,6 +9,7 @@ using Qmmands;
 
 namespace CheeseBot.Commands.Modules
 {
+    [Description("All kinds of fun things")]
     public class FunModule : DiscordModuleBase
     {
         private static readonly IReadOnlyList<string> EightBallResponses = new[]

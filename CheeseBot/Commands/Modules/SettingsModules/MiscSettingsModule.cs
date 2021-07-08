@@ -3,6 +3,7 @@ using Qmmands;
 
 namespace CheeseBot.Commands.Modules
 {
+    [Description("Some miscellaneous server settings")]
     public class MiscSettingsModule : GuildSettingsModule
     {
         [Command("permit")]

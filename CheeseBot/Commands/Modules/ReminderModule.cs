@@ -15,6 +15,7 @@ using Qmmands;
 namespace CheeseBot.Commands.Modules
 {
     [Group("reminder", "remind", "reminders", "remindme")]
+    [Description("Commands for managing reminders")]
     public class ReminderModule : DiscordGuildModuleBase
     {
         private readonly ReminderService _reminderService;

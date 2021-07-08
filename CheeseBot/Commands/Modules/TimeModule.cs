@@ -6,6 +6,7 @@ using Qmmands;
 namespace CheeseBot.Commands.Modules
 {
     [Group("time")]
+    [Description("Commands for interacting with time")]
     public class TimeModule : DiscordModuleBase
     {
         [Command("until", "since")]

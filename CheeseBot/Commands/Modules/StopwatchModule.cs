@@ -7,6 +7,7 @@ using Qmmands;
 namespace CheeseBot.Commands.Modules
 {
     [Group("sw", "stopwatch")]
+    [Description("Commands for managing stopwatches")]
     public class StopwatchModule : DiscordModuleBase
     {
         private readonly CheeseBotDbContext _dbContext;
@@ -31,7 +32,7 @@ namespace CheeseBot.Commands.Modules
         } 
         
         [Command("start", "new")]
-        [Description("Oh? Now I have to keep time for you? Fine. Starts a new reminder.")]
+        [Description("Oh? Now I have to keep time for you? Fine. Starts a new stopwatch.")]
         public async Task<DiscordCommandResult> StartAsync()
         {
             var sw = await FindStopwatchAsync();

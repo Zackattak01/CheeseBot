@@ -10,6 +10,7 @@ using Qmmands;
 
 namespace CheeseBot.Commands.Modules
 {
+    [Description("Help and discovery tools")]
     public class HelpModule : DiscordModuleBase
     {
         private readonly CommandService _commandService;

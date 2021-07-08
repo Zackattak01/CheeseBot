@@ -19,6 +19,7 @@ using Qmmands;
 namespace CheeseBot.Commands.Modules
 {
     [RequireBotOwner]
+    [Description("Dont look :eyes:")]
     public class OwnerModule : DiscordModuleBase
     {
         private const int ByteToMbConversionFactor = 1000000;

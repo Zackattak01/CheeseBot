@@ -10,6 +10,7 @@ using Qmmands;
 
 namespace CheeseBot.Commands.Modules
 {
+    [Description("Info about the bot, server, or a user")]
     public class InfoModule : DiscordModuleBase
     {
         [Command("ping")]
@@ -59,24 +60,24 @@ namespace CheeseBot.Commands.Modules
             return Response(embedBuilder);
         }
 
-        [Command("ui", "user")]
+        [Command("user", "ui")]
         [Description("Gets info about the specified user")]
         public DiscordCommandResult UserInfo([Remainder] IUser user = null)
             => Response((user ?? Context.Author).CreateInfoEmbed());
         
-        [Command("ui", "user")]
+        [Command("user", "ui")]
         [Priority(1)]
         [Description("Gets info about the specified user")]
         public DiscordCommandResult UserInfo([Remainder] IMember member)
             => Response(member.CreateInfoEmbed());
 
-        [Command("si", "server")]
+        [Command("server", "si")]
         [Description("Gets info about the current server")]
         [RequireGuild]
         public DiscordCommandResult ServerInfo()
             => Response(((DiscordGuildCommandContext) Context).Guild.CreateInfoEmbed());
 
-        [Command("av", "avatar")]
+        [Command("avatar", "av")]
         public DiscordCommandResult Avatar(IUser user, int size = 2048)
         {
             if (size < 16 || size > 2048 || (size & (size - 1)) != 0)
@@ -85,11 +86,13 @@ namespace CheeseBot.Commands.Modules
             return Response(user.GetAvatarUrl(size: size));
         }
 
-        [Command("av", "avatar")]
+        [Command("avatar", "av")]
+
         public DiscordCommandResult Avatar(IMember member, int size = 2048)
             => Avatar(member as IUser, size);
         
-        [Command("av", "avatar")]
+        [Command("avatar", "av")]
+
         public DiscordCommandResult Avatar(int size = 2048)
             => Avatar(Context.Author, size);
     }

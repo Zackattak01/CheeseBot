@@ -8,6 +8,7 @@ using Qmmands;
 namespace CheeseBot.Commands.Modules
 {
     [Group("prefix", "prefixes")]
+    [Description("Guild wide prefix settings")]
     public class PrefixModule : GuildSettingsModule
     {
         [Command]
