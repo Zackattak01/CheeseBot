@@ -5,12 +5,12 @@ namespace CheeseBot.Extensions
 {
     public static class CommandExtensions
     {
-        public static string GetHelpString(this Command command)
+        public static string GetHelpString(this Command command, string forcedAlias = null)
         {
             const char space = ' ';
             
             var sb = new StringBuilder();
-            sb.Append(command.Name).Append(space);
+            sb.Append(forcedAlias ?? command.Name).Append(space);
 
             foreach (var parameter in command.Parameters)
             {

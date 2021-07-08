@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
 using CheeseBot.Disqord;
 using CheeseBot.Extensions;
 using Disqord;
@@ -45,8 +47,46 @@ namespace CheeseBot.Commands.Modules
             
             return View(new SelectionPagedView(new SelectionPageProvider(selectionPages)));
         }
+        
+        [Command("help")]
+        public DiscordCommandResult Help([Remainder] string path)
+        {
+            var matches = _commandService.FindCommands(path);
 
-        private Page GetSyntaxExplanationPage()
+            var selectionPages = new List<SelectionPage>
+            {
+                new(GetSyntaxExplanationPage(), "Help")
+            };
+            
+            foreach (var command in matches.Select(x => x.Command))
+            {
+                var embed = new LocalEmbed()
+                    .WithDefaultColor()
+                    .WithTitle(command.GetHelpString())
+                    .AddField("Description", command.Description);
+
+                var displayableAliases = new List<string>();
+                
+                foreach (var alias in command.FullAliases)
+                {
+                    var trimmedAlias = alias.Trim();
+                    if (trimmedAlias == command.Name || trimmedAlias == string.Empty)
+                        continue;
+                    
+                    displayableAliases.Add($"• {command.GetHelpString(trimmedAlias)}");
+                }
+                
+                if (displayableAliases.Count > 1)
+                    embed.WithDescription($"{Markdown.Bold("Aliases")}\n{string.Join('\n', displayableAliases)}");
+                
+                var page = new Page().AddEmbed(embed);
+                selectionPages.Add(new SelectionPage(page, command.Name));
+            }
+
+            return View(new SelectionPagedView(new SelectionPageProvider(selectionPages)));
+        }
+
+        private static Page GetSyntaxExplanationPage()
         {
             const string description = "<argName> = required argument\n" +
                                        "<argName...> = argument will be parsed with the remaining text\n" + 
