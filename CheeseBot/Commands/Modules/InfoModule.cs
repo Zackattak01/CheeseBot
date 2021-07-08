@@ -78,6 +78,7 @@ namespace CheeseBot.Commands.Modules
             => Response(((DiscordGuildCommandContext) Context).Guild.CreateInfoEmbed());
 
         [Command("avatar", "av")]
+        [Description("Fetches a user's avatar")]
         public DiscordCommandResult Avatar(IUser user, int size = 2048)
         {
             if (size < 16 || size > 2048 || (size & (size - 1)) != 0)
@@ -87,12 +88,12 @@ namespace CheeseBot.Commands.Modules
         }
 
         [Command("avatar", "av")]
-
+        [Description("Fetches a user's avatar")]
         public DiscordCommandResult Avatar(IMember member, int size = 2048)
             => Avatar(member as IUser, size);
         
         [Command("avatar", "av")]
-
+        [Description("Fetches a user's avatar")]
         public DiscordCommandResult Avatar(int size = 2048)
             => Avatar(Context.Author, size);
     }

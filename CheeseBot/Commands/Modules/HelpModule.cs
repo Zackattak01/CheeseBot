@@ -64,7 +64,7 @@ namespace CheeseBot.Commands.Modules
                 var embed = new LocalEmbed()
                     .WithDefaultColor()
                     .WithTitle(command.GetHelpString())
-                    .AddField("Description", command.Description);
+                    .AddField("Description", command.Description ?? "No description");
 
                 var displayableAliases = new List<string>();
                 
