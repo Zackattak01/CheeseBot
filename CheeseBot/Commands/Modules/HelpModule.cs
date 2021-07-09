@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using CheeseBot.Disqord;
 using CheeseBot.Extensions;
 using Disqord;
@@ -37,13 +36,14 @@ namespace CheeseBot.Commands.Modules
                 
                 var embed = new LocalEmbed()
                     .WithDefaultColor()
+                    .WithDescription(module.Description)
                     .WithTitle(name);
                 
                 foreach (var command in module.Commands)
                     embed.AddField(command.GetHelpString(), command.Description ?? "No description");
 
                 var page = new Page().AddEmbed(embed);
-                selectionPages.Add(new SelectionPage(page, name, module.Description));
+                selectionPages.Add(new SelectionPage(page, name, module.Description.HumanTruncateAt(LocalSelectionComponentOption.MaxDescriptionLength)));
             }
             
             return View(new SelectionPagedView(new SelectionPageProvider(selectionPages)));
@@ -77,11 +77,11 @@ namespace CheeseBot.Commands.Modules
                     displayableAliases.Add($"• {command.GetHelpString(trimmedAlias)}");
                 }
                 
-                if (displayableAliases.Count > 1)
+                if (displayableAliases.Count > 0)
                     embed.WithDescription($"{Markdown.Bold("Aliases")}\n{string.Join('\n', displayableAliases)}");
                 
                 var page = new Page().AddEmbed(embed);
-                selectionPages.Add(new SelectionPage(page, command.Name));
+                selectionPages.Add(new SelectionPage(page, command.Name, command.Description.HumanTruncateAt(LocalSelectionComponentOption.MaxDescriptionLength)));
             }
 
             return View(new SelectionPagedView(new SelectionPageProvider(selectionPages)));

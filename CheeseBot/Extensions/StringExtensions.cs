@@ -42,5 +42,15 @@ namespace CheeseBot.Extensions
 
             return stringBuilder.ToString().Trim();
         }
+
+        public static string HumanTruncateAt(this string s, int maxLength)
+        {
+            const string truncationIndicator = "...";
+            
+            if (!(s.Length > maxLength))
+                return s;
+
+            return s[..(maxLength - 3)] + truncationIndicator;
+        }
     }
 }
