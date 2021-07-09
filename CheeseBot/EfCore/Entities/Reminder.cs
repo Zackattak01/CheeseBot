@@ -32,19 +32,12 @@ namespace CheeseBot.EfCore.Entities
             Value = value;
         }
 
-        public string GetTimeString()
-        {
-            var article = ExecutionTime.Date == DateTime.Today ? "at" : "on";
-            return $"{article} {ExecutionTime.Humanize()}";
-        }
-        
-        private string GetTimeCapitalizeFirstLetter()
-        {
-            var time = GetTimeString();
-            return char.ToUpper(time[0]) + time[1..];
-        }
+        public string FormatMarkdownTimestamp() 
+            => ExecutionTime.Date == DateTime.Today
+                ? Markdown.Timestamp(ExecutionTime, Markdown.TimestampFormat.RelativeTime)
+                : Markdown.Timestamp(ExecutionTime);
 
         public override string ToString()
-            => $"{GetTimeCapitalizeFirstLetter()}: {Value}";
+            => $"{FormatMarkdownTimestamp()}: {Value}";
     }
 }

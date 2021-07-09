@@ -35,7 +35,8 @@ namespace CheeseBot.Commands.Modules
                 return Response("Reminder time cannot be in the past or now.");
             
             await _reminderService.AddReminderAsync(reminder);
-            return Response($"Ok, I will remind you to {Markdown.Code(reminder.Value)} {reminder.GetTimeString()} (Id:{reminder.Id})");
+            
+            return Response($"Ok, I will remind you to {Markdown.Code(reminder.Value)} {GetTimestampWithArticle(reminder)} (Id:{reminder.Id})");
         }
 
         [Command("list", "")]
@@ -86,7 +87,12 @@ namespace CheeseBot.Commands.Modules
                 return Response("You cannot remove other peoples reminders.");
 
             await _reminderService.RemoveReminderAsync(reminder);
-            return Response($"Ok, I will no longer remind you to {Markdown.Code(reminder.Value)} {reminder.GetTimeString()}");
+            return Response($"Ok, I will no longer remind you to {Markdown.Code(reminder.Value)} {GetTimestampWithArticle(reminder)}");
         }
+
+        private static string GetTimestampWithArticle(Reminder reminder) 
+            => reminder.ExecutionTime.Date == DateTime.Today 
+                ? Markdown.Timestamp(reminder.ExecutionTime, Markdown.TimestampFormat.RelativeTime) 
+                : $"on {Markdown.Timestamp(reminder.ExecutionTime)}";
     }
 }
