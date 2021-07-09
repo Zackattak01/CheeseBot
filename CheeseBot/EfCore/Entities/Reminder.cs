@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using CheeseBot.Extensions;
 using Disqord;
 
 namespace CheeseBot.EfCore.Entities
