@@ -9,7 +9,7 @@ using Qmmands;
 namespace CheeseBot.Commands.Modules
 {
 
-    [Group("src", "source", "file")]
+    [Group("source", "src", "file")]
     [Description("Commands for browsing Cheese Bot's source code")]
     public class SourceCodeModule : DiscordModuleBase
     {
@@ -21,6 +21,7 @@ namespace CheeseBot.Commands.Modules
         }
 
         [Command]
+        [Description("Returns requested source code")]
         public async Task<DiscordCommandResult> SourceAsync(string path)
         {
             var sourceFile = await _sourceBrowser.GetFileContents(path);
@@ -43,10 +44,13 @@ namespace CheeseBot.Commands.Modules
         }
 
         [Command("link")]
+        [Description("Returns a link to the requested source code")]
         public DiscordCommandResult LinkSource(string path)
             => Response($"<{_sourceBrowser.GetSourceLink(path)}>");
 
         [Command("clear")]
+        [RequireBotOwner]
+        [Description("Clears the source code cache")]
         public DiscordCommandResult ClearCache()
         {
             _sourceBrowser.ClearContentCache();
