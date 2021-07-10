@@ -43,16 +43,22 @@ namespace CheeseBot.Commands.Modules
                     embed.AddField(command.GetHelpString(), command.Description ?? "No description");
 
                 var page = new Page().AddEmbed(embed);
-                selectionPages.Add(new SelectionPage(page, name, module.Description.HumanTruncateAt(LocalSelectionComponentOption.MaxDescriptionLength)));
+                selectionPages.Add(new SelectionPage(
+                    page,
+                    name,
+                    module.Description?.HumanTruncateAt(LocalSelectionComponentOption.MaxDescriptionLength) ?? "No description"));
             }
             
             return View(new SelectionPagedView(new SelectionPageProvider(selectionPages)));
         }
         
         [Command("help")]
-        public DiscordCommandResult Help([Remainder] string path)
+        public DiscordCommandResult Help([Remainder] string query)
         {
-            var matches = _commandService.FindCommands(path);
+            var matches = _commandService.FindCommands(query);
+
+            if (matches.Count == 0)
+                return Response("No matches were found.  Please try refining your search query.");
 
             var selectionPages = new List<SelectionPage>
             {
@@ -81,7 +87,10 @@ namespace CheeseBot.Commands.Modules
                     embed.WithDescription($"{Markdown.Bold("Aliases")}\n{string.Join('\n', displayableAliases)}");
                 
                 var page = new Page().AddEmbed(embed);
-                selectionPages.Add(new SelectionPage(page, command.Name, command.Description.HumanTruncateAt(LocalSelectionComponentOption.MaxDescriptionLength)));
+                selectionPages.Add(new SelectionPage(
+                    page,
+                    command.Name,
+                    command.Description?.HumanTruncateAt(LocalSelectionComponentOption.MaxDescriptionLength) ?? "No description"));
             }
 
             return View(new SelectionPagedView(new SelectionPageProvider(selectionPages)));
