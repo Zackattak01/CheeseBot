@@ -49,14 +49,14 @@ namespace CheeseBot.Commands.Modules
         [Command("choice", "choose", "decide")]
         [Description("Chooses between any number of specified options")]
         public DiscordCommandResult Choose([Minimum(2)] params string[] choices)
-            => Response(choices[_random.Next(0, choices.Length)]);
+            => Response($"I choose {Markdown.Code(choices[_random.Next(0, choices.Length)])}");
 
         [RequireGuild]
         [Command("pp")]
         [Description(":eyes:")]
         public DiscordCommandResult PP(IMember user = null)
         {
-            user ??= (Context.Author as IMember);
+            user ??= Context.Author as IMember;
             return Response($"{user!.Mention}'s pp {user.Id % 13}in");
         }
 
