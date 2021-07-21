@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using CheeseBot.Extensions;
 using Disqord;
 using Disqord.Bot;
+using Disqord.Extensions.Interactivity;
 using Disqord.Gateway;
+using Disqord.Gateway.Default.Dispatcher;
 using Disqord.Rest;
 using Qmmands;
 
@@ -18,12 +20,14 @@ namespace CheeseBot.Commands.Modules
         public async Task PingAsync()
         {
             const string responseString = "Pong:\nREST: {0}ms\nGateway: {1}ms";
-            var gatewayLatency = DateTimeOffset.Now - Context.Message.CreatedAt();
 
+            var waitForMessageTask = Context.WaitForMessageAsync(e => e.Message is IUserMessage userMessage && userMessage.Nonce == Context.Message.Id.ToString());
+            
             var stopwatch = Stopwatch.StartNew();
-            var msg = await Response(string.Format(responseString, "*loading*", "*loading*"));
+            var msg = await Response(new LocalMessage().WithContent(string.Format(responseString, "*loading*", "*loading*")).WithNonce(Context.Message.Id.ToString()));
             stopwatch.Stop();
-
+            
+            var gatewayLatency = DateTimeOffset.Now - (await waitForMessageTask).Message.CreatedAt();
             await msg.ModifyAsync(x => x.Content = string.Format(responseString, stopwatch.ElapsedMilliseconds, (int)gatewayLatency.TotalMilliseconds));
         }
 

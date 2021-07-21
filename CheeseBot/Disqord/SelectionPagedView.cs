@@ -43,8 +43,8 @@ namespace CheeseBot.Disqord
                 
                 Selection.Options.FirstOrDefault(x => x.Value == e.SelectedOptions[0].Value)!.IsDefault = true;
             }
-                    
-            return ValueTask.CompletedTask;
+
+            return default;
         }
         
     }
