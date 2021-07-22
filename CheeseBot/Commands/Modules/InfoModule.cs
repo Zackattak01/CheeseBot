@@ -20,7 +20,7 @@ namespace CheeseBot.Commands.Modules
         {
             const string responseString = "Pong:\nREST: {0}ms\nGateway: {1}ms";
 
-            var waitForPingMessageTask = Context.Bot.GetInteractivity().WaitForMessageAsync(Context.ChannelId, e => e.Message is IUserMessage userMessage && userMessage.Nonce == Context.Message.Id.ToString());
+            var waitForPingMessageTask = Context.Bot.WaitForMessageAsync(Context.ChannelId, e => e.Message is IUserMessage userMessage && userMessage.Nonce == Context.Message.Id.ToString());
             
             var stopwatch = Stopwatch.StartNew();
             var msg = await Response(new LocalMessage().WithContent(string.Format(responseString, "*loading*", "*loading*")).WithNonce(Context.Message.Id.ToString()));
