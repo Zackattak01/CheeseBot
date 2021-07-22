@@ -6,7 +6,6 @@ using Disqord;
 using Disqord.Bot;
 using Disqord.Extensions.Interactivity;
 using Disqord.Gateway;
-using Disqord.Gateway.Default.Dispatcher;
 using Disqord.Rest;
 using Qmmands;
 
