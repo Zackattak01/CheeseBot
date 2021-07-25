@@ -30,7 +30,7 @@ namespace CheeseBot.Services
             _contentCache = new Dictionary<Uri, GitHubSourceFile>();
         }
 
-        public async Task<GitHubSourceFile> GetFileContents(string path)
+        public async Task<GitHubSourceFile> GetFileContentsAsync(string path)
         {
             path = GetPathWithoutLineSelector(path, out var lineSelection);
             
@@ -53,7 +53,7 @@ namespace CheeseBot.Services
             var sourceFile = new GitHubSourceFile(uri, uri.ToString().Split('/').Last(), content);
             _contentCache.Add(uri, sourceFile);
             
-            Logger.LogInformation($"Fetched github source file: {sourceFile.Filename} Caching contents for {MinutesToCacheContent} minutes");
+            Logger.LogInformation($"Fetched github source file: {sourceFile.Filename}. Caching contents for {MinutesToCacheContent} minutes");
             
             var scheduledTask = _scheduler.Schedule(DateTime.Now.AddMinutes(MinutesToCacheContent), scheduledTask =>
             {
@@ -66,10 +66,8 @@ namespace CheeseBot.Services
             _scheduledCacheRemovalTasks.Add(scheduledTask.Id);
 
             if (lineSelection is not null)
-            {
                 return new GitHubSourceFileSelection(sourceFile, lineSelection);
-            }
-            
+
             return sourceFile;
         }
 
@@ -113,14 +111,12 @@ namespace CheeseBot.Services
 
         private static string GetPathWithoutLineSelector(string path, out GitHubLineSelection selection)
         {
-            
             var lastIndexOfLineSelector = path.LastIndexOf(GithubLineSelectorChar);
             if (lastIndexOfLineSelector != -1)
             {
                 var pathWithoutLineSelector = path[..lastIndexOfLineSelector];
                 GitHubLineSelection.TryParse(path[(lastIndexOfLineSelector + 1)..], out selection);
                 return pathWithoutLineSelector;
-                
             }
 
             selection = null;

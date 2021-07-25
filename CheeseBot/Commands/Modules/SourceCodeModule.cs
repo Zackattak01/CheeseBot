@@ -24,7 +24,7 @@ namespace CheeseBot.Commands.Modules
         [Description("Returns requested source code")]
         public async Task<DiscordCommandResult> SourceAsync(string path)
         {
-            var sourceFile = await _sourceBrowser.GetFileContents(path);
+            var sourceFile = await _sourceBrowser.GetFileContentsAsync(path);
 
             if (sourceFile is null)
                 return Response("File could not be found or something else went wrong.");
