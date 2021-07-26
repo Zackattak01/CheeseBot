@@ -23,18 +23,13 @@ namespace CheeseBot.Commands.Modules
                 }
             }
 
-            if (numberString is null)
+            if (numberString is null || !double.TryParse(numberString, out var number))
                 return Response("The input was not in the correct format!  Please use the format of `[temperature] [unit]`");
-
-            // should never fail
-            var number = double.Parse(numberString);
 
             return unitString switch
             {
-                "c" => Response($"{numberString}C is {number * (9d / 5d) + 32}F"),
-                "celsius" => Response($"{numberString}C is {number * (9d / 5d) + 32}F"),
-                "f" => Response($"{numberString}F is {(number - 32) * (5d / 9d)}C"),
-                "fahrenheit" => Response($"{numberString}F is {(number - 32) * (5d / 9d)}C"),
+                "c" or "celsius" => Response($"{numberString}C is {number * (9d / 5d) + 32}F"),
+                "f" or "fahrenheit" => Response($"{numberString}F is {(number - 32) * (5d / 9d)}C"),
                 _ => Response("Unknown unit!  Conversions to and and Fahrenheit and Celsius are supported")
             };
         }
