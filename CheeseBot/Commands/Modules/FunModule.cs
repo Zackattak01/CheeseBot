@@ -105,5 +105,9 @@ namespace CheeseBot.Commands.Modules
         [Description("My word is final.")]
         public DiscordCommandResult EightBall([Remainder] string question)
             => Response(EightBallResponses[_random.Next(0, EightBallResponses.Count)]);
+
+        [Command("coinflip", "flip", "coin")]
+        public DiscordCommandResult CoinFlip()
+            => Response(_random.Next(0, 2) == 0 ? "Heads" : "Tails");
     }
 }
