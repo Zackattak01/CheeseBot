@@ -20,14 +20,25 @@ namespace CheeseBot.Commands.Modules
         {
             const string responseString = "Pong:\nREST: {0}ms\nGateway: {1}ms";
 
-            var waitForPingMessageTask = Context.Bot.WaitForMessageAsync(Context.ChannelId, e => e.Message is IUserMessage userMessage && userMessage.Nonce == Context.Message.Id.ToString());
+            async Task<long> GetGatewayPingAsync()
+            {
+                var messageReceivedArgs = await Context.Bot.WaitForMessageAsync(Context.ChannelId, e => e.Message is IUserMessage userMessage && userMessage.Nonce == Context.Message.Id.ToString());
+                return (long)(DateTimeOffset.Now - messageReceivedArgs.Message.CreatedAt()).TotalMilliseconds;
+            }
             
-            var stopwatch = Stopwatch.StartNew();
-            var msg = await Response(new LocalMessage().WithContent(string.Format(responseString, "*loading*", "*loading*")).WithNonce(Context.Message.Id.ToString()));
-            stopwatch.Stop();
+            async Task<(IUserMessage, long)> GetRestPingAsync()
+            {
+                var stopwatch = Stopwatch.StartNew();
+                var msg = await Response(new LocalMessage().WithContent(string.Format(responseString, "*loading*", "*loading*")).WithNonce(Context.Message.Id.ToString()));
+                stopwatch.Stop();
+                return (msg, stopwatch.ElapsedMilliseconds);
+            }
             
-            var gatewayLatency = DateTimeOffset.Now - (await waitForPingMessageTask).Message.CreatedAt();
-            await msg.ModifyAsync(x => x.Content = string.Format(responseString, stopwatch.ElapsedMilliseconds, (int)gatewayLatency.TotalMilliseconds));
+            var gatewayPingTask = GetGatewayPingAsync();
+            var (msg, restPing) = await GetRestPingAsync();
+            var gatewayPing = await gatewayPingTask;
+            
+            await msg.ModifyAsync(x => x.Content = string.Format(responseString, restPing, gatewayPing));
         }
 
         [Command("info")]
