@@ -1,5 +1,6 @@
 using System;
 using CheeseBot.Extensions;
+using Disqord;
 using Disqord.Bot;
 using Qmmands;
 
@@ -15,9 +16,9 @@ namespace CheeseBot.Commands.Modules
         {
             var now = DateTime.Now;
             if (time < now)
-                return Response($"The time since {time.Humanize()} is {(now - time).Humanize()}");
+                return Response($"The time since {Markdown.Timestamp(time)} is {(now - time).Humanize()}");
             else if (time > now)
-                return Response($"The time until {time.Humanize()} is {(time - now).Humanize()}");
+                return Response($"The time until {Markdown.Timestamp(time)} is {(time - now).Humanize()}");
             else if (time == now)
                 return Response("Your an idiot... the time you provided is *now*");
 
