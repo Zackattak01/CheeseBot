@@ -107,6 +107,7 @@ namespace CheeseBot.Commands.Modules
             => Response(EightBallResponses[_random.Next(0, EightBallResponses.Count)]);
 
         [Command("coinflip", "flip", "coin")]
+        [Description("Flip a virtual coin")]
         public DiscordCommandResult CoinFlip()
             => Response(_random.Next(0, 2) == 0 ? "Heads" : "Tails");
     }
