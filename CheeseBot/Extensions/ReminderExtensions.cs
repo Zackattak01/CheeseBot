@@ -5,7 +5,7 @@ namespace CheeseBot.Extensions
 {
     public static class ReminderExtensions
     {
-        public static LocalEmbed GetEmbed(this Reminder reminder)
+        public static LocalEmbed CreateEmbed(this Reminder reminder)
         { 
             var messageLink = Discord.MessageJumpLink(reminder.GuildId, reminder.ChannelId, reminder.OriginalMessageId);
             var linkMarkdown = Markdown.Link("Original Message", messageLink);

@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using CheeseBot.EfCore;
@@ -7,16 +9,20 @@ using CheeseBot.EfCore.Entities;
 using CheeseBot.Extensions;
 using CheeseBot.Scheduling;
 using Disqord;
+using Disqord.Bot;
+using Disqord.Bot.Hosting;
 using Disqord.Gateway;
 using Disqord.Hosting;
+using Disqord.Http;
 using Disqord.Rest;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace CheeseBot.Services
 {
-    public class ReminderService : DiscordClientService
+    public class ReminderService : DiscordBotService
     {
         private readonly SchedulingService _scheduler;
         
@@ -28,8 +34,8 @@ namespace CheeseBot.Services
             SchedulingService scheduler,
             IServiceProvider services,
             ILogger<ReminderService> logger,
-            DiscordClientBase client)
-            : base(logger, client)
+            DiscordBotBase bot)
+            : base(logger, bot)
         {
             _services = services;
             _scheduler = scheduler;
@@ -38,7 +44,7 @@ namespace CheeseBot.Services
 
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            await Client.WaitUntilReadyAsync(cancellationToken);
+            await Bot.WaitUntilReadyAsync(cancellationToken);
             await RescheduleExistingReminders();
         }
 
@@ -96,27 +102,35 @@ namespace CheeseBot.Services
 
         private async Task SendReminderAsync(Reminder reminder)
         {
-            var channel = Client.GetChannel(reminder.GuildId, reminder.ChannelId);
+            var channel = Bot.GetChannel(reminder.GuildId, reminder.ChannelId);
+            
+            var localMessage = new LocalMessage()
+                .WithContent(Mention.User(reminder.UserId))
+                .AddEmbed(reminder.CreateEmbed());
 
             // Channel where reminder was created no longer exists and hence the reminder no longer exists
             if (channel is not null)
-            {
-                var user = Client.GetUser(reminder.UserId) ?? await Client.FetchUserAsync(reminder.UserId);
-                var localMessage = new LocalMessage()
-                    .WithContent(Mention.User(user))
-                    .AddEmbed(reminder.GetEmbed());
-
-                await Client.SendMessageAsync(reminder.ChannelId, localMessage);
-            }
+                await Bot.SendMessageAsync(reminder.ChannelId, localMessage);
             else
-                Logger.LogInformation($"Reminder: {reminder.Id}'s channel no longer exists.  Deleting reminder without notifying user.");
+            {
+                try
+                {
+                    localMessage.Embeds.First().WithFooter("Your are receiving a DM because the channel this reminder was scheduled in no longer exists");
+                    var dmChannel = await Bot.CreateDirectChannelAsync(reminder.UserId);
+                    await dmChannel.SendMessageAsync(localMessage);
+                }
+                catch (RestApiException e) when (e.ErrorModel.Code.GetValueOrDefault() == RestApiErrorCode.CannotSendMessagesToThisUser)
+                {
+                    Logger.LogInformation($"Could not notify user {reminder.UserId} about a reminder.  Deleting reminder without notifying user.");
+                }
+            }
 
             await RemoveReminderAsync(reminder);
         }
 
         private void ScheduleReminder(Reminder reminder)
         {
-            var scheduledTask = _scheduler.Schedule(reminder.ExecutionTime, (_) => SendReminderAsync(reminder));
+            var scheduledTask = _scheduler.Schedule(reminder.ExecutionTime, _ => SendReminderAsync(reminder));
             _scheduledReminderDict.Add(reminder.Id, scheduledTask);
         }
 

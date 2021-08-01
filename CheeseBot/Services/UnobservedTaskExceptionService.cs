@@ -5,9 +5,9 @@ using Microsoft.Extensions.Logging;
 
 namespace CheeseBot.Services
 {
-    public class UnobservedTaskExceptionService : DiscordClientService
+    public class UnobservedTaskExceptionService : CheeseBotService
     {
-        public UnobservedTaskExceptionService(ILogger<UnobservedTaskExceptionService> logger, DiscordClientBase client) : base(logger, client)
+        public UnobservedTaskExceptionService(ILogger<UnobservedTaskExceptionService> logger) : base(logger)
         {
             // only raised on a garbage collection
             TaskScheduler.UnobservedTaskException += 
