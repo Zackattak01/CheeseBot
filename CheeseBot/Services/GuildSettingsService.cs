@@ -12,12 +12,11 @@ namespace CheeseBot.Services
 {
     public class GuildSettingsService : CheeseBotService
     {
-        private readonly Dictionary<ulong, GuildSettings> _guildSettingsCache;
+        private readonly Dictionary<Snowflake, GuildSettings> _guildSettingsCache;
 
         private readonly IServiceProvider _services;
 
         private readonly DefaultGuildSettingsProvider _defaultGuildSettingsProvider;
-
 
         public GuildSettingsService(
             IServiceProvider services, 
@@ -27,7 +26,7 @@ namespace CheeseBot.Services
         {
             _services = services;
             _defaultGuildSettingsProvider = defaultGuildSettingsProvider;
-            _guildSettingsCache = new Dictionary<ulong, GuildSettings>();
+            _guildSettingsCache = new Dictionary<Snowflake, GuildSettings>();
         }
 
         private async Task<GuildSettings> FindOrCreateGuildSettings(Snowflake guildId)

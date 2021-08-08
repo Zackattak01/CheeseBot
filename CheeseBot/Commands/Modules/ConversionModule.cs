@@ -30,7 +30,7 @@ namespace CheeseBot.Commands.Modules
             {
                 "c" or "celsius" => Response($"{numberString}C is {number * (9d / 5d) + 32}F"),
                 "f" or "fahrenheit" => Response($"{numberString}F is {(number - 32) * (5d / 9d)}C"),
-                _ => Response("Unknown unit!  Conversions to and and Fahrenheit and Celsius are supported")
+                _ => Response("Unknown unit!  Conversions to and from Fahrenheit and Celsius are supported")
             };
         }
     }

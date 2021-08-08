@@ -1,6 +1,4 @@
 using System.Threading.Tasks;
-using Disqord;
-using Disqord.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace CheeseBot.Services

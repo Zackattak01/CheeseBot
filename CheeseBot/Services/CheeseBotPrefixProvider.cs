@@ -19,13 +19,9 @@ namespace CheeseBot.Services
 
         public async ValueTask<IEnumerable<IPrefix>> GetPrefixesAsync(IGatewayUserMessage message)
         {
-            
             if (message.GuildId is { } guildId)
-            {
-                var prefixes = await _guildSettings.GetGuildPrefixesAsync(guildId);
-                return prefixes;
-            }
-        
+                return await _guildSettings.GetGuildPrefixesAsync(guildId);
+            
             //DMs will use defaults
             return _defaultGuildSettingsProvider.DefaultPrefixes;
         }
