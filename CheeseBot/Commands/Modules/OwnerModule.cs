@@ -153,7 +153,7 @@ namespace CheeseBot.Commands.Modules
             if (msg is null)
                 return Response("A message with that id does not exist");
             
-            return Load(id, msg.Content);
+            return LoadModule(id, msg.Content).Response;
         }
 
         [Command("load")]
@@ -173,31 +173,50 @@ namespace CheeseBot.Commands.Modules
                     return Response("More code needed, sir.");
             }
 
-            return Load(id, code);
+            return LoadModule(id, code).Response;
         }
 
         [Command("unload")]
         [Description("Unloads your modules. (Finally I can get rid of this garbage)")]
         public DiscordCommandResult Unload(Snowflake? id = null)
+            => UnloadModule(id).Response;
+
+        [Command("reload")]
+        public async Task<DiscordCommandResult> Reload(Snowflake? id = null)
         {
+            string content = null;
             if (id is null)
             {
                 if (Context.Message.ReferencedMessage.HasValue)
+                {
                     id = Context.Message.ReferencedMessage.Value.Id;
+                    content = Context.Message.ReferencedMessage.Value.Content;
+                }
                 else
                     return Response("Please provide an id");
             }
 
-            var result = _commandModuleCompilingService.RemoveModules(id.Value);
-            return Response(result ? "Module(s) unloaded" : "No modules are loaded under that id");
+            var unloadResult = UnloadModule(id);
+
+            if (!unloadResult.IsSuccess)
+                return unloadResult.Response;
+
+            var msgContent = content ?? (await Context.Bot.FetchMessageAsync(Context.ChannelId, id.Value)).Content;
+
+            var loadResult = LoadModule(id.Value, msgContent);
+
+            if (loadResult.IsSuccess)
+                return Response("Module(s) reloaded");
+            else
+                return loadResult.Response;
         }
 
-        private DiscordCommandResult Load(Snowflake id, string code)
+        private (bool IsSuccess, DiscordCommandResult Response) LoadModule(Snowflake id, string code)
         {
             code = EvalUtils.TrimCode(code);
 
             if (_commandModuleCompilingService.IsModuleLoaded(id))
-                return Response("That code is already loaded.");
+                return (false, Response("That code is already loaded."));
 
             ICompileResult result;
             try
@@ -206,30 +225,36 @@ namespace CheeseBot.Commands.Modules
             }
             catch (CommandMappingException mappingException)
             {
-                return Response(mappingException.Message);
+                return (false, Response(mappingException.Message));
             }
             
             
             switch (result)
             {
                 case SuccessfulCompileResult:
-                    return Response("Loaded command module(s).");
+                    return (true, Response("Loaded command module(s)."));
                 case FailedCompileResult failedResult:
                 {
                     var errorString = string.Join('\n', failedResult.Errors);
                     if (errorString.Length > LocalMessageBase.MaxContentLength)
                     {
                         var pages = errorString.SplitInParts(LocalMessageBase.MaxContentLength);
-                        return Pages(pages.Select(x => new Page { Content = x }));
+                        return (false, Pages(pages.Select(x => new Page { Content = x })));
                     }
                     else
                     {
-                        return Response($"Command module loading failed:\n {errorString}");
+                        return (false, Response($"Command module loading failed:\n {errorString}"));
                     }
                 }
                 default:
-                    return Response("The space time continuum is screwed up again.");
+                    return (false, Response("The space time continuum is screwed up again."));
             }
+        }
+
+        private (bool IsSuccess, DiscordCommandResult Response) UnloadModule(Snowflake? id = null)
+        {
+            var result = _commandModuleCompilingService.RemoveModules(id.Value);
+            return (result, Response(result ? "Module(s) unloaded" : "No modules are loaded under that id"));
         }
     }
 }

@@ -11,8 +11,8 @@ namespace CheeseBot.Disqord
     {
         public SelectionViewComponent Selection { get; }
         
-        public SelectionPagedView(SelectionPageProvider pageProvider, LocalMessage templateMessage = null) : base(
-            pageProvider, templateMessage)
+        public SelectionPagedView(SelectionPageProvider pageProvider, LocalMessage templateMessage = null) 
+            : base(pageProvider, templateMessage)
         {
             Selection = new SelectionViewComponent(HandleSelection);
             
@@ -25,7 +25,7 @@ namespace CheeseBot.Disqord
                 
                 Selection.Options.Add(option);
             }
-            
+
             AddComponent(Selection);
         }
 
