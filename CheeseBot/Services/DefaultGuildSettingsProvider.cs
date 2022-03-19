@@ -11,7 +11,7 @@ namespace CheeseBot.Services
     {
         public const int MaxNumberOfPrefixes = 5;
         
-        public HashSet<IPrefix> DefaultPrefixes { get; } 
+        public List<IPrefix> DefaultPrefixes { get; } 
         
         public DefaultGuildSettingsProvider(Token token, ILogger<DefaultGuildSettingsProvider> logger) 
             : base(logger)
@@ -19,7 +19,7 @@ namespace CheeseBot.Services
             if (token is not BotToken botToken)
                 throw new Exception("Token was not expected type");
             
-            DefaultPrefixes = new HashSet<IPrefix>
+            DefaultPrefixes = new List<IPrefix>
             {
                 new StringPrefix("?"),
                 new MentionPrefix(botToken.Id)

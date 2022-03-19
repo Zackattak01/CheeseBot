@@ -30,9 +30,12 @@ namespace CheeseBot.EfCore
             modelBuilder.Entity<GuildSettings>(modelBuilder =>
             {
                 modelBuilder.Property(x => x.Prefixes)
-                    .HasConversion(
-                        static prefixes => prefixes.Select(x => x.ToString()).ToArray(),
-                        static arr => new HashSet<IPrefix>(arr.Select(StringToPrefix)));
+                    .HasPostgresArrayConversion(
+                        static prefix => prefix.ToString(),
+                        static str => StringToPrefix(str));
+                // .HasConversion(
+                // static prefixes => prefixes.Select(x => x.ToString()).ToArray(),
+                // static arr => new HashSet<IPrefix>(arr.Select(StringToPrefix)));
             });
         }
 
