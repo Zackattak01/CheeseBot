@@ -8,7 +8,7 @@ namespace CheeseBot.Extensions
 {
     public static class GuildSettingsServiceExtensions
     {
-        public static async Task<IReadOnlySet<IPrefix>> GetGuildPrefixesAsync(this GuildSettingsService service, Snowflake guildId)
+        public static async Task<IReadOnlyList<IPrefix>> GetGuildPrefixesAsync(this GuildSettingsService service, Snowflake guildId)
         {
             var settings = await service.GetGuildSettingsAsync(guildId);
             return settings.Prefixes;
