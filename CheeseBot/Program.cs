@@ -28,6 +28,9 @@ namespace CheeseBot
         
         public static async Task Main(string[] args)
         {
+            // TODO: this fixes the time in the reminder models, but this should be migrated to non legacy behavior 
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+            
             var host = new HostBuilder()
                 .ConfigureLogging(x =>
                 {
