@@ -30,7 +30,7 @@ namespace CheeseBot
         {
             // After a small amount of research the models should be in compliance with the non legacy behavior but EF still throws:
             // "Cannot write DateTime with Kind=Unspecified to PostgreSQL type 'timestamp with time zone', only UTC is supported."
-            // However the type in the db is 'timestamp without time zone' which should be ok but its not. I guess we'll use on legacy behavior
+            // However the type in the db is 'timestamp without time zone' which should be ok but its not. I guess we'll use legacy behavior
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
             
             var host = new HostBuilder()
