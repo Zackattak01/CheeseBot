@@ -17,7 +17,8 @@ namespace CheeseBot.Commands.Modules
         [RequireBotChannelPermissions(Permission.ManageMessages)]
         public async Task CleanAsync([Minimum(1)] int numberToSearch = 100)
         {
-            var messages = await Context.Bot.FetchMessagesAsync(Context.ChannelId, numberToSearch);
+            // add one to the specified amount to account for the message sent to invoke this command
+            var messages = await Context.Bot.FetchMessagesAsync(Context.ChannelId, numberToSearch + 1);
             var idsToDelete = new HashSet<Snowflake>();
 
             foreach (var message in messages)
@@ -54,7 +55,8 @@ namespace CheeseBot.Commands.Modules
         [RequireBotChannelPermissions(Permission.ManageMessages)]
         public async Task NukeAsync([Minimum(1)] int numberToNuke = 100)
         {
-            var messages = await Context.Bot.FetchMessagesAsync(Context.ChannelId, numberToNuke);
+            // add one to the specified amount to account for the message sent to invoke this command
+            var messages = await Context.Bot.FetchMessagesAsync(Context.ChannelId, numberToNuke + 1);
             await Context.Bot.DeleteMessagesAsync(Context.ChannelId, messages.Select(x => x.Id));
         }
     }
