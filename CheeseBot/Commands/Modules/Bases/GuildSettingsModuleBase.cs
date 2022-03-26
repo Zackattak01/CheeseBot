@@ -6,7 +6,7 @@ using Disqord.Bot;
 
 namespace CheeseBot.Commands.Modules
 {
-    public abstract class GuildSettingsModule : DiscordGuildModuleBase
+    public abstract class GuildSettingsModuleBase : DiscordGuildModuleBase
     {
         public GuildSettingsService GuildSettingsService { get; set; }
 

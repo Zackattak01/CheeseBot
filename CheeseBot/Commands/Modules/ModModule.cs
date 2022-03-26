@@ -9,7 +9,7 @@ using Qmmands;
 namespace CheeseBot.Commands.Modules
 {
     [Description("Moderation commands")]
-    public class ModModule : GuildSettingsModule
+    public class ModModule : GuildSettingsModuleBase
     {
         [Command("clean")]
         [Description("Clean up after myself.")]

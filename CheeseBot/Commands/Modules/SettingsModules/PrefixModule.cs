@@ -9,7 +9,7 @@ namespace CheeseBot.Commands.Modules
 {
     [Group("prefix", "prefixes")]
     [Description("Guild wide prefix settings")]
-    public class PrefixModule : GuildSettingsModule
+    public class PrefixModule : GuildSettingsModuleBase
     {
         [Command]
         [Description("Displays the current prefixes that are recognized on this server.")]
