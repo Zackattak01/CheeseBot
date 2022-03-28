@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Disqord.Bot" Version="1.0.0-176" />
+      <PackageReference Include="Disqord.Bot" Version="1.0.0-179" />
       <PackageReference Include="EFCore.NamingConventions" Version="6.0.0" />
       <PackageReference Include="HumanTimeParser.English" Version="2.0.2-dev-1077486393" />
       <PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="3.11.0" />
