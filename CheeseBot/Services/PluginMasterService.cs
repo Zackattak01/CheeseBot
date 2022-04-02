@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CheeseBot.Plugins;
 using Disqord.Bot.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -15,19 +16,21 @@ namespace CheeseBot.Services
     public class PluginMasterService : IHostedService
     {
         private readonly IReadOnlyList<Plugin> _allPlugins;
+        private readonly IConfiguration _configuration;
         private ILogger<PluginMasterService> Logger { get; }
         public IReadOnlyList<Plugin> Plugins { get; }
 
-        public PluginMasterService(ILogger<PluginMasterService> logger, IReadOnlyList<Plugin> plugins)
+        public PluginMasterService(ILogger<PluginMasterService> logger, IReadOnlyList<Plugin> plugins, IConfiguration configuration)
         {
             Logger = logger;
             Plugins = plugins.Where(x => x.GetValidationInformation().IsValidPluginDefinition).ToList();
             _allPlugins = plugins;
+            _configuration = configuration;
         }
         
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            Logger.LogInformation($"Attempting to load plugins from {Path.GetFullPath(PluginLoader.DefaultSearchLocation)}");
+            Logger.LogInformation($"Attempting to load plugins from {Path.GetFullPath(_configuration["plugins_location"] ?? PluginLoader.DefaultSearchLocation)}");
             var msg = Plugins.Count switch
             {
                 0 when _allPlugins.Count == 0 => "No plugins were loaded.",

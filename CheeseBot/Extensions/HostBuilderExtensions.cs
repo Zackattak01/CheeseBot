@@ -6,6 +6,7 @@ using CheeseBot.Services;
 using Disqord.Bot;
 using Disqord.Bot.Hosting;
 using Disqord.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.Hosting;
@@ -19,12 +20,13 @@ namespace CheeseBot.Extensions
     {
         public static IHostBuilder InstallPlugins(this IHostBuilder builder)
         {
-            var plugins = PluginLoader.LoadPlugins();
-            var validPlugins = plugins.Where(x => x.GetValidationInformation().IsValidPluginDefinition);
-            var validPluginAssemblies = validPlugins.Select(x => x.Assembly).ToList();
             return builder
                 .ConfigureServices((context, services) =>
                 {
+                    var plugins = PluginLoader.LoadPlugins(context.Configuration["plugins_location"]);
+                    var validPlugins = plugins.Where(x => x.GetValidationInformation().IsValidPluginDefinition);
+                    var validPluginAssemblies = validPlugins.Select(x => x.Assembly).ToList();
+                    
                     // Stolen from 
                     // https://github.com/Quahu/Disqord/blob/3a3ef050aaf1e7c80f13abf41f4190d0291f1d7a/src/Disqord/Hosting/DiscordClientHostBuilderExtensions.cs#L45-L76
                     // and
@@ -61,7 +63,7 @@ namespace CheeseBot.Extensions
                         }
                     }
                     
-                    services.AddHostedService(s => new PluginMasterService(s.GetRequiredService<ILogger<PluginMasterService>>(), plugins));
+                    services.AddHostedService(s => new PluginMasterService(s.GetRequiredService<ILogger<PluginMasterService>>(), plugins, s.GetRequiredService<IConfiguration>()));
                 });
         }
     }
