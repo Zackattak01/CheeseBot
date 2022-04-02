@@ -9,9 +9,10 @@ namespace CheeseBot.Plugins
 {
     public static class PluginLoader
     {
-        public static IReadOnlyList<Plugin> LoadPlugins()
+        public const string DefaultSearchLocation = "Plugins";
+        public static IReadOnlyList<Plugin> LoadPlugins(string location = null)
         {
-            var files = DiscoverPluginsFiles();
+            var files = DiscoverPluginsFiles(location ?? DefaultSearchLocation);
             
             if (files is null)
                 return Array.Empty<Plugin>();
@@ -20,10 +21,10 @@ namespace CheeseBot.Plugins
             return assemblies.Select(x => new Plugin(x)).ToList();
         }
 
-        private static IEnumerable<string> DiscoverPluginsFiles()
+        private static IEnumerable<string> DiscoverPluginsFiles(string location)
         {
-            if (Directory.Exists("Plugins"))
-                return Directory.EnumerateFiles("Plugins", "*.dll", SearchOption.AllDirectories).Select(Path.GetFullPath);
+            if (Directory.Exists(location))
+                return Directory.EnumerateFiles(location, "*.dll", SearchOption.AllDirectories).Select(Path.GetFullPath);
             else
                 return null;
         }

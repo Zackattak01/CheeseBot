@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -26,6 +27,7 @@ namespace CheeseBot.Services
         
         public Task StartAsync(CancellationToken cancellationToken)
         {
+            Logger.LogInformation($"Attempting to load plugins from {Path.GetFullPath(PluginLoader.DefaultSearchLocation)}");
             var msg = Plugins.Count switch
             {
                 0 when _allPlugins.Count == 0 => "No plugins were loaded.",
