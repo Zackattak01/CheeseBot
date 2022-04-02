@@ -34,6 +34,7 @@ namespace CheeseBot
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
             
             var host = new HostBuilder()
+                .InstallPlugins()
                 .ConfigureLogging(x =>
                 {
                     var logger = new LoggerConfiguration()
