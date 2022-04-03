@@ -1,6 +1,3 @@
-using Disqord;
-using Disqord.Bot;
-
 namespace CheeseBot.Eval
 {
     public class EvalGlobals

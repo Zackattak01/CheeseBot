@@ -1,16 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CheeseBot.Disqord;
-using CheeseBot.EfCore;
-using CheeseBot.EfCore.Entities;
-using CheeseBot.Extensions;
-using Disqord;
-using Disqord.Bot;
-using Microsoft.EntityFrameworkCore;
-using Qmmands;
-
 namespace CheeseBot.Commands.Modules
 {
     [Group("note", "notes")]

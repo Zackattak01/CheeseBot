@@ -1,11 +1,3 @@
-using System;
-using System.Collections.Generic;
-using CheeseBot.Extensions;
-using CheeseBot.Services;
-using Disqord;
-using Disqord.Bot;
-using Qmmands;
-
 namespace CheeseBot.Commands.Modules
 {
     [Group("prefix", "prefixes")]

@@ -1,7 +1,4 @@
-using System.Linq;
 using System.Reflection;
-using CheeseBot.Services;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace CheeseBot.Extensions
 {

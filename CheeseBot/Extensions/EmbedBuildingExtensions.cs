@@ -1,5 +1,3 @@
-using Disqord;
-
 namespace CheeseBot.Extensions
 {
     public static class EmbedBuildingExtensions

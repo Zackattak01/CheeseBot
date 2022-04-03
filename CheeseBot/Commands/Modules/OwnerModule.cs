@@ -1,20 +1,8 @@
-using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using CheeseBot.Eval;
-using CheeseBot.Extensions;
-using CheeseBot.Services;
-using Disqord;
-using Disqord.Bot;
 using Disqord.Extensions.Interactivity.Menus.Paged;
-using Disqord.Rest;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Qmmands;
 
 namespace CheeseBot.Commands.Modules
 {

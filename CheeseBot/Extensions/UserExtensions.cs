@@ -1,8 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using Disqord;
-using Disqord.Gateway;
-
 namespace CheeseBot.Extensions
 {
     public static class UserExtensions

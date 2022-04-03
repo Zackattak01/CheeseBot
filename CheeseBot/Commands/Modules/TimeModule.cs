@@ -1,9 +1,3 @@
-using System;
-using CheeseBot.Extensions;
-using Disqord;
-using Disqord.Bot;
-using Qmmands;
-
 namespace CheeseBot.Commands.Modules
 {
     [Group("time")]

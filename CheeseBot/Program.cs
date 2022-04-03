@@ -1,22 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using CheeseBot.Disqord;
-using CheeseBot.EfCore;
-using CheeseBot.Extensions;
-using CheeseBot.Services;
-using Disqord;
-using Disqord.Bot;
-using Disqord.Bot.Hosting;
-using Disqord.Gateway;
-using HumanTimeParser.English;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Serilog;
+﻿using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 

@@ -1,5 +1,4 @@
 #if DEBUG
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
 namespace CheeseBot.EfCore

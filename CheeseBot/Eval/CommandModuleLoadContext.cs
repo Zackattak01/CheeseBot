@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using System.Runtime.Loader;
-using Qmmands;
 
 namespace CheeseBot.Eval
 {

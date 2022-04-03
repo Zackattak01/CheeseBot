@@ -1,9 +1,3 @@
-using System.Threading.Tasks;
-using CheeseBot.EfCore;
-using CheeseBot.EfCore.Entities;
-using Disqord.Bot;
-using Qmmands;
-
 namespace CheeseBot.Commands.Modules
 {
     [Group("sw", "stopwatch")]

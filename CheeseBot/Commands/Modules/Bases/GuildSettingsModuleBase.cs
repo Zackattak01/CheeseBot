@@ -1,9 +1,3 @@
-using System.Threading.Tasks;
-using CheeseBot.EfCore;
-using CheeseBot.EfCore.Entities;
-using CheeseBot.Services;
-using Disqord.Bot;
-
 namespace CheeseBot.Commands.Modules
 {
     public abstract class GuildSettingsModuleBase : DiscordGuildModuleBase

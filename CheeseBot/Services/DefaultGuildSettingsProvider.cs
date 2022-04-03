@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using CheeseBot.EfCore.Entities;
-using Disqord;
-using Disqord.Bot;
-using Microsoft.Extensions.Logging;
-
 namespace CheeseBot.Services
 {
     public class DefaultGuildSettingsProvider : CheeseBotService

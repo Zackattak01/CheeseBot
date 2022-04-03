@@ -1,10 +1,4 @@
-using System;
-using System.Threading.Tasks;
-using Disqord.Bot;
 using HumanTimeParser.Core.Parsing;
-using HumanTimeParser.English;
-using Microsoft.Extensions.DependencyInjection;
-using Qmmands;
 
 namespace CheeseBot.Commands.TypeParsers
 {

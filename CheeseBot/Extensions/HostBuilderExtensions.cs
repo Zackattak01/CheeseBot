@@ -1,18 +1,5 @@
-using System;
-using System.Linq;
-using CheeseBot.Disqord;
 using CheeseBot.Plugins;
-using CheeseBot.Services;
-using Disqord.Bot;
-using Disqord.Bot.Hosting;
 using Disqord.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyModel;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Qommon.Collections;
-using Serilog;
 
 namespace CheeseBot.Extensions
 {

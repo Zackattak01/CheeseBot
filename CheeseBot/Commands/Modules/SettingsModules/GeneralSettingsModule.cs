@@ -1,6 +1,3 @@
-using Disqord.Bot;
-using Qmmands;
-
 namespace CheeseBot.Commands.Modules
 {
     [Description("Some general server settings")]

@@ -1,8 +1,3 @@
-using System.Collections.Generic;
-using CheeseBot.EfCore.Entities;
-using Disqord;
-using Disqord.Bot;
-
 namespace CheeseBot.Extensions
 {
     public static class GuildSettingsExtensions

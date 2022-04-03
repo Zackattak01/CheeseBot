@@ -1,4 +1,3 @@
-using Disqord;
 using Disqord.Extensions.Interactivity.Menus.Paged;
 
 namespace CheeseBot.Disqord

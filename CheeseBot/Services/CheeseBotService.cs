@@ -1,5 +1,4 @@
 using Disqord.Logging;
-using Microsoft.Extensions.Logging;
 
 namespace CheeseBot.Services
 {

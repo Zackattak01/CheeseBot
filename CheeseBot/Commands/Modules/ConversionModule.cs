@@ -1,6 +1,3 @@
-using Disqord.Bot;
-using Qmmands;
-
 namespace CheeseBot.Commands.Modules
 {
     [Description("Easily converts some units")]
