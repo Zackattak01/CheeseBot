@@ -7,12 +7,13 @@ Just a bot made to kill time and practice.
 
 ```json
 {
-  "discord" : {
-    "token" : "Your Discord Token"
+  "plugins_location" : "Your plugins location"
+  "discord": {
+    "token": "Your Discord Token"
   },
   
   "postgres": {
-    "connection_string" : "Your connection string"
+    "connection_string": "Your connection string"
   }
 }
 ```
