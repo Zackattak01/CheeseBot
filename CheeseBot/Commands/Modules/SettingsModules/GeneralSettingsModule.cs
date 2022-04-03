@@ -1,3 +1,7 @@
+using System.Reflection;
+using CheeseBot.Settings;
+using CheeseBot.Settings.Formatters;
+
 namespace CheeseBot.Commands.Modules
 {
     [Description("Some general server settings")]

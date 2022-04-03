@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using CheeseBot.Settings;
+using CheeseBot.Settings.Formatters;
 
 namespace CheeseBot.EfCore.Entities
 {

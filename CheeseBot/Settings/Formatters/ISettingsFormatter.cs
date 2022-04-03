@@ -1,5 +1,3 @@
-using CheeseBot.EfCore.Entities;
-
 namespace CheeseBot.Settings.Formatters
 {
     public interface ISettingsFormatter

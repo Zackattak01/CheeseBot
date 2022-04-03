@@ -1,4 +1,3 @@
-using System;
 using CheeseBot.Settings.Formatters;
 
 namespace CheeseBot.Settings
