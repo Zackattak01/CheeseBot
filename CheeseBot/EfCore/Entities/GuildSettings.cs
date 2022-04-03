@@ -1,10 +1,5 @@
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using CheeseBot.Settings;
-using CheeseBot.Settings.Formatters;
-using Disqord;
-using Disqord.Bot;
 
 namespace CheeseBot.EfCore.Entities
 {

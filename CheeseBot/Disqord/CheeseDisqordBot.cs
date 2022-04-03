@@ -1,10 +1,5 @@
-using System;
 using System.Threading;
-using System.Threading.Tasks;
 using CheeseBot.Commands.TypeParsers;
-using Disqord;
-using Disqord.Bot;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace CheeseBot.Disqord

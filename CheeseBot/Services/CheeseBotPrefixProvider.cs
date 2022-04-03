@@ -1,9 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using CheeseBot.Extensions;
-using Disqord.Bot;
-using Disqord.Gateway;
-
 namespace CheeseBot.Services
 {
     public class CheeseBotPrefixProvider : IPrefixProvider

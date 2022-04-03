@@ -1,14 +1,3 @@
-using System;
-using System.Linq;
-using System.Reflection;
-using CheeseBot.EfCore.Entities;
-using CheeseBot.Extensions;
-using CheeseBot.Settings;
-using CheeseBot.Settings.Formatters;
-using Disqord;
-using Disqord.Bot;
-using Qmmands;
-
 namespace CheeseBot.Commands.Modules
 {
     [Description("Some general server settings")]

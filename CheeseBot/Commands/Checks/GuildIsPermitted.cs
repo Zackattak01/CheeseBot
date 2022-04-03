@@ -1,10 +1,3 @@
-using System.Threading.Tasks;
-using CheeseBot.Extensions;
-using CheeseBot.Services;
-using Disqord.Bot;
-using Microsoft.Extensions.DependencyInjection;
-using Qmmands;
-
 namespace CheeseBot.Commands.Checks
 {
     public class GuildIsPermitted : DiscordGuildCheckAttribute

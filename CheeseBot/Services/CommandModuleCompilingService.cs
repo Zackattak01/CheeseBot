@@ -1,11 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using CheeseBot.Eval;
-using Disqord;
-using Microsoft.Extensions.Logging;
-using Qmmands;
 
 namespace CheeseBot.Services
 {

@@ -1,11 +1,4 @@
-using System.Collections.Generic;
-using System.Linq;
-using CheeseBot.Disqord;
-using CheeseBot.Extensions;
-using Disqord;
-using Disqord.Bot;
 using Disqord.Extensions.Interactivity.Menus.Paged;
-using Qmmands;
 
 namespace CheeseBot.Commands.Modules
 {

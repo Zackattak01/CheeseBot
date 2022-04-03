@@ -1,6 +1,3 @@
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-
 namespace CheeseBot.Services
 {
     public class UnobservedTaskExceptionService : CheeseBotService

@@ -1,9 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using CheeseBot.Services;
-using Disqord;
-using Disqord.Bot;
-
 namespace CheeseBot.Extensions
 {
     public static class GuildSettingsServiceExtensions

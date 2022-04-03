@@ -1,12 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using CheeseBot.Extensions;
-using Disqord;
-using Disqord.Bot;
-using Disqord.Rest;
-using Qmmands;
-
 namespace CheeseBot.Commands.Modules
 {
     [Description("All kinds of fun things")]

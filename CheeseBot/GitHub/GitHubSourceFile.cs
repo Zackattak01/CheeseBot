@@ -1,5 +1,3 @@
-using System;
-
 namespace CheeseBot.GitHub
 {
     public class GitHubSourceFile

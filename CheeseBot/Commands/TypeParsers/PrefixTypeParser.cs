@@ -1,8 +1,3 @@
-using System.Threading.Tasks;
-using Disqord;
-using Disqord.Bot;
-using Qmmands;
-
 namespace CheeseBot.Commands.TypeParsers
 {
     public class PrefixTypeParser : DiscordTypeParser<IPrefix>

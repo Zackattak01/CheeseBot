@@ -1,6 +1,3 @@
-using CheeseBot.EfCore.Entities;
-using Disqord;
-
 namespace CheeseBot.Extensions
 {
     public static class ReminderExtensions

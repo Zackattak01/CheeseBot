@@ -1,7 +1,3 @@
-using System;
-using Disqord;
-using Disqord.Bot;
-
 namespace CheeseBot.Extensions
 {
     public static class PrefixExtensions

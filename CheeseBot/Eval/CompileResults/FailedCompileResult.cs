@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Microsoft.CodeAnalysis.Emit;
 
 namespace CheeseBot.Eval

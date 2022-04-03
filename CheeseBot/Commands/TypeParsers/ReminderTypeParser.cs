@@ -1,11 +1,4 @@
-using System;
-using System.Threading.Tasks;
-using CheeseBot.EfCore.Entities;
-using Disqord.Bot;
 using HumanTimeParser.Core.Parsing;
-using HumanTimeParser.English;
-using Microsoft.Extensions.DependencyInjection;
-using Qmmands;
 
 namespace CheeseBot.Commands.TypeParsers
 {
@@ -31,7 +24,7 @@ namespace CheeseBot.Commands.TypeParsers
                     reminderValue.Trim()
                 );
 
-                return new ValueTask<TypeParserResult<Reminder>>(Success(reminder));
+            return new ValueTask<TypeParserResult<Reminder>>(Success(reminder));
         }
     }
 }

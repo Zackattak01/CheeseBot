@@ -1,6 +1,3 @@
-using System;
-using Microsoft.Extensions.Logging;
-
 namespace CheeseBot
 {
     public class Logger<T> : ILogger<T>

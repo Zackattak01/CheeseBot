@@ -1,5 +1,3 @@
-using System;
-
 namespace CheeseBot.Scheduling
 {
     public class UnhandledExceptionEventArgs : EventArgs

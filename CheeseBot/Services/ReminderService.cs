@@ -1,20 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
-using CheeseBot.EfCore;
-using CheeseBot.EfCore.Entities;
-using CheeseBot.Extensions;
-using CheeseBot.Scheduling;
-using Disqord;
-using Disqord.Bot;
-using Disqord.Bot.Hosting;
-using Disqord.Gateway;
-using Disqord.Rest;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace CheeseBot.Services
 {

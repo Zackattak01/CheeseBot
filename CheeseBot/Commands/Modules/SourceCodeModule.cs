@@ -1,10 +1,5 @@
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
-using CheeseBot.Services;
-using Disqord;
-using Disqord.Bot;
-using Qmmands;
 
 namespace CheeseBot.Commands.Modules
 {

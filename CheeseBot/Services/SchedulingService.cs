@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using CheeseBot.Scheduling;
-using Microsoft.Extensions.Logging;
-
 namespace CheeseBot.Services
 {
     public class SchedulingService : CheeseBotService
