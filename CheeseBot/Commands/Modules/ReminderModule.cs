@@ -18,7 +18,7 @@ namespace CheeseBot.Commands.Modules
         public async Task<DiscordCommandResult> ReminderAsync([Remainder] Reminder reminder)
         {
             if (reminder.ExecutionTime <= DateTime.Now)
-                return Response("Reminder time cannot be in the past or now.");
+                return Response("Reminder cannot be set in the past.");
             
             await _reminderService.AddReminderAsync(reminder);
             

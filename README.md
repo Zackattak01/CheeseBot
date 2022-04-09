@@ -7,7 +7,7 @@ Just a bot made to kill time and practice.
 
 ```json
 {
-  "plugins_location" : "Your plugins location"
+  "plugins_location": "Your plugins location"
   "discord": {
     "token": "Your Discord Token"
   },
