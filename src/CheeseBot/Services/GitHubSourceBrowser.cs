@@ -4,7 +4,7 @@ namespace CheeseBot.Services
 {
     public class GitHubSourceBrowser : CheeseBotService
     {
-        private const string GithubRawRepoBaseLink = "https://raw.githubusercontent.com/Zackattak01/CheeseBot/main/CheeseBot/";
+        private const string GithubRawRepoBaseLink = "https://raw.githubusercontent.com/Zackattak01/CheeseBot/main/src/CheeseBot/";
         private const string GithubRepoBaseLink = "https://github.com/Zackattak01/CheeseBot/tree/main/src/CheeseBot";
         private const string CSharpExtension = ".cs";
         private const string CsprojExtension = ".csproj";
