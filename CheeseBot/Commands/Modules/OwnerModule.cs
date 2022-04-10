@@ -167,7 +167,14 @@ namespace CheeseBot.Commands.Modules
         [Command("unload")]
         [Description("Unloads your modules. (Finally I can get rid of this garbage)")]
         public DiscordCommandResult Unload(Snowflake? id = null)
-            => UnloadModule(id).Response;
+        {
+            if (id is null && Context.Message.ReferencedMessage.HasValue)
+                id = Context.Message.ReferencedMessage.Value.Id;
+            else
+                return Response("Please provide a message id.");
+            
+            return UnloadModule(id.Value).Response;
+        }
 
         [Command("reload")]
         public async Task<DiscordCommandResult> Reload(Snowflake? id = null)
@@ -184,7 +191,7 @@ namespace CheeseBot.Commands.Modules
                     return Response("Please provide an id");
             }
 
-            var unloadResult = UnloadModule(id);
+            var unloadResult = UnloadModule(id.Value);
 
             if (!unloadResult.IsSuccess)
                 return unloadResult.Response;
@@ -239,9 +246,9 @@ namespace CheeseBot.Commands.Modules
             }
         }
 
-        private (bool IsSuccess, DiscordCommandResult Response) UnloadModule(Snowflake? id = null)
+        private (bool IsSuccess, DiscordCommandResult Response) UnloadModule(Snowflake id)
         {
-            var result = _commandModuleCompilingService.RemoveModules(id.Value);
+            var result = _commandModuleCompilingService.RemoveModules(id);
             return (result, Response(result ? "Module(s) unloaded" : "No modules are loaded under that id"));
         }
     }
