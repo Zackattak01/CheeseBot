@@ -43,12 +43,12 @@ namespace CheeseBot.Services
                 return settings;
             else
             {
-                Logger.LogInformation($"Encountered guild: {guildId} for the first time.  Caching settings.");
+                Logger.LogInformation("Encountered guild: {0} for the first time.  Caching settings.", guildId);
 
                 var guildSettings = await FindOrCreateGuildSettings(guildId);
                 
                 if(!_guildSettingsCache.TryAdd(guildId, guildSettings))
-                    Logger.LogWarning($"Could not cache settings for {guildId}!  Settings already cached?");
+                    Logger.LogWarning("Could not cache settings for {0}!  Settings already cached?", guildId);
 
                 return guildSettings;
             }

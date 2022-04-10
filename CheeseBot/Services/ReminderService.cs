@@ -69,7 +69,7 @@ namespace CheeseBot.Services
             {
                 if (reminder.ExecutionTime <= DateTime.Now)
                 {
-                    Logger.LogInformation($"Sending missed reminder for user: {reminder.UserId}");
+                    Logger.LogInformation("Sending missed reminder for user: {0}", reminder.UserId);
                     await SendReminderAsync(reminder);
                 }
                 else
@@ -101,7 +101,7 @@ namespace CheeseBot.Services
                 }
                 catch (RestApiException e) when (e.ErrorModel.Code.GetValueOrDefault() == RestApiErrorCode.CannotSendMessagesToThisUser)
                 {
-                    Logger.LogInformation($"Could not notify user {reminder.UserId} about a reminder.  Deleting reminder without notifying user.");
+                    Logger.LogInformation("Could not notify user {0} about a reminder.  Deleting reminder without notifying user.", reminder.UserId);
                 }
             }
 

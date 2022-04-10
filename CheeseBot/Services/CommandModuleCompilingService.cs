@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace CheeseBot.Services
@@ -19,8 +20,10 @@ namespace CheeseBot.Services
         public ICompileResult CreateModules(Snowflake id, string code)
         {
             Logger.LogInformation("Compiling module code...");
+            var sw = Stopwatch.StartNew();
             var result = CompileUtils.CompileCommandModule(id.ToString(), code);
-            Logger.LogInformation("Done compiling module code.");
+            sw.Stop();
+            Logger.LogInformation("Finished compiling module code in {0}ms.", sw.ElapsedMilliseconds);
 
             if (result is SuccessfulCompileResult successfulResult)
             {
@@ -32,7 +35,7 @@ namespace CheeseBot.Services
 
                 
                 var modules = _commandService.AddModules(assembly);
-                Logger.LogInformation($"Added {modules.Count} module(s).");
+                Logger.LogInformation("Added {0} module(s).", modules.Count);
                 
                 _loadedModules.Add(id, new CommandModuleLoadContext(context, modules));
             }
@@ -49,7 +52,7 @@ namespace CheeseBot.Services
             
             foreach (var module in context.Modules)
                 _commandService.RemoveModule(module);
-            Logger.LogInformation($"Removed {context.Modules.Count()} module(s).");
+            Logger.LogInformation("Removed {0} module(s).", context.Modules.Count());
             
             _loadedModules.Remove(id);
             

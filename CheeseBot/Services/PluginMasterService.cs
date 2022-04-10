@@ -22,7 +22,7 @@ namespace CheeseBot.Services
         
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            Logger.LogInformation($"Attempting to load plugins from {Path.GetFullPath(_configuration["plugins_location"] ?? PluginLoader.DefaultSearchLocation)}");
+            Logger.LogInformation("Attempting to load plugins from {0}", Path.GetFullPath(_configuration["plugins_location"] ?? PluginLoader.DefaultSearchLocation));
             var msg = Plugins.Count switch
             {
                 0 when _allPlugins.Count == 0 => "No plugins were loaded.",

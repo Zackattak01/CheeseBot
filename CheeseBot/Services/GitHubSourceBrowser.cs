@@ -47,11 +47,11 @@ namespace CheeseBot.Services
             var sourceFile = new GitHubSourceFile(uri, uri.ToString().Split('/').Last(), content);
             _contentCache.Add(uri, sourceFile);
             
-            Logger.LogInformation($"Fetched github source file: {sourceFile.Filename}. Caching contents for {MinutesToCacheContent} minutes");
+            Logger.LogInformation("Fetched github source file: {0}. Caching contents for {1} minutes", sourceFile.Filename, MinutesToCacheContent);
             
             var scheduledTask = _scheduler.Schedule(DateTime.Now.AddMinutes(MinutesToCacheContent), scheduledTask =>
             {
-                Logger.LogInformation($"Cached content for {sourceFile.Filename} expired after {MinutesToCacheContent} minutes.");
+                Logger.LogInformation("Cached content for {0} expired after {1} minutes.", sourceFile.Filename, MinutesToCacheContent);
                 _contentCache.Remove(uri);
                 _scheduledCacheRemovalTasks.Remove(scheduledTask.Id);
                 return Task.CompletedTask;
