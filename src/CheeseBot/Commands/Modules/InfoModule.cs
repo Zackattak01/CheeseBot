@@ -90,7 +90,7 @@ namespace CheeseBot.Commands.Modules
             if (size < 16 || size > 2048 || (size & (size - 1)) != 0)
                 return Response("Invalid size!  Size must be a power of 2 and between 16 and 2048.");
 
-            return Response(user.GetAvatarUrl(size: size));
+            return Response(user.GetAvatarUrl(CdnAssetFormat.Automatic, size));
         }
 
         [Command("avatar", "av")]
