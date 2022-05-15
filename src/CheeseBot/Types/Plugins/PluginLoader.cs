@@ -9,7 +9,7 @@ namespace CheeseBot.Plugins
         public const string DefaultSearchLocation = "Plugins";
         public static IReadOnlyList<Plugin> LoadPlugins(string location = null)
         {
-            var files = DiscoverPluginsFiles(location ?? DefaultSearchLocation);
+            var files = DiscoverPluginFiles(location ?? DefaultSearchLocation);
             
             if (files is null)
                 return Array.Empty<Plugin>();
@@ -18,7 +18,7 @@ namespace CheeseBot.Plugins
             return assemblies.Select(x => new Plugin(x)).ToList();
         }
 
-        private static IEnumerable<string> DiscoverPluginsFiles(string location)
+        private static IEnumerable<string> DiscoverPluginFiles(string location)
         {
             if (Directory.Exists(location))
                 return Directory.EnumerateFiles(location, "*.dll", SearchOption.AllDirectories).Select(Path.GetFullPath);

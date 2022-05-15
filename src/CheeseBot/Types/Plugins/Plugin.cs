@@ -4,8 +4,10 @@ namespace CheeseBot.Plugins
 {
     public class Plugin
     {
-        public IPluginManifest Manifest { get; private set; }
+        public PluginManifest Manifest { get; private set; }
         public Assembly Assembly { get; }
+
+        public (bool IsValidPluginDefinition, string ErrorString) ValidationInformation => (_isValidPluginDefinition, _validationError);
 
         private readonly bool _isValidPluginDefinition;
         private readonly string _validationError;
@@ -18,7 +20,7 @@ namespace CheeseBot.Plugins
 
         private (bool IsValidPluginDefinition, string ErrorString) Validate()
         {
-            var manifests = Assembly.DefinedTypes.Where(x => x.IsAssignableTo(typeof(IPluginManifest))).ToList();
+            var manifests = Assembly.DefinedTypes.Where(x => x.IsAssignableTo(typeof(PluginManifest))).ToList();
 
             if (manifests.Count == 1)
             {
@@ -27,7 +29,7 @@ namespace CheeseBot.Plugins
                 if (ctor == null)
                     return (false, "Plugin manifest did not contain a parameterless constructor!");
                 
-                Manifest = ctor.Invoke(null) as IPluginManifest;
+                Manifest = ctor.Invoke(null) as PluginManifest;
             }
             
             return manifests.Count switch
@@ -37,8 +39,5 @@ namespace CheeseBot.Plugins
                 _ => (false, $"Plugin has {manifests.Count} manifests! Plugin assembly should only contain 1!")
             };
         }
-
-        public (bool IsValidPluginDefinition, string ErrorString) GetValidationInformation() 
-            => (_isValidPluginDefinition, _validationError);
     }
 }

@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using System.Reflection;
 using CheeseBot.Plugins;
 using Disqord.Hosting;
 
@@ -5,15 +7,28 @@ namespace CheeseBot.Extensions
 {
     public static class HostBuilderExtensions
     {
-        public static IHostBuilder InstallPlugins(this IHostBuilder builder)
+        public static IHostBuilder InstallPlugins(this IHostBuilder builder, string path = null)
         {
+            var sw = Stopwatch.StartNew();
+            var plugins = PluginLoader.LoadPlugins(path);
+            sw.Stop();
+            
+            var validPlugins = plugins.Where(x => x.ValidationInformation.IsValidPluginDefinition).ToList();
+            var validPluginAssemblies = new List<Assembly>();
+                    
+            foreach (var validPlugin in validPlugins)
+            {
+                validPlugin.Manifest.Awake();
+                validPlugin.Manifest.ConfigureHost(builder);
+                validPluginAssemblies.Add(validPlugin.Assembly);
+            }
+            
             return builder
                 .ConfigureServices((context, services) =>
                 {
-                    var plugins = PluginLoader.LoadPlugins(context.Configuration["plugins_location"]);
-                    var validPlugins = plugins.Where(x => x.GetValidationInformation().IsValidPluginDefinition);
-                    var validPluginAssemblies = validPlugins.Select(x => x.Assembly).ToList();
-                    
+                    foreach (var validPlugin in validPlugins) 
+                        validPlugin.Manifest.ConfigureServices(services);
+
                     // Stolen from 
                     // https://github.com/Quahu/Disqord/blob/3a3ef050aaf1e7c80f13abf41f4190d0291f1d7a/src/Disqord/Hosting/DiscordClientHostBuilderExtensions.cs#L45-L76
                     // and
@@ -21,6 +36,7 @@ namespace CheeseBot.Extensions
                     static Type GetImplementationType(ServiceDescriptor descriptor)
                         => descriptor.ImplementationType ?? (descriptor.ImplementationInstance?.GetType() ?? descriptor.ImplementationFactory?.GetType().GenericTypeArguments[1]);
                     
+                    // Discover DiscordBotServices
                     for (var i = 0; i < validPluginAssemblies.Count; i++)
                     {
                         var types = validPluginAssemblies[i].GetExportedTypes();
@@ -50,7 +66,7 @@ namespace CheeseBot.Extensions
                         }
                     }
                     
-                    services.AddHostedService(s => new PluginMasterService(s.GetRequiredService<ILogger<PluginMasterService>>(), plugins, s.GetRequiredService<IConfiguration>()));
+                    services.AddHostedService(s => new PluginMasterService(s.GetRequiredService<ILogger<PluginMasterService>>(), new PluginLoadInfo(plugins, validPlugins, sw.Elapsed, path), s.GetRequiredService<CommandService>()));
                 });
         }
     }

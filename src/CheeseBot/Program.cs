@@ -14,9 +14,8 @@ namespace CheeseBot
             // "Cannot write DateTime with Kind=Unspecified to PostgreSQL type 'timestamp with time zone', only UTC is supported."
             // However the type in the db is 'timestamp without time zone' which should be ok but its not. I guess we'll use legacy behavior
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-            
+
             var host = new HostBuilder()
-                .InstallPlugins()
                 .ConfigureLogging(x =>
                 {
                     var logger = new LoggerConfiguration()
@@ -47,6 +46,7 @@ namespace CheeseBot
                     bot.OwnerIds = new[] {new Snowflake(Global.AuthorId)};
                     bot.Intents = GatewayIntents.All;
                 })
+                .InstallPlugins(args.Length > 0 ? args[0] : null) // plugin path can be specified via command args
                 .Build();
 
             using (var scope = host.Services.CreateScope())
