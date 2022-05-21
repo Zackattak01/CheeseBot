@@ -15,6 +15,6 @@ namespace CheeseBot.Disqord
         }
 
         public override ValueTask<Page> GetPageAsync(PagedViewBase view)
-            => new(Pages[view.CurrentPageIndex].Page);
+            => new(Pages[view.CurrentPageIndex].GetPageAsync());
     }
 }
