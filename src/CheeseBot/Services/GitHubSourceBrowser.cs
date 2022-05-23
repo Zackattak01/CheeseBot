@@ -1,80 +1,93 @@
+using System.Text;
 using CheeseBot.GitHub;
+using CheeseBot.GitHub.Entities;
 
 namespace CheeseBot.Services
 {
     public class GitHubSourceBrowser : CheeseBotService
     {
-        private const string GithubRawRepoBaseLink = "https://raw.githubusercontent.com/Zackattak01/CheeseBot/main/src/CheeseBot/";
+        private const string DefaultSourceDirectory = "src/CheeseBot";
         private const string GithubRepoBaseLink = "https://github.com/Zackattak01/CheeseBot/tree/main/src/CheeseBot";
         private const string CSharpExtension = ".cs";
         private const string CsprojExtension = ".csproj";
         private const char GithubLineSelectorChar = '#';
         private const int MinutesToCacheContent = 30;
 
-        private readonly HttpClient _httpClient;
+        private readonly GitHubClient _client;
         private readonly SchedulingService _scheduler;
-        private readonly Dictionary<Uri, GitHubSourceFile> _contentCache;
+        private readonly Dictionary<string, GitHubSource> _contentCache;
         private readonly HashSet<int> _scheduledCacheRemovalTasks;
 
-        public GitHubSourceBrowser(HttpClient httpClient, SchedulingService scheduler, ILogger<GitHubSourceBrowser> logger) : base(logger)
+        public GitHubSourceBrowser(GitHubClient client, SchedulingService scheduler, ILogger<GitHubSourceBrowser> logger) : base(logger)
         {
-            _httpClient = httpClient;
+            _client = client;
             _scheduler = scheduler;
             _scheduledCacheRemovalTasks = new HashSet<int>();
-            _contentCache = new Dictionary<Uri, GitHubSourceFile>();
+            _contentCache = new Dictionary<string, GitHubSource>();
         }
 
-        public async Task<GitHubSourceFile> GetFileContentsAsync(string path)
+        public async Task<GitHubSource> GetPathAsync(string path)
         {
-            path = GetPathWithoutLineSelector(path, out var lineSelection);
+            path = NormalizePath(path, out var lineSelection);
             
-            var uri = new Uri(GithubRawRepoBaseLink + GetPathWithExtension(path));
-
-            if (_contentCache.TryGetValue(uri, out var cachedFile))
+            if (_contentCache.TryGetValue(path, out var cachedFile))
             {
                 if (lineSelection is not null)
-                    return new GitHubSourceFileSelection(cachedFile, lineSelection);
+                {
+                    return cachedFile switch
+                    {
+                        GitHubSourceFile cachedSourceFile => new GitHubSourceFileSelection(cachedSourceFile, lineSelection),
+                        GitHubSourceDirectory => cachedFile,
+                        _ => throw new Exception("Github source cache contains an unexpected type!")
+                    };
+                }
                 
                 return cachedFile;
             }
-                
-            
-            var response = await _httpClient.GetAsync(uri);
-            if (!response.IsSuccessStatusCode)
-                return null;
 
-            var content = await response.Content.ReadAsStringAsync();
-            var sourceFile = new GitHubSourceFile(uri, uri.ToString().Split('/').Last(), content);
-            _contentCache.Add(uri, sourceFile);
+            var (type, models) =  await _client.GetRepositoryContentsAsync(path);
             
+            GitHubSource sourceFile;
+            if (type == GitHubSourceType.File)
+                sourceFile = new GitHubSourceFile(path, models[0].Name, models[0].Content);
+            else
+            {
+                var files = new List<GitHubSource>(models.Length);
+                foreach (var model in models)
+                {
+                    var filePath = string.Concat(path, "/", model.Name);
+                    
+                    if (model.Type == GitHubSourceType.File)
+                        files.Add(new GitHubSourceFile(filePath, model.Name, string.Empty));
+                    else if (model.Type == GitHubSourceType.Dir)
+                        files.Add(new GitHubSourceDirectory(filePath, model.Name, Array.Empty<GitHubSource>()));
+                }
+
+                sourceFile = new GitHubSourceDirectory(path, path.Split('/').Last(), files);
+            }
+
+            AddFileToCache(path, sourceFile);
+            
+            if (lineSelection is not null && sourceFile is GitHubSourceFile file)
+                sourceFile = new GitHubSourceFileSelection(file, lineSelection);
+            
+            return sourceFile;
+        }
+
+        public void AddFileToCache(string path, GitHubSource sourceFile)
+        {
             Logger.LogInformation("Fetched github source file: {0}. Caching contents for {1} minutes", sourceFile.Filename, MinutesToCacheContent);
+            _contentCache.Add(path, sourceFile);
             
             var scheduledTask = _scheduler.Schedule(DateTime.Now.AddMinutes(MinutesToCacheContent), scheduledTask =>
             {
                 Logger.LogInformation("Cached content for {0} expired after {1} minutes.", sourceFile.Filename, MinutesToCacheContent);
-                _contentCache.Remove(uri);
+                _contentCache.Remove(path);
                 _scheduledCacheRemovalTasks.Remove(scheduledTask.Id);
                 return Task.CompletedTask;
             });
 
             _scheduledCacheRemovalTasks.Add(scheduledTask.Id);
-
-            if (lineSelection is not null)
-                return new GitHubSourceFileSelection(sourceFile, lineSelection);
-
-            return sourceFile;
-        }
-
-        public string GetSourceLink(string path)
-        {
-            var lineSelectorIndex = path.LastIndexOf(GithubLineSelectorChar);
-            
-            if (lineSelectorIndex == -1)
-                return GithubRepoBaseLink + path;
-
-            var pathWithoutSelection = path[..lineSelectorIndex];
-            var pathWithExtension = GetPathWithExtension(pathWithoutSelection);
-            return GithubRepoBaseLink + pathWithExtension + path[(lineSelectorIndex)..];
         }
 
         public void ClearContentCache()
@@ -87,7 +100,18 @@ namespace CheeseBot.Services
             _contentCache.Clear();
         }
 
-        // simple check to add a file extension if one was not provided
+        public static string GetSourceLink(string path)
+        {
+            var lineSelectorIndex = path.LastIndexOf(GithubLineSelectorChar);
+            
+            if (lineSelectorIndex == -1)
+                return GithubRepoBaseLink + path;
+
+            var pathWithoutSelection = path[..lineSelectorIndex];
+            var pathWithExtension = GetPathWithExtension(pathWithoutSelection);
+            return GithubRepoBaseLink + pathWithExtension + path[(lineSelectorIndex)..];
+        }
+
         private static string GetPathWithExtension(string path)
         {
             if (path.Length > CSharpExtension.Length)
@@ -100,10 +124,58 @@ namespace CheeseBot.Services
             }
 
 
-            return path += CSharpExtension;
+            return path + CSharpExtension;
         }
 
-        private static string GetPathWithoutLineSelector(string path, out GitHubLineSelection selection)
+        private static string NormalizePath(string path, out GitHubLineSelection selection)
+        {
+            selection = null;
+            
+            if (path is null)
+                return DefaultSourceDirectory;
+
+            path = GetPathWithoutSelection(path, out selection);
+
+            if (!path.EndsWith('/'))
+                path += '/';
+
+            var pathSegments = new List<string>();
+
+            if (!path.StartsWith(DefaultSourceDirectory))
+            {
+                pathSegments.Add("src");
+                pathSegments.Add("CheeseBot");
+            }
+            
+            var currentSegment = new StringBuilder();
+            foreach (var c in path)
+            {
+                var currentCharIsSlash = c == '/';
+
+                if (currentCharIsSlash)
+                {
+                    var currentSegmentStr = currentSegment.ToString();
+                    currentSegment.Clear();
+                    if (string.IsNullOrEmpty(currentSegmentStr) || string.IsNullOrWhiteSpace(currentSegmentStr) || currentSegmentStr == ".")
+                        continue;
+                    else if (currentSegmentStr == "..")
+                    {
+                        var index = pathSegments.Count - 1;
+                        if (index >= 0)
+                            pathSegments.RemoveAt(index);
+                        continue;
+                    }
+
+                    pathSegments.Add(currentSegmentStr);
+                }
+                else
+                    currentSegment.Append(c);
+            }
+
+            return string.Join("/", pathSegments);
+        }
+
+        private static string GetPathWithoutSelection(string path, out GitHubLineSelection selection)
         {
             var lastIndexOfLineSelector = path.LastIndexOf(GithubLineSelectorChar);
             if (lastIndexOfLineSelector != -1)

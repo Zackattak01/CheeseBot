@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using CheeseBot.GitHub;
+using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 
@@ -37,6 +38,7 @@ namespace CheeseBot
                     services.AddSingleton<Random>();//TODO: Cryptographic random... just for fun
                     services.AddSingleton<EnglishTimeParser>();
                     services.AddSingleton<HttpClient>();
+                    services.AddSingleton<GitHubClient>();
                     services.AddCheeseBotServices();
                 })
                 .ConfigureHostConfiguration(configuration => configuration.AddJsonFile(ConfigPath))

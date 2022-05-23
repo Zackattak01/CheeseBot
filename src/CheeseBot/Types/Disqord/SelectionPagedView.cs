@@ -5,11 +5,25 @@ namespace CheeseBot.Disqord
 {
     public class SelectionPagedView : PagedViewBase
     {
-        public SelectionViewComponent Selection { get; }
+        public SelectionViewComponent Selection { get; private set; }
         
         public SelectionPagedView(SelectionPageProvider pageProvider, LocalMessage templateMessage = null) 
             : base(pageProvider, templateMessage)
         {
+            AddSelectionComponent();
+        }
+
+        public void SetPageProvider(SelectionPageProvider provider, int pageIndex = 0)
+        {
+            PageProvider = provider;
+            CurrentPageIndex = pageIndex;
+            AddSelectionComponent();
+        }
+
+        private void AddSelectionComponent()
+        {
+            ClearComponents();
+            var pageProvider = (SelectionPageProvider)PageProvider;
             Selection = new SelectionViewComponent(HandleSelection);
             
             for (var i = 0; i < pageProvider.Pages.Count; i++)
