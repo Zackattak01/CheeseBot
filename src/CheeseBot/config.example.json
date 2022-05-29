@@ -1,5 +1,4 @@
 {
-  "plugins_location": "Your plugins location",
   "discord": {
     "token": "Your Discord Token"
   },
