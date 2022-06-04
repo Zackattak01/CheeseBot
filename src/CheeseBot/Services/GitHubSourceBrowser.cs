@@ -7,7 +7,7 @@ namespace CheeseBot.Services
     public class GitHubSourceBrowser : CheeseBotService
     {
         private const string DefaultSourceDirectory = "src/CheeseBot";
-        private const string GithubRepoBaseLink = "https://github.com/Zackattak01/CheeseBot/tree/main/src/CheeseBot";
+        private const string GithubRepoBaseLink = "https://github.com/Zackattak01/CheeseBot/tree/main/";
         private const string CSharpExtension = ".cs";
         private const string CsprojExtension = ".csproj";
         private const char GithubLineSelectorChar = '#';
@@ -49,7 +49,7 @@ namespace CheeseBot.Services
             
             GitHubSource sourceFile;
             if (type == GitHubSourceType.File)
-                sourceFile = new GitHubSourceFile(path, models[0].Name, models[0].Content);
+                sourceFile = new GitHubSourceFile(path, models[0].Name, models[0].HtmlUrl, models[0].Content);
             else
             {
                 var files = new List<GitHubSource>(models.Length);
@@ -58,12 +58,12 @@ namespace CheeseBot.Services
                     var filePath = string.Concat(path, "/", model.Name);
                     
                     if (model.Type == GitHubSourceType.File)
-                        files.Add(new GitHubSourceFile(filePath, model.Name, string.Empty));
+                        files.Add(new GitHubSourceFile(filePath, model.Name, model.HtmlUrl, string.Empty));
                     else if (model.Type == GitHubSourceType.Dir)
-                        files.Add(new GitHubSourceDirectory(filePath, model.Name, Array.Empty<GitHubSource>()));
+                        files.Add(new GitHubSourceDirectory(filePath, model.Name, model.HtmlUrl, Array.Empty<GitHubSource>()));
                 }
 
-                sourceFile = new GitHubSourceDirectory(path, path.Split('/').Last(), files);
+                sourceFile = new GitHubSourceDirectory(path, path.Split('/').Last(), models[0] + "/..", files);
             }
 
             AddFileToCache(path, sourceFile);
@@ -102,6 +102,7 @@ namespace CheeseBot.Services
 
         public static string GetSourceLink(string path)
         {
+            path = NormalizePath(path);
             var lineSelectorIndex = path.LastIndexOf(GithubLineSelectorChar);
             
             if (lineSelectorIndex == -1)
@@ -130,12 +131,16 @@ namespace CheeseBot.Services
         private static string NormalizePath(string path, out GitHubLineSelection selection)
         {
             selection = null;
-            
-            if (path is null)
-                return DefaultSourceDirectory;
-
             path = GetPathWithoutSelection(path, out selection);
 
+            return NormalizePath(path);
+        }
+
+        public static string NormalizePath(string path)
+        {
+            if (path is null)
+                return DefaultSourceDirectory;
+            
             if (!path.EndsWith('/'))
                 path += '/';
 
@@ -177,6 +182,10 @@ namespace CheeseBot.Services
 
         private static string GetPathWithoutSelection(string path, out GitHubLineSelection selection)
         {
+            selection = null;
+            if (path is null)
+                return null;
+            
             var lastIndexOfLineSelector = path.LastIndexOf(GithubLineSelectorChar);
             if (lastIndexOfLineSelector != -1)
             {
@@ -184,8 +193,7 @@ namespace CheeseBot.Services
                 GitHubLineSelection.TryParse(path[(lastIndexOfLineSelector + 1)..], out selection);
                 return pathWithoutLineSelector;
             }
-
-            selection = null;
+            
             return path;
         }
     }

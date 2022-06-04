@@ -6,10 +6,13 @@ namespace CheeseBot.GitHub.Entities
 
         public string Filename { get; }
 
-        public GitHubSource(string path, string filename)
+        public string Url { get; }
+
+        public GitHubSource(string path, string filename, string url)
         {
             Path = path;
             Filename = filename;
+            Url = url;
         }
     }
 }

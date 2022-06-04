@@ -80,7 +80,7 @@ namespace CheeseBot.Commands.Modules
             var fileListEmbed = new LocalEmbed()
                 .WithDefaultColor()
                 .WithTitle($"Directory: {sourceDirectory.Filename}")
-                .AddField("Files", string.Join("\n", sourceDirectory.Files.Select(x => x.Filename)));
+                .WithDescription("**Files**\n" + string.Join("\n", sourceDirectory.Files.Select(x => Markdown.Link(x.Filename, x.Url))));
             
             var fileListPage = new Page().AddEmbed(fileListEmbed);
             pages.Add(new SelectionPage(fileListPage, "./"));
@@ -105,7 +105,7 @@ namespace CheeseBot.Commands.Modules
                         case GitHubSourceFile sourceFile:
                         {
                             if (sourceFile.Content.Length > LocalMessageBase.MaxContentLength) 
-                                return page.WithContent($"File too large to display. View online: {GitHubSourceBrowser.GetSourceLink(sourceFile.Path)}");
+                                return page.WithContent($"File too large to display. View online: {Markdown.Link(sourceFile.Filename, sourceFile.Url)}");
 
                             page.WithContent(Markdown.CodeBlock("csharp", sourceFile.Content));
                             break;
