@@ -45,15 +45,15 @@ namespace CheeseBot.Services
                 method.Invoke(null, new object[] { moduleBuilder });
             }
 
-            var _addedCommands = new List<(Plugin, int, int)>();
+            var addedCommands = new List<(Plugin, int, int)>();
 
             foreach (var plugin in Plugins)
             {
                 var addedModules = _commandService.AddModules(plugin.Assembly, action: MutateModule);
-                _addedCommands.Add((plugin, addedModules.Count, addedModules.SelectMany(CommandUtilities.EnumerateAllCommands).Count()));
+                addedCommands.Add((plugin, addedModules.Count, addedModules.SelectMany(CommandUtilities.EnumerateAllCommands).Count()));
             }
 
-            return _addedCommands;
+            return addedCommands;
         }
         
         private void LogPluginLoadInformation(IReadOnlyList<(Plugin Plugin, int ModuleCount, int CommandCount)> commandInfo)
