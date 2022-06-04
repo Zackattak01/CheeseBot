@@ -98,22 +98,24 @@ namespace CheeseBot.Commands.Modules
                 async Task<Page> PageFunction()
                 {
                     var page = new Page();
-
-                    switch (file)
+                    var fetchedFile = await _sourceBrowser.GetPathAsync(file.Path);
+                    
+                    switch (fetchedFile)
                     {
                         case GitHubSourceFile sourceFile:
                         {
-                            sourceFile = (GitHubSourceFile)await _sourceBrowser.GetPathAsync(sourceFile.Path);
-                            if (sourceFile.Content.Length > LocalMessageBase.MaxContentLength) return page.WithContent($"File too large to display. View online: {GitHubSourceBrowser.GetSourceLink(sourceFile.Path)}");
+                            if (sourceFile.Content.Length > LocalMessageBase.MaxContentLength) 
+                                return page.WithContent($"File too large to display. View online: {GitHubSourceBrowser.GetSourceLink(sourceFile.Path)}");
 
                             page.WithContent(Markdown.CodeBlock("csharp", sourceFile.Content));
                             break;
                         }
                         case GitHubSourceDirectory sourceDirectory:
-                            sourceDirectory = (GitHubSourceDirectory)await _sourceBrowser.GetPathAsync(sourceDirectory.Path);
+                        {
                             view.SetPageProvider(new SelectionPageProvider(GetSourceCodePages(sourceDirectory, view)));
                             page = await view.PageProvider.GetPageAsync(view);
                             break;
+                        }
                     }
 
                     return page;
