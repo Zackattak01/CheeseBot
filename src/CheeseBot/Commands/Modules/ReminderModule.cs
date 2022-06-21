@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace CheeseBot.Commands.Modules
 {
     [Group("reminder", "remind", "reminders", "remindme")]
@@ -22,7 +24,7 @@ namespace CheeseBot.Commands.Modules
             
             await _reminderService.AddReminderAsync(reminder);
             
-            return Response($"Ok, I will remind you to {Markdown.Code(reminder.Value)} {GetTimestampWithArticle(reminder)} (Id:{reminder.Id})");
+            return Response($"Ok, I will remind you {FormatReminderString(reminder)} (Id:{reminder.Id})");
         }
 
         [Command("list", "")]
@@ -73,12 +75,23 @@ namespace CheeseBot.Commands.Modules
                 return Response("You cannot remove other peoples reminders.");
 
             await _reminderService.RemoveReminderAsync(reminder);
-            return Response($"Ok, I will no longer remind you to {Markdown.Code(reminder.Value)} {GetTimestampWithArticle(reminder)}");
+            return Response($"Ok, I will no longer remind you {FormatReminderString(reminder)}");
         }
 
         private static string GetTimestampWithArticle(Reminder reminder) 
             => reminder.ExecutionTime.Date == DateTime.Today 
                 ? Markdown.Timestamp(reminder.ExecutionTime, Markdown.TimestampFormat.RelativeTime) 
                 : $"on {Markdown.Timestamp(reminder.ExecutionTime)}";
+
+        private static string FormatReminderString(Reminder reminder)
+        {
+            var strBuilder = new StringBuilder();
+
+            if (!string.IsNullOrEmpty(reminder.Value))
+                strBuilder.Append("to ").Append(Markdown.Code(reminder.Value)).Append(' ');
+
+            strBuilder.Append(GetTimestampWithArticle(reminder));
+            return strBuilder.ToString();
+        }
     }
 }
