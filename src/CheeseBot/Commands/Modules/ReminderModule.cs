@@ -2,7 +2,7 @@ using System.Text;
 
 namespace CheeseBot.Commands.Modules
 {
-    [Group("reminder", "remind", "reminders", "remindme")]
+    [Group("reminder", "remind", "reminders", "remindme", "r")]
     [Description("Commands for managing reminders")]
     public class ReminderModule : DiscordGuildModuleBase
     {
