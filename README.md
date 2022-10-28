@@ -24,8 +24,8 @@ To run the docker image a `config.json` must be mounted. For full functionality 
 ```
 $ docker run -d \
     --name cheesebot \
-    -v /path/to/config.json:/App/config.json
-    -v /path/to/Plugins:/App/Plugins
-    -e "TZ=America/New_York"
+    -v /path/to/config.json:/App/config.json \
+    -v /path/to/Plugins:/App/Plugins \
+    -e "TZ=America/New_York" \
     zbroderson/cheesebot
 ```
