@@ -10,7 +10,7 @@
     <ItemGroup>
       <PackageReference Include="Disqord.Bot" Version="1.0.0-184" />
       <PackageReference Include="EFCore.NamingConventions" Version="6.0.0" />
-      <PackageReference Include="HumanTimeParser.English" Version="3.0.0-dev-3970768311" />
+      <PackageReference Include="HumanTimeParser.English" Version="3.0.0-dev-3971561612" />
       <PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="4.1.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.5">
         <PrivateAssets>all</PrivateAssets>
